@@ -1,0 +1,513 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem*{remark}{Remark}
+\newtheorem{example}{Example}
+
+%---------------------------------------------------------------
+
+\title{The average number of contigs}
+\author{
+\textsc{Guillaume Filion} \\ [1ex]
+\normalsize CRG, Barcelona
+}
+\date{\today}
+
+%---------------------------------------------------------------
+%---------------------------------------------------------------
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Here is the text of the abstract. I need to type more in order to see if
+this goes beyond the two columns of the text.
+\end{abstract}
+
+
+%---------------------------------------------------------------
+%---------------------------------------------------------------
+
+\section{Introduction}
+
+Here is the text of the Introduction.
+
+\section{Results}
+
+\subsection{A combinatorial approach to the assembly problem}
+
+We will formalize the assembly problem...
+
+This situation corresponds to the assembly of a repeatless genome with a
+single circular chromosome of size $G$. In this setup, the $n$ reads are
+assumed to have the same length $L$, to be sequenced without error  and to
+be uniformly distributed on the genome.
+
+The assembly is completely determined by the $n$ distances between the
+starts of consecutive reads. We need to compute the number of possible
+configurations, and in how many of those the distance between consecutive
+reads never exceeds a given threshold $k$. To do this, we will use
+bivariate generating functions. This may look like an unintuitive approach
+at first, but it will allow us to derive simpler proofs of the main
+results.
+
+If $(q_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate series, the generating
+function of the series is by definition
+
+\begin{equation}
+Q(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty q_{k,n}x^ky^n.
+\end{equation}
+
+When $q_{k,n}$ counts a number of objects, we will say that $Q(x,y)$ is
+the generating function of those objects. We will refer to $q_{k,n}$ as
+the `coefficient of $x^ky^n$ in $Q(x,y)$', and also denote it as $[x^ky^n]
+Q(x,y)$. The function $F$ and the bivariate sequence $(q_{k,n})_{k \geq 0,
+n \geq 0}$ carry the same information, but some combinatorial operations
+are easier to perform with Q, as we will illustrate shortly.
+
+We define an `interval' as the distance between the left ends of two
+consecutive reads. Every interval has a size, which is a non-negative
+integer, and a weight equal to 1. Introducing a constant weight is way to
+count reads, as will appear below. There is no interval of size different
+from 1, and one interval of size $k$ and weight 1, so the generating
+function of intervals is
+
+\begin{equation*}
+I(x,y) = \sum_{k=0}^\infty x^ky = \frac{y}{1-x}.
+\end{equation*}
+
+Also, we define intervals of size no greater than $d$ as $d$-intervals.
+The generating function of $d$-intervals is thus
+
+\begin{equation*}
+I_d(x,y) = (1+x+x^2+\ldots+x^d)y.
+\end{equation*}
+
+Finally, we define $d$-gaps as intervals of size greater than $d$, with
+the important difference that have weight 0 instead of 1. The generating
+function of $d$-gaps is thus
+
+\begin{equation*}
+G_d(x,y) = x^d+x^{d+1}+x^{d+2}+\ldots = x^d \frac{1}{1-x}.
+\end{equation*}
+
+Operations on generating functions allow us to create more complex
+combinatorial objects. We have already used additions, which corresponds
+to disjoint unions. For instance, generating function of $d$-intervals is
+another way of saying that a $d$-interval is either an interval of size 0,
+or an interval of size 1, or an interval of size 2, and so on until an
+interval of size $d$. More generally, if $A(x,y)$ and $B(x,y)$ are the
+generating functions of objects in disjoint sets $\mathcal{A}$ and
+$\mathcal{B}$, respectively, then $A(x,y)+B(x,y)$ is the generating
+function of objects in $\mathcal{A} \cup \mathcal{B}$.
+
+Multiplications correspond to Cartesian products. More specifically, if
+$A(x,y)$ and $B(x,y)$ are the generating functions of objects in sets
+$\mathcal{A}$ and $\mathcal{B}$ (disjoint or not), and the attributes of a
+pair are the sums of individual attributes, then $A(x,y)B(x,y)$ is the
+generating function of objects in $\mathcal{A} \times \mathcal{B}$. To
+prove this, observe that the pairs of size $k$ and weight $n$ are made of
+all pairwise combinations of objects whose sizes sum to $k$ and weights
+sum to $n$. The number of those pairs is $\sum_{l=0}^k \sum_{m=0}^n
+a_{l,m}b_{k-l,n-m}$ so the generating function of $\mathcal{A} \times
+\mathcal{B}$ is
+
+
+\begin{eqnarray*}
+&\;& \sum_{k=0}^\infty \sum_{n=0}^\infty \left( \sum_{l=0}^k \sum_{m=0}^n
+  a_{m,l}b_{k-l,n-m}\right) x^k y^l  \\ 
+&=& \sum_{l=0}^\infty \sum_{m=0}^\infty \sum_{k=l}^\infty \sum_{n=m}^\infty
+  a_{m,l}b_{k-l,n-m}x^{m + k-m} y^{l + n-l} \\
+&=& \sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
+  \sum_{k=l}^\infty \sum_{n=m}^\infty
+  b_{k-l,n-m}x^{k-m} y^{n-l} \\
+&=& B(x,y) \sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
+ = A(x,y)B(x,y).
+\end{eqnarray*}
+
+It follows that if $A(x,y)$ is the generating function of objects in the
+set $\mathcal{A}$, then $A(x,y)^n$ is the generating function of objects
+in $\mathcal{A}^n$ (representing $n$-tuples of objects of $\mathcal{A}$).
+For instance, the concatenation of two intervals gives a new interval of
+weight 2, and whose size is the sum of individual sizes. So the generating
+function of concatenated intervals is $I(x,y)^2$. More generally,
+$I(x,y)^n$ is the generating function of the concatenation of $n$
+intervals. It follows that the generating function of all concatenations of
+intervals is
+
+\begin{equation}
+\label{eq:config}
+C(x,y) = I(x,y)^0 + I(x,y)^1 +\ldots
+= \sum_{n=0}^\infty \left( \frac{y}{1-x} \right)^n
+= \frac{1}{1 - y/(1-x)}.
+\end{equation}
+
+
+The coefficient of $x^ky^n$ in $C(x,y)$ is the number of concatenations of
+intervals of total size $k$ and total weight $n$, \textit{i.e.} the number
+of ways to arrange $n+1$ reads such that the extreme left ends are
+separated by $k$ nucleotides. It is thus interesting to extract this
+coefficient from the generating function. The intermediate representation
+in formula (\ref{eq:config}) shows that this must also be the coefficient
+of $x^k$ in $1/(1-x)^n$. To compute it, we derive $n-1$ times the equality
+$1/(1-x) = 1 + x + x^2 + \ldots$ to obtain
+
+\begin{equation*}
+(n-1)! \left( \frac{1}{1-x} \right)^n =
+\sum_{k=n-1}^\infty k \cdot (k-1) \ldots (k-n+2) x^{k-n+1}.
+\end{equation*}
+
+Rearranging the terms and shifting the indices, we obtain
+
+\begin{gather}
+\notag
+\left( \frac{1}{1-x} \right)^n =
+\sum_{k=0}^\infty \frac{(k+n-1) \ldots (k+1)}{(n-1)!} x^k
+= \sum_{k=0}^\infty {k+n-1 \choose n-1} x^k \text{, or} \\
+\label{eq:C}
+[x^ky^n]C(x,y) = {k+n-1 \choose n-1}.
+\end{gather}
+
+Equation (\ref{eq:C}) expresses the number of ways to arrange $n+1$ reads
+such that the extreme left ends are separated by $k$ nucleotides. The main
+question of the assembly problem is to determine how many of those consist
+exclusively of $d$-intervals. If this represents a small fraction, chances
+are that gaps will be present and that the assembly will be impossible.
+Following the same rationale as above, we find the generating function of
+concatenations of $d$-intervals to be
+
+\begin{equation}
+\label{eq:dinter}
+C_d(x,y) = \sum_{n=0}^\infty \left(y(1+x+\ldots+x^d)\right)^n =
+\frac{1}{1-y(1+x+\ldots+x^d)}.
+\end{equation}
+
+The coefficients of $x^ky^n$ in $C_d(x,y)$ are known as the polynomial
+coefficients. Unforunately, they cannot be computed via a simple
+expression, so we will need to use an asymptotic approximation.
+
+\subsection{Asymptotic approximations}
+
+Equations (\ref{eq:config}) and (\ref{eq:dinter}) describe so called
+Riordan arrays, \textit{i.e.} bivariate sequences $(a_{k,n})_{k \geq 0,
+n \geq 0}$ such that
+
+\begin{equation*}
+\sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n} x^k y^n =
+\frac{\phi(x)}{1-y \nu(x)}.
+\end{equation*}
+
+Finding simple asymptotic estimates of bivariate sequences is usually not
+easy, but for Riordan arrays, such results are available.
+
+\begin{proposition}
+\label{th:PW}
+If $F(x,y)$ is a Riordan array, $k$ and $n$ tend to infinity and $\lim k/n
+= \lambda$, then
+
+\begin{equation}
+\label{eq:Cd}
+[x^ky^n]F(x,y) \sim \frac{\nu(x_\lambda)^n\phi(x_\lambda)}
+  {x_\lambda^k\sqrt{2\pi n \sigma(x_\lambda)^2}},
+\end{equation}
+
+\noindent
+where $x_\lambda$ is the solution of
+$\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$.
+\end{proposition}
+
+The proof of this theorem was given by Pemantle and Wilson. Here we will
+derive the concrete solution for $C_d$. The first task is to find the
+solution of $\mu(x) = \lambda$.
+
+\begin{proposition}
+\label{th:mu}
+The equation $\mu_d(x) = x\nu'(x)/\nu(x) = \lambda$ has a single solution
+$x_\lambda$ for $0 \leq \lambda \leq d$.
+\end{proposition}
+
+\begin{proof}
+We first demonstrate that for $x \geq 0$, $\mu$ is strictly increasing.
+
+\begin{equation}
+\label{eq:mu}
+\mu_d(x) = x\frac{\nu'(x)}{\nu(x)} =
+x\frac{1+2x+3x^2+\ldots+dx^{d-1}}{1+x+\ldots+x^d} =
+(d+1)\frac{x^{d+1}}{x^{d+1}-1} - \frac{x}{x-1}.
+\end{equation} 
+
+Differentiating the last expression we obtain
+
+\begin{equation}
+\label{eq:muprime}
+\mu_d'(x) = \frac{1}{(1-x)^2} -\frac{(d+1)^2x^d}{(1-x^{d+1})^2}.
+\end{equation}
+
+The function $f(\alpha) = x^{\alpha} = e^{\alpha \log(x)}$ is strictly
+convex for every $x > 0$ and $x \neq 1$. Applying the definition of
+convexity, we obtain the inequality
+
+\begin{eqnarray*}
+\frac{f(0)+\ldots+f(d)}{d+1} &>&
+f\left(\frac{0+1+2+\ldots+d}{d+1}\right) \\
+\frac{1+x+\ldots+x^d}{d+1} &>& f(d/2) = x^{d/2} \\
+\frac{1-x^{d+1}}{1-x} &>& (d+1)x^{d/2} \\
+\frac{1}{(1-x)^2} &>& \frac{(d+1)^2x^d}{(1-x^{d+1})^2}.
+\end{eqnarray*}
+
+Combined with equation (\ref{eq:muprime}), the last inequality shows that
+$\mu_d'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu_d'(0) = 1$ and
+$\mu_d'(1) = d$, $\mu_d$ is strictly increasing. Observing that $\mu_d(0)
+= 0$ and $\lim_{x\rightarrow\infty} \mu_d(x) = d$, the equation $\mu_d(x)
+= \lambda$ has a unique solution $x_\lambda$, if $0 \leq \lambda \leq
+d$.
+\end{proof}
+
+\begin{remark}
+There is no solution to this equation for $\lambda > d$ because $a_{k,n} =
+0$ for $k > nd$, or equivalently $\lambda > d$. Indeed, there is no
+concatenation of $n$ $d$-intervals with size greater than $nd$.
+\end{remark}
+
+
+The value of $x_\lambda$ can be found numerically. Once it is available,
+computing $\nu(x_\lambda)$ and $\sigma(x_\lambda^2)$ is trivial, but
+numeric precision can become an issue, especially if $d$ and $n$ are
+large. To avoid this, we use the equivalent forms
+
+\begin{gather}
+\nu(x_\lambda) = \frac{d+1}{1 +
+  (1-x_\lambda)(d-\lambda)}, \label{eq:nu} \\
+\sigma(x_\lambda)^2 = (\lambda+1)(d-\lambda) -
+  \frac{d-2\lambda}{1-x_\lambda}. \label{eq:sigma}
+\end{gather}
+
+
+\begin{example}
+
+Suppose that we want to assemble a genome of 25,000 nucleotides and that
+we have 10,001 reads taken uniformly at random from this genome. What is
+the probability that all the reads are within 25 nucleotides of their
+immediate neighbors?
+
+Here $k=25000$, $n=10000$, $d=25$ and $\lambda = 2.5$. We solve equation
+equation (\ref{eq:mu}) by the Newton-Raphson method and obtain $x_\lambda
+\approx 0.714626$. Using equations (\ref{eq:nu}) and (\ref{eq:sigma}) we
+obtain $\nu(x_\lambda) \approx 3.503616$ and $\sigma(x_\lambda)^2 \approx
+8.666415$. We compute equation (\ref{eq:Cd}) in logarithmic space and
+obtain
+
+\begin{eqnarray*}
+\log(a_{k,n}) &\approx& 10000 \log(3.503616) - 25000 \log(0.714626) \\
+&-& \log(10000)/2 - \log(8.666415)/2 - \log(2\pi)/2
+\approx 20931.25.
+\end{eqnarray*}
+
+This is to be compared to the total number of configurations in
+logarithmic space, which according to equation (\ref{eq:C}) is
+
+\begin{equation*}
+\log { 34999 \choose 9999 } \approx 20932.83.
+\end{equation*}
+
+The estimated probability that a configuration corresponds to a coverage
+by $25$-intervals is
+thus
+
+\begin{equation*}
+\exp(20931.25-20932.83) \approx 0.207.
+\end{equation*}
+
+Random simulations with 10,000 samples gave an estimate for this
+probability equal to $0.206$, strikingly close to the numerical
+approximation.
+
+\end{example}
+
+In practice, the sampling scheme is not the same as described above.
+$n+1$ reads are drawn from the genome at random. If the distance between
+the most extreme left ends is $k$, each of the remaining $n-1$ reads can
+be at $k+1$ positions, for a total of $(k+1)^{n-1}$ possibilities. To see
+why this differs from the number given in (\ref{eq:C}), let us consider an
+interval of size $a > 0$. There must be a read mapping to some location
+$x$, and another one mapping to the location $x+a$. If the read mapping to
+$x$ is drawn first or second, we obtain two different configurations from
+the $(k+1)^{n-1}$ possibilities. Now if the size of the interval is 0, two
+reads map to some location $x$, but whichever is drawn first does not
+affect the configuration. So the discrepancy comes from intervals of
+length 0.
+
+Based on this observation, it would be more convenient to consider only
+the reads that are distinct, \textit{i.e.} only the intervals of positive
+size. It is easy to see that
+
+\begin{eqnarray*}
+I_*(x,y) &=& \sum_{k=1}^\infty x^ky = \frac{xy}{1-x} \\
+C_*(x,y) &=& \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
+= \frac{1}{1-xy/(1-x)}.
+\end{eqnarray*}
+
+Using the same method as for deriving equation (\ref{eq:C}), we see that 
+
+\begin{equation}
+\label{eq:Cstar}
+[x^ky^n]C_*(x,y) = [x^k] \left( \frac{x}{1-x} \right)^n
+= {k-1 \choose n-1}.
+\end{equation}
+
+Similarly, we obtain 
+
+\begin{eqnarray*}
+I_{d*}(x,y) &=& (x + x^2 + \ldots + x^d)y \\
+C_{d*}(x,y) &=& \sum_{n=0}^\infty \left((x+ \ldots + x^d)y
+\right)^n
+= \frac{1}{1-y(x+x^2+\ldots+x^d)}.
+\end{eqnarray*}
+
+Since $C_{d*}(x,y)$ is a Riordan array, we can still use proposition
+\ref{th:PW}. We only need to find the solutions of the equations when
+$\nu(x) = 1+ x+ \ldots x^d$ is replaced by $\nu_*(x) = x+x^2+\ldots +x^d$.
+
+\begin{proposition}
+The equation $\mu_{d*}(x) = x\nu_*'(x)/\nu_*(x) = \lambda$ has a unique
+solution for $1 \leq \lambda \leq d$.
+\end{proposition}
+
+\begin{proof}
+\label{th:mustar}
+\begin{equation}
+\label{eq:mustar}
+\mu_{d*}(x) = 1 + d\frac{x^d}{x^d-1} - \frac{x}{x-1}.
+\end{equation}
+
+By comparison with equation (\ref{eq:mu}), we see that the solution of
+$\mu_{d*}(x) = \lambda$ is the same as the solution of $\mu_{d-1}(x) =
+\lambda - 1$. By proposition \ref{th:mu}, this solution exists and is
+unique for $0 \leq \lambda -1 \leq d-1$, which completes the proof.
+\end{proof}
+
+Similarly as above, we compute $\nu_*(x_\lambda)$ and
+$\sigma(x_\lambda)^2$ with the numerically stable expressions
+
+\begin{gather}
+\label{eq:nustar}
+\nu_*(x_\lambda) = \frac{dx_\lambda}{1+(d-\lambda)(1-x_\lambda)}, \\
+\sigma_*(x_\lambda)^2 = \lambda(d-\lambda) -
+  \frac{d-2\lambda+1}{1-x_\lambda}. \label{eq:sigmastar}
+\end{gather}
+
+
+\begin{example}
+
+Let us consider the same problem as above, with a genome of size 25,000
+and 10,001 reads. We assume that the reads are drawn uniformly at random
+without replacement.
+
+As above, $k=25000$, $n=10000$, $d=25$ and $\lambda = 2.5$. We solve
+equation equation (\ref{eq:mustar}) by applying the Newton-Raphson method
+to equation (\ref{eq:mu}) with $\lambda-1$ and $d-1$ and obtain
+$x_\lambda \approx 0.60001177$. Using equations (\ref{eq:nustar}) and
+(\ref{eq:sigmastar}) we obtain $\nu_*(x_\lambda) \approx 1.50006684$ and
+$\sigma(x_\lambda)^2 \approx 3.747554$. We compute equation
+(\ref{eq:Cd}) in logarithmic space and obtain
+
+\begin{eqnarray*}
+\log(a_{k,n}) &\approx& 10000\log(1.50006684) - 25000\log(0.60001177) \\
+&-& \log(10000)/2 - \log(3.747554)/2 - \log(2\pi)/2
+\approx 16819.0783
+\end{eqnarray*}
+
+This is to be compared to the total number of configurations in
+logarithmic space, which according to equation (\ref{eq:Cstar}) is
+
+\begin{equation*}
+\log { 24999 \choose 9999 } \approx 16819.1067
+\end{equation*}
+
+The estimated probability that a configuration corresponds to a coverage
+by $25$-intervals is
+thus
+
+\begin{equation*}
+\exp(16819.0783-16819.1067) \approx 0.972.
+\end{equation*}
+
+Random simulations with 10,000 samples gave an estimate for this
+probability equal to $0.973$, again very close to the numerical
+approximation. In this example, $x_\lambda$ and $\nu_*(x_\lambda)$ must be
+approximated to eight digits to obtain an approximate accute to within
+1\%. On real problems, $n$ and $k$ can be several orders of magnitude
+higher, which shows the importance of using numerically accurate formulas.
+
+\end{example}
+
+It is possible to remove duplicate reads, but it would be useful to know
+upfront how many unique reads we expect. If there are $k+1$ possible
+locations and $n+1$ reads, each position is sampled on average
+$(n+1)/(k+1)$ times. Using the Poisson approximation, the probability that
+a position is not sampled is $e^{-(n+1)/(k+1)}$ so that the frequency of
+sampled positions is $1-e^{-(n+1)/(k+1)}$.
+
+
+\begin{example}
+
+Once again we consider a problem with a genome of size 25,000 and 10,001
+reads. We assume that the reads are drawn uniformly at random with
+replacement.
+
+As above, $k=25000$ and $d=25$, but we need to replace $n=10000$ by the
+estimated number of unique reads $n_* = 25000 \cdot e^{-10001/25001} =
+8241.999 \approx 8242$. This give a value for $\lambda$ approximately
+equal to 3.033. We follow the same calculations as in the previous example
+and we obtain $x_\lambda \approx 0.67044393$, $\nu_*(x_\lambda) \approx
+2.03429224$ and $\sigma_*(x_\lambda)^2 \approx 6.144598$.
+
+\begin{eqnarray*}
+\log(a_{k,n}) &\approx& 8242\log(2.03429224) - 25000\log(0.67044393) \\
+&-& \log(8242)/2 - \log(6.144598)/2 - \log(2\pi)/2
+\approx 15842.084.
+\end{eqnarray*}
+
+The total number of configurations in logarithmic space is again
+obtained from equation (\ref{eq:Cstar}) as
+
+\begin{equation*}
+\log { 24999 \choose 8241 } \approx 15842.457.
+\end{equation*}
+
+Finally, the estimated probability that a configuration corresponds to a
+coverage by $25$-intervals is
+
+\begin{equation*}
+\exp(15842.084-15842.457) \approx 0.689.
+\end{equation*}
+
+For comparison, random simulations with 10,000 samples gave an estimate
+for this probability equal to $0.688$.
+
+\end{example}
+
+%---------------------------------------------------------------
+%	REFERENCE LIST
+%---------------------------------------------------------------
+
+\begin{thebibliography}{99}
+
+\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
+Figueredo, A.~J. and Wolf, P. S.~A. (2009).
+\newblock Assortative pairing and life history strategy - a cross-cultural
+  study.
+\newblock {\em Human Nature}, 20:317--330.
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------
+
+\end{document}
