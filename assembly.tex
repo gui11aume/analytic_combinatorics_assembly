@@ -90,14 +90,6 @@ The generating function of $d$-intervals is thus
 I_d(x,y) = (1+x+x^2+\ldots+x^d)y.
 \end{equation*}
 
-Finally, we define $d$-gaps as intervals of size greater than $d$, with
-the important difference that have weight 0 instead of 1. The generating
-function of $d$-gaps is thus
-
-\begin{equation*}
-G_d(x,y) = x^d+x^{d+1}+x^{d+2}+\ldots = x^d \frac{1}{1-x}.
-\end{equation*}
-
 Operations on generating functions allow us to create more complex
 combinatorial objects. We have already used additions, which corresponds
 to disjoint unions. For instance, generating function of $d$-intervals is
@@ -493,6 +485,40 @@ For comparison, random simulations with 10,000 samples gave an estimate
 for this probability equal to $0.688$.
 
 \end{example}
+
+In summary, the asymptotic estimates are accurate in the range where they
+are useful, namely when the probability of covering the genome is not
+exceedingly close to 0 or to 1.
+
+\subsection{The number of contigs}
+
+We now introduce $d$-gaps as intervals of size greater than $d$ and with
+weight 0. The generating function of $d$-gaps is thus
+
+\begin{equation*}
+G_d(x,y) = x^{d+1}+x^{d+2}+\ldots = \frac{x^{d+1}}{1-x}.
+\end{equation*}
+
+We also define a $d$-contig as a concatenation of $d$-intervals, followed
+by a $d$-gap. Based on this combinatorial definition, the generating
+function of $d$-contigs is the product of the two generating functions
+
+\begin{equation*}
+N_d(x,y) = \frac{1}{1-y(x+x^2+\ldots+x^d)}\frac{x^{d+1}}{1-x} =
+\frac{x^{d+1}}{1-x-yx(1-x^d)}.
+\end{equation*}
+
+Finally, we define a $d$-assembly as a concatenation of $d$-contigs.
+Using the same rationale as above we find the generating function of
+$d$-assemblies as
+
+\begin{equation*}
+A_d(x,y) = \frac{1}{1-N_d(x,y)} =
+1+\frac{x^{d+1}}{1-x-x^{d+1}-y(1-x^d)}.
+\end{equation*}
+
+$A_d(x,y)-1$ is a Riordan array with $\phi(x) =
+x^{d+1}/(1-x-x^{d+1}$ and $\nu(x) = x(1-x^d)/(1-x-x^{d+1})$.
 
 %---------------------------------------------------------------
 %	REFERENCE LIST
