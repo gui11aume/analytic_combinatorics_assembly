@@ -86,9 +86,10 @@ I(x,y) = \sum_{k=0}^\infty x^ky = \frac{y}{1-x}.
 Also, we define intervals of size no greater than $d$ as $d$-intervals.
 The generating function of $d$-intervals is thus
 
-\begin{equation*}
+\begin{equation}
+\label{eq:dintervals}
 I_d(x,y) = (1+x+x^2+\ldots+x^d)y.
-\end{equation*}
+\end{equation}
 
 Operations on generating functions allow us to create more complex
 combinatorial objects. We have already used additions, which corresponds
@@ -490,35 +491,88 @@ In summary, the asymptotic estimates are accurate in the range where they
 are useful, namely when the probability of covering the genome is not
 exceedingly close to 0 or to 1.
 
-\subsection{The number of contigs}
+\subsection{The average number of contigs}
 
-We now introduce $d$-gaps as intervals of size greater than $d$ and with
-weight 0. The generating function of $d$-gaps is thus
+We now introduce $d$-gaps as intervals of size greater than $d$. The same
+way as $y$ was used to count $d$-intervals, we introduce $z$ to count
+$d$-gaps. So the generating function of $d$-gaps is
 
-\begin{equation*}
-G_d(x,y) = x^{d+1}+x^{d+2}+\ldots = \frac{x^{d+1}}{1-x}.
-\end{equation*}
+\begin{equation}
+\label{eq:dgaps}
+G_d(x,z) = z(x^{d+1}+x^{d+2}+\ldots) = z\frac{x^{d+1}}{1-x}.
+\end{equation}
 
-We also define a $d$-contig as a concatenation of $d$-intervals, followed
-by a $d$-gap. Based on this combinatorial definition, the generating
-function of $d$-contigs is the product of the two generating functions
-
-\begin{equation*}
-N_d(x,y) = \frac{1}{1-y(x+x^2+\ldots+x^d)}\frac{x^{d+1}}{1-x} =
-\frac{x^{d+1}}{1-x-yx(1-x^d)}.
-\end{equation*}
-
-Finally, we define a $d$-assembly as a concatenation of $d$-contigs.
-Using the same rationale as above we find the generating function of
-$d$-assemblies as
+We define a $d$-assembly as a concatenation of $d$-intervals and $d$-gaps.
+Each link of a $d$-assembly is either a $d$-interval or a $d$-gap so the
+generating function of links is the sum of (\ref{eq:dintervals}) and
+(\ref{eq:dgaps}). Since a $d$-assembly is a sequence of links, the
+generating function is
 
 \begin{equation*}
-A_d(x,y) = \frac{1}{1-N_d(x,y)} =
-1+\frac{x^{d+1}}{1-x-x^{d+1}-y(1-x^d)}.
+A_d(x,y,z) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+z\frac{x^{d+1}}{1-x}\right)^n =
+\frac{1-x}{1-x-xy(1-x^d) -zx^{d+1}}.
 \end{equation*}
 
-$A_d(x,y)-1$ is a Riordan array with $\phi(x) =
-x^{d+1}/(1-x-x^{d+1}$ and $\nu(x) = x(1-x^d)/(1-x-x^{d+1})$.
+$A_d(x,y,z)$ is the generating function of a three-dimensional array
+$(a_{k,n,m})$, where each term is the number of $d$-assemblies of size $k$
+with $n$ $d$-intervals and $m$ $d$-gaps. The average number of $d$-gaps
+for a given value $k$ and $n$ is the total number of $d$-gaps in
+$d$-assemblies of size $k$ with $n$ $d$-intervals, divided by the number
+of such assemblies. In other words the average is
+
+\begin{equation}
+\label{eq:average}
+\sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m}.
+\end{equation}
+
+To compute this number, observe that
+
+\begin{equation*}
+A_d(x,y,1) = \sum_{k=0}^\infty\sum_{n=0}^\infty
+\left(\sum_{m=0}^\infty a_{k,n,m}\right) x^ky^n.
+\end{equation*}
+
+So the denominator of (\ref{eq:average}) is the general term of the
+bivariate generating function
+
+\begin{equation*}
+A(x,y) = \frac{1-x}{1-x-x^{d+1}-yx(1-x^d) } =
+\frac{(1-x)/(1-x-x{d+1})}{1-yx(1-x^d)/(1-x(1-x^d))}.
+\end{equation*}
+
+The second form of the generating function above highlights that it
+represents a Riordan array with $\phi(x) = (1-x)/(1-x-x{d+1})$ and $\nu(x)
+= x(1-x^d)/(1-x(1-x^d))$.
+
+To compute the numerator of (\ref{eq:average}), we differentiate
+$A_d(x,y,z)$ with respect to $z$ and we observe
+
+\begin{equation*}
+\partial A_d(x,y,z)/\partial z\Bigr|_{\substack{\\z=1}} =
+\sum_{k=0}^\infty\sum_{n=0}^\infty
+\left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n.
+\end{equation*}
+
+So the numerator of (\ref{eq:average}) is the general term of the
+bivariate generating function
+
+\begin{equation*}
+\frac{x^{d+1}(1-x)}{\left(1-x-x^{d+1}-yx(1-x^d)\right)^2}.
+\end{equation*}
+
+This is not the generating function of a Riordan array, but observe that
+it is equal to
+
+\begin{equation*}
+\frac{\partial}{\partial y} D(x,y)\text{, where }
+D(x,y) = \frac{x^d(1-x)/(1-x^d)}{1-x-x^{d+1}-yx(1-x^d)}.
+\end{equation*}
+
+$D(x,y)$ is the generating function of a Riordan array, for which we can
+obtain accurate coefficients asymptotics. since $[x^ky^n]\partial D(x,y) /
+\partial y = n[x^ky^{n+1}]D(x,y)$, we can also obtain accurate asymptotics
+for the numerator of (\ref{eq:average}).
 
 %---------------------------------------------------------------
 %	REFERENCE LIST
