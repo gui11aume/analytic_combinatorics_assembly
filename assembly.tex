@@ -499,7 +499,7 @@ $d$-gaps. So the generating function of $d$-gaps is
 
 \begin{equation}
 \label{eq:dgaps}
-G_d(x,z) = z(x^{d+1}+x^{d+2}+\ldots) = z\frac{x^{d+1}}{1-x}.
+G_d(x,z) = yz(x^{d+1}+x^{d+2}+\ldots) = yz\frac{x^{d+1}}{1-x}.
 \end{equation}
 
 We define a $d$-assembly as a concatenation of $d$-intervals and $d$-gaps.
@@ -510,8 +510,8 @@ generating function is
 
 \begin{equation*}
 A_d(x,y,z) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-z\frac{x^{d+1}}{1-x}\right)^n =
-\frac{1-x}{1-x-xy(1-x^d) -zx^{d+1}}.
+yz\frac{x^{d+1}}{1-x}\right)^n =
+\frac{1-x}{1-x-y\left(x(1-x^d) +zx^{d+1}\right)}.
 \end{equation*}
 
 $A_d(x,y,z)$ is the generating function of a three-dimensional array
@@ -537,16 +537,14 @@ So the denominator of (\ref{eq:average}) is the general term of the
 bivariate generating function
 
 \begin{equation*}
-A(x,y) = \frac{1-x}{1-x-x^{d+1}-yx(1-x^d) } =
-\frac{(1-x)/(1-x-x{d+1})}{1-yx(1-x^d)/(1-x(1-x^d))}.
+A(x,y) = \frac{1-x}{1-x-xy} = \frac{1}{1-yx/(1-x)}.
 \end{equation*}
 
-The second form of the generating function above highlights that it
-represents a Riordan array with $\phi(x) = (1-x)/(1-x-x{d+1})$ and $\nu(x)
-= x(1-x^d)/(1-x(1-x^d))$.
-
-To compute the numerator of (\ref{eq:average}), we differentiate
-$A_d(x,y,z)$ with respect to $z$ and we observe
+This is equation (\ref{eq:config}). Even though we could exact the
+coefficients from this generating function, we can obtain a simpler
+approximation of (\ref{eq:average}) as we will show now.  To compute the
+numerator of (\ref{eq:average}), we differentiate $A_d(x,y,z)$ with
+respect to $z$ and we observe that
 
 \begin{equation*}
 \partial A_d(x,y,z)/\partial z\Bigr|_{\substack{\\z=1}} =
@@ -558,21 +556,45 @@ So the numerator of (\ref{eq:average}) is the general term of the
 bivariate generating function
 
 \begin{equation*}
-\frac{x^{d+1}(1-x)}{\left(1-x-x^{d+1}-yx(1-x^d)\right)^2}.
+\frac{yx^{d+1}(1-x)}{\left(1-x-xy\right)^2}.
 \end{equation*}
 
 This is not the generating function of a Riordan array, but observe that
-it is equal to
+it is equal to $y\partial D(x,y)/\partial y$, where
 
 \begin{equation*}
-\frac{\partial}{\partial y} D(x,y)\text{, where }
-D(x,y) = \frac{x^d(1-x)/(1-x^d)}{1-x-x^{d+1}-yx(1-x^d)}.
+D(x,y) = \frac{x^d(1-x)}{1-x-xy} =
+\frac{x^d}{1-yx(1-x)}.
 \end{equation*}
 
 $D(x,y)$ is the generating function of a Riordan array, for which we can
-obtain accurate coefficients asymptotics. since $[x^ky^n]\partial D(x,y) /
-\partial y = n[x^ky^{n+1}]D(x,y)$, we can also obtain accurate asymptotics
-for the numerator of (\ref{eq:average}).
+obtain accurate coefficients asymptotics. Since $[x^ky^n]y\partial D(x,y)
+/ \partial y = n[x^ky^n]D(x,y)$, we can also obtain accurate
+asymptotics for the numerator of (\ref{eq:average}).
+
+We also note that the function $\nu$ is the same for $A(x,y)$ and
+$D(x,y)$, so according to proposition \ref{th:PW}, the values of
+$x_\lambda$, $\nu(x_\lambda)$ and $\sigma(x_\lambda)^2$ are the same in
+both cases. This implies that
+
+\begin{equation*}
+\sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m} \sim
+n x_\lambda^d.
+\end{equation*}
+
+$\mu = 1/(1-x)$. Solution gives $x = 1-1/\lambda$, so the average is
+directly $n((\lambda-1)/\lambda$. The final solution is
+
+\begin{equation*}
+n\left(1-n/k\right)^d.
+\end{equation*}
+
+\begin{example}
+Consider a genome of size 25,000 and 5,001 reads. Here $k = $ and $n =
+5000$ (so $\lambda = 5$) and $d = 25$. We obtain $x\lambda \approx
+0.8042383141$ and $n x_\lambda^d \approx 18.89$. The simulations give
+18.85.
+\end{example}
 
 %---------------------------------------------------------------
 %	REFERENCE LIST
