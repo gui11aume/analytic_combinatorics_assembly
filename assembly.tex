@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{cite}
 
 \newtheorem{proposition}{Proposition}
 \newtheorem*{remark}{Remark}
@@ -11,7 +12,7 @@
 
 %---------------------------------------------------------------
 
-\title{The average number of contigs}
+\title{The expected number of contigs}
 \author{
 \textsc{Guillaume Filion} \\ [1ex]
 \normalsize CRG, Barcelona
@@ -37,7 +38,22 @@ this goes beyond the two columns of the text.
 
 \section{Introduction}
 
-Here is the text of the Introduction.
+Lander and Waterman gave the first estimates of the expected number of
+contigs in sequencing projects \cite{pmid3294162}. However, the estimate
+is based on the hypothesis that there are no edge effects, which no longer
+hold when the number of gaps between contigs is close to 0, \textit{i.e.}
+in the ``interesting'' case that the genome can be fully assembled.
+
+\textbf{Related work:} Schbath and collaborators \cite{pmid10890387}
+studied the effect of varying read length on the distribution of contigs.
+Wendl \cite{pmid16901236} developed a theory taking into account ``edge
+effects'' appearing when the read length is not negligible compared to the
+size of the target genome. Stanhope \cite{pmid20686599} studied the
+distribution of the largest contig using models of occupancy.
+
+Analytic combinatorics developed by Flajolet and Sedgewick in
+\cite{AnalComb2009}. Analytic combinatorics in several dimensions by
+Pemantle and Wilson \cite{AnalComb2013}.
 
 \section{Results}
 
@@ -80,7 +96,7 @@ from 1, and one interval of size $k$ and weight 1, so the generating
 function of intervals is
 
 \begin{equation*}
-I(x,y) = \sum_{k=0}^\infty x^ky = \frac{y}{1-x}.
+I(x,y) = \sum_{k=1}^\infty x^ky = \frac{xy}{1-x}.
 \end{equation*}
 
 Also, we define intervals of size no greater than $d$ as $d$-intervals.
@@ -88,7 +104,7 @@ The generating function of $d$-intervals is thus
 
 \begin{equation}
 \label{eq:dintervals}
-I_d(x,y) = (1+x+x^2+\ldots+x^d)y.
+I_d(x,y) = (x+x^2+\ldots+x^d)y.
 \end{equation}
 
 Operations on generating functions allow us to create more complex
@@ -138,8 +154,8 @@ intervals is
 \begin{equation}
 \label{eq:config}
 C(x,y) = I(x,y)^0 + I(x,y)^1 +\ldots
-= \sum_{n=0}^\infty \left( \frac{y}{1-x} \right)^n
-= \frac{1}{1 - y/(1-x)}.
+= \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
+= \frac{1-x}{1 - x - xy}.
 \end{equation}
 
 
@@ -148,24 +164,24 @@ intervals of total size $k$ and total weight $n$, \textit{i.e.} the number
 of ways to arrange $n+1$ reads such that the extreme left ends are
 separated by $k$ nucleotides. It is thus interesting to extract this
 coefficient from the generating function. The intermediate representation
-in formula (\ref{eq:config}) shows that this must also be the coefficient
-of $x^k$ in $1/(1-x)^n$. To compute it, we derive $n-1$ times the equality
-$1/(1-x) = 1 + x + x^2 + \ldots$ to obtain
+in formula (\ref{eq:config}) shows that $[x^ky^n]C(x,y) = [x^k]
+x^n/(1-x)^n$. To compute it, we derive $n-1$ times the equality $1/(1-x) =
+1 + x + x^2 + \ldots$ to obtain
 
 \begin{equation*}
 (n-1)! \left( \frac{1}{1-x} \right)^n =
 \sum_{k=n-1}^\infty k \cdot (k-1) \ldots (k-n+2) x^{k-n+1}.
 \end{equation*}
 
-Rearranging the terms and shifting the indices, we obtain
+Mutiplying through by $x^n/(n-1)!$ and rearranging the terms, we obtain
 
 \begin{gather}
 \notag
-\left( \frac{1}{1-x} \right)^n =
-\sum_{k=0}^\infty \frac{(k+n-1) \ldots (k+1)}{(n-1)!} x^k
-= \sum_{k=0}^\infty {k+n-1 \choose n-1} x^k \text{, or} \\
+\left( \frac{x}{1-x} \right)^n =
+\sum_{k=n}^\infty \frac{(k-1) \ldots (k-n+2)}{(n-1)!} x^k
+= \sum_{k=n}^\infty {k-1 \choose n-1} x^k \text{, \textit{i.e.}} \\
 \label{eq:C}
-[x^ky^n]C(x,y) = {k+n-1 \choose n-1}.
+[x^ky^n]C(x,y) = {k-1 \choose n-1}.
 \end{gather}
 
 Equation (\ref{eq:C}) expresses the number of ways to arrange $n+1$ reads
@@ -178,8 +194,8 @@ concatenations of $d$-intervals to be
 
 \begin{equation}
 \label{eq:dinter}
-C_d(x,y) = \sum_{n=0}^\infty \left(y(1+x+\ldots+x^d)\right)^n =
-\frac{1}{1-y(1+x+\ldots+x^d)}.
+C_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
+\frac{1}{1-y(x+x^2+\ldots+x^d)}.
 \end{equation}
 
 The coefficients of $x^ky^n$ in $C_d(x,y)$ are known as the polynomial
@@ -216,9 +232,9 @@ where $x_\lambda$ is the solution of
 $\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$.
 \end{proposition}
 
-The proof of this theorem was given by Pemantle and Wilson. Here we will
-derive the concrete solution for $C_d$. The first task is to find the
-solution of $\mu(x) = \lambda$.
+The proof of this theorem was given by Pemantle and Wilson
+\cite{PemWil08}. Here we will derive the concrete solution for $C_d$. The
+first task is to find the solution of $\mu(x) = \lambda$.
 
 \begin{proposition}
 \label{th:mu}
@@ -591,24 +607,22 @@ n\left(1-n/k\right)^d.
 
 \begin{example}
 Consider a genome of size 25,000 and 5,001 reads. Here $k = $ and $n =
-5000$ (so $\lambda = 5$) and $d = 25$. We obtain $x\lambda \approx
-0.8042383141$ and $n x_\lambda^d \approx 18.89$. The simulations give
-18.85.
+5000$ (so $\lambda = 5$) and $d = 25$. We obtain $x_\lambda = 0.8$
+and $n x_\lambda^d \approx 18.89$. The simulations give
+$18.85$. In comparison, the Lander-Waterman estimate is $ne^{-nd/k} =
+33.69$.
 \end{example}
+
+Clarke, L. and Carbon, J. (1976) A colony bank containing synthetic ColE1
+hybrid plasmids representative of the entire E. coli genome. Cell, 9,
+91-101
 
 %---------------------------------------------------------------
 %	REFERENCE LIST
 %---------------------------------------------------------------
 
-\begin{thebibliography}{99}
-
-\bibitem[Figueredo and Wolf, 2009]{Figueredo:2009dg}
-Figueredo, A.~J. and Wolf, P. S.~A. (2009).
-\newblock Assortative pairing and life history strategy - a cross-cultural
-  study.
-\newblock {\em Human Nature}, 20:317--330.
- 
-\end{thebibliography}
+\bibliography{pubmed,extra}
+\bibliographystyle{plain}
 
 %----------------------------------------------------------------
 

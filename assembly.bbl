@@ -1,0 +1,42 @@
+\begin{thebibliography}{1}
+
+\bibitem{pmid3294162}
+E~S Lander and M~S Waterman.
+\newblock {Genomic mapping by fingerprinting random clones: a mathematical
+  analysis.}
+\newblock {\em {Genomics}}, 2(3):231--9, April 1988.
+
+\bibitem{AnalComb2009}
+Flajolet P. and Sedgewick R.
+\newblock {\em Analytic Combinatorics}.
+\newblock Cambridge University Press, 2009.
+
+\bibitem{PemWil08}
+Pemantle R. and Wilson M.
+\newblock Twenty combinatorial examples of asymptotics derived from
+  multivariate generating functions.
+\newblock {\em SIAM Rev.}, 50(2):199--272, 2008.
+
+\bibitem{AnalComb2013}
+Pemantle R. and Wilson M.
+\newblock {\em Analytic combinatorics in several variables}.
+\newblock Cambridge University Press, 2013.
+
+\bibitem{pmid10890387}
+S~Schbath, N~Bossard, and S~Tavaré.
+\newblock {The effect of nonhomogeneous clone length distribution on the
+  progress of an STS mapping project.}
+\newblock {\em {J. Comput. Biol.}}, 7(1-2):47--57.
+
+\bibitem{pmid20686599}
+Stephen~A Stanhope.
+\newblock {Occupancy modeling, maximum contig size probabilities and designing
+  metagenomics experiments.}
+\newblock {\em {PLoS ONE}}, 5(7):e11652, July 2010.
+
+\bibitem{pmid16901236}
+Michael~C Wendl.
+\newblock {A general coverage theory for shotgun DNA sequencing.}
+\newblock {\em {J. Comput. Biol.}}, 13(6):1177--96.
+
+\end{thebibliography}
