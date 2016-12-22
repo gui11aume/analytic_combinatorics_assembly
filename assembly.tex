@@ -38,11 +38,50 @@ this goes beyond the two columns of the text.
 
 \section{Introduction}
 
-Lander and Waterman gave the first estimates of the expected number of
-contigs in sequencing projects \cite{pmid3294162}. However, the estimate
-is based on the hypothesis that there are no edge effects, which no longer
-hold when the number of gaps between contigs is close to 0, \textit{i.e.}
-in the ``interesting'' case that the genome can be fully assembled.
+How many reads should I sequence? How long should they be? With what
+minimum overlap? These questions were first addressed in this context by
+Lander and Waterman in a landmark study that defined the ``classic
+theory'' of assembly \cite{pmid3294162}, giving estimates of the number of
+contigs. At the time, genome assembly was a long term endeavour and it
+made sense to gather information about the progress of the project. The
+Lander-Waterman estimators are thus accurate for intermediate stages where
+the number of contigs is high, but their quality drops when the assembly
+nears completion.
+
+Nowadays, genome assembly is several orders of magnitude faster. The
+questions remain the same, but in many cases the assembly does not have a
+proper intermediate stage because the sequencing capacity of a single run
+is potentially sufficient to assemble the target genome. It is thus
+desirable to minimize the amount of resources that a necessary for the
+task, and estimators that are accurate when assembly is likely to be
+possible are generally more useful. Likewise, the parameters of the
+algorithm must minimize the risk of misassembly while giving the highest
+chance that assembly will be possible. This can be done efficiently only
+if the statistical properties of the assembly are also understood when it
+is likely to be possible.
+
+All the results shown here are based on original proofs using analytic
+combinatorics \cite{AnalComb2009}. The general strategy of analytic
+combinatorics is to (i) describe simple combinatorial objects by a
+generating function (ii) use transfer theorems to find the generating
+function of complex structures based on these objects and (iii) analyze
+the singularities of the resulting function to derive asymptotic
+estimates. This method is sometimes considered counter-intuitive because
+generating functions do not directly appeal to intuition
+\cite{AnalComb1996}, but it allows to derive precise estimates with simple
+proofs.
+
+Since I expect most readers to not be familiar with analytic
+combinatorics, I have tried to introduce the ideas progressively, hoping
+that the logic of each step will be apparent. This also means that the
+information is somewhat spread throughout the manuscript and does not
+clearly separate the biological and the mathematical concepts. I have also
+tried to use standard notations from analytic combinatorics for the proofs
+of the claims, and standard notations from genomic for the specific
+applications, which may be slightly confusing.  The key findings are
+applications of recent results of Pemantle and Wilson on multivariate
+asymptotics. The reader is referred to the original literature for the
+proofs of those theorems \cite{PemWil08,AnalComb2013}.
 
 \textbf{Related work:} Schbath and collaborators \cite{pmid10890387}
 studied the effect of varying read length on the distribution of contigs.
@@ -51,9 +90,6 @@ effects'' appearing when the read length is not negligible compared to the
 size of the target genome. Stanhope \cite{pmid20686599} studied the
 distribution of the largest contig using models of occupancy.
 
-Analytic combinatorics developed by Flajolet and Sedgewick in
-\cite{AnalComb2009}. Analytic combinatorics in several dimensions by
-Pemantle and Wilson \cite{AnalComb2013}.
 
 \section{Results}
 
@@ -74,8 +110,8 @@ bivariate generating functions. This may look like an unintuitive approach
 at first, but it will allow us to derive simpler proofs of the main
 results.
 
-If $(q_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate series, the generating
-function of the series is by definition
+If $(q_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate array, the generating
+function of the array is by definition
 
 \begin{equation}
 Q(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty q_{k,n}x^ky^n.
@@ -83,73 +119,71 @@ Q(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty q_{k,n}x^ky^n.
 
 When $q_{k,n}$ counts a number of objects, we will say that $Q(x,y)$ is
 the generating function of those objects. We will refer to $q_{k,n}$ as
-the `coefficient of $x^ky^n$ in $Q(x,y)$', and also denote it as $[x^ky^n]
-Q(x,y)$. The function $F$ and the bivariate sequence $(q_{k,n})_{k \geq 0,
-n \geq 0}$ carry the same information, but some combinatorial operations
-are easier to perform with Q, as we will illustrate shortly.
+the ``coefficient of $x^ky^n$ in $Q(x,y)$'', and also denote it as
+$[x^ky^n] Q(x,y)$. The function $F$ and the bivariate sequence
+$(q_{k,n})_{k \geq 0, n \geq 0}$ carry the same information, but some
+combinatorial operations are easier to perform with Q, as we will
+illustrate shortly.
 
 We define an `interval' as the distance between the left ends of two
-consecutive reads. Every interval has a size, which is a non-negative
-integer, and a weight equal to 1. Introducing a constant weight is way to
-count reads, as will appear below. There is no interval of size different
-from 1, and one interval of size $k$ and weight 1, so the generating
-function of intervals is
+consecutive reads. Every interval has a size, which is a strictly positive
+integer, and a weight equal to 1 and that will later be used to count
+intervals.  There is exactly one interval of size $k$ and weight 1, and
+zero in all other cases, so the generating function of intervals is
 
 \begin{equation*}
-I(x,y) = \sum_{k=1}^\infty x^ky = \frac{xy}{1-x}.
+I(x,y) = xy + x^2y + x^3y + \ldots
+= xy\sum_{k=0}^\infty x^k = \frac{xy}{1-x}.
 \end{equation*}
 
-Also, we define intervals of size no greater than $d$ as $d$-intervals.
-The generating function of $d$-intervals is thus
-
-\begin{equation}
-\label{eq:dintervals}
-I_d(x,y) = (x+x^2+\ldots+x^d)y.
-\end{equation}
-
 Operations on generating functions allow us to create more complex
-combinatorial objects. We have already used additions, which corresponds
-to disjoint unions. For instance, generating function of $d$-intervals is
-another way of saying that a $d$-interval is either an interval of size 0,
-or an interval of size 1, or an interval of size 2, and so on until an
-interval of size $d$. More generally, if $A(x,y)$ and $B(x,y)$ are the
-generating functions of objects in disjoint sets $\mathcal{A}$ and
-$\mathcal{B}$, respectively, then $A(x,y)+B(x,y)$ is the generating
-function of objects in $\mathcal{A} \cup \mathcal{B}$.
+combinatorial objects through transfer theorems.  We have already used
+additions, which corresponds to disjoint unions. For instance, the
+generating function above says that an interval is either an interval of
+size 1 and weight 1, or an interval of size 2 and weight 1 \textit{etc}.
+More generally, if $A(x,y)$ and $B(x,y)$ are the generating functions of
+objects in disjoint sets $\mathcal{A}$ and $\mathcal{B}$, then
+$A(x,y)+B(x,y)$ is the generating function of objects in $\mathcal{A} \cup
+\mathcal{B}$.
 
 Multiplications correspond to Cartesian products. More specifically, if
 $A(x,y)$ and $B(x,y)$ are the generating functions of objects in sets
-$\mathcal{A}$ and $\mathcal{B}$ (disjoint or not), and the attributes of a
-pair are the sums of individual attributes, then $A(x,y)B(x,y)$ is the
-generating function of objects in $\mathcal{A} \times \mathcal{B}$. To
-prove this, observe that the pairs of size $k$ and weight $n$ are made of
-all pairwise combinations of objects whose sizes sum to $k$ and weights
-sum to $n$. The number of those pairs is $\sum_{l=0}^k \sum_{m=0}^n
-a_{l,m}b_{k-l,n-m}$ so the generating function of $\mathcal{A} \times
-\mathcal{B}$ is
+$\mathcal{A}$ and $\mathcal{B}$ (disjoint or not), and the size and weight
+of a pair are the sums of individual sizes and weights, then
+$A(x,y)B(x,y)$ is the generating function of objects in $\mathcal{A}
+\times \mathcal{B}$. To prove this, observe that the pairs of size $k$ and
+weight $n$ are made of all pairwise combinations of objects whose sizes
+sum to $k$ and weights sum to $n$. The number of such pairs is
+$\sum_{l=0}^k \sum_{m=0}^n a_{l,m}b_{k-l,n-m}$ so the generating function
+of objects in $\mathcal{A} \times \mathcal{B}$ is
 
 
-\begin{eqnarray*}
-&\;& \sum_{k=0}^\infty \sum_{n=0}^\infty \left( \sum_{l=0}^k \sum_{m=0}^n
-  a_{m,l}b_{k-l,n-m}\right) x^k y^l  \\ 
-&=& \sum_{l=0}^\infty \sum_{m=0}^\infty \sum_{k=l}^\infty \sum_{n=m}^\infty
-  a_{m,l}b_{k-l,n-m}x^{m + k-m} y^{l + n-l} \\
-&=& \sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
+\begin{gather*}
+\sum_{k=0}^\infty \sum_{n=0}^\infty \left( \sum_{l=0}^k \sum_{m=0}^n
+  a_{m,l}b_{k-l,n-m}\right) x^k y^l = \\ 
+\sum_{l=0}^\infty \sum_{m=0}^\infty \sum_{k=l}^\infty \sum_{n=m}^\infty
+  a_{m,l}b_{k-l,n-m}x^{m + k-m} y^{l + n-l} = \\
+\sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
   \sum_{k=l}^\infty \sum_{n=m}^\infty
-  b_{k-l,n-m}x^{k-m} y^{n-l} \\
-&=& B(x,y) \sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
+  b_{k-l,n-m}x^{k-m} y^{n-l} = \\
+B(x,y) \sum_{l=0}^\infty \sum_{m=0}^\infty a_{m,l} x^m y^l
  = A(x,y)B(x,y).
-\end{eqnarray*}
+\end{gather*}
 
-It follows that if $A(x,y)$ is the generating function of objects in the
-set $\mathcal{A}$, then $A(x,y)^n$ is the generating function of objects
-in $\mathcal{A}^n$ (representing $n$-tuples of objects of $\mathcal{A}$).
-For instance, the concatenation of two intervals gives a new interval of
-weight 2, and whose size is the sum of individual sizes. So the generating
-function of concatenated intervals is $I(x,y)^2$. More generally,
-$I(x,y)^n$ is the generating function of the concatenation of $n$
-intervals. It follows that the generating function of all concatenations of
-intervals is
+For instance, we can take $\mathcal{A}$ and $\mathcal{B}$ as the set of
+intervals. If we define the size of a pair of intervals as the sum of
+their sizes (by placing the ends next to each other) and its weight as 2,
+then size and weight are additive. In these conditions, the generating
+function of pairs of intervals is $I(x,y)^2$.
+
+Applying the formula above multiple times, we see that if $A(x,y)$ is the
+generating function of objects in $\mathcal{A}$, then $A(x,y)^n$ is the
+generating function of objects in $\mathcal{A}^n$ (representing $n$-tuples
+of objects in $\mathcal{A}$). Since joining $n$ consecutive intervals
+gives a new interval whose size is the sum of individual sizes and whose
+weight is the number of (atomic) intervals, $I(x,y)^n$ is the generating
+function of the concatenation of $n$ intervals. It follows that the
+generating function of all concatenations of intervals is
 
 \begin{equation}
 \label{eq:config}
@@ -192,6 +226,16 @@ are that gaps will be present and that the assembly will be impossible.
 Following the same rationale as above, we find the generating function of
 concatenations of $d$-intervals to be
 
+In addition, we define intervals of size no greater than $d$ as
+``$d$-intervals''. Since the case $d=1$ is trivial, we will assume $d > 1$
+throughout the manuscript. Following the same rationale as bove, we find
+the generating function of $d$-intervals to be
+
+\begin{equation}
+\label{eq:dintervals}
+I_d(x,y) = (x+x^2+\ldots+x^d)y.
+\end{equation}
+
 \begin{equation}
 \label{eq:dinter}
 C_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
@@ -204,9 +248,9 @@ expression, so we will need to use an asymptotic approximation.
 
 \subsection{Asymptotic approximations}
 
-Equations (\ref{eq:config}) and (\ref{eq:dinter}) describe so called
-Riordan arrays, \textit{i.e.} bivariate sequences $(a_{k,n})_{k \geq 0,
-n \geq 0}$ such that
+Formulas (\ref{eq:config}) and (\ref{eq:dinter}) are the generating
+functions of so called Riordan arrays, \textit{i.e.} bivariate sequences
+$(a_{k,n})_{k,n}$ such that
 
 \begin{equation*}
 \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n} x^k y^n =
@@ -218,8 +262,8 @@ easy, but for Riordan arrays, such results are available.
 
 \begin{proposition}
 \label{th:PW}
-If $F(x,y)$ is a Riordan array, $k$ and $n$ tend to infinity and $\lim k/n
-= \lambda$, then
+Assume that $F(x,y)$ is the generating function of a Riordan array, that
+$k$ and $n$ tend to infinity and that $\lim k/n = \lambda$, then
 
 \begin{equation}
 \label{eq:Cd}
@@ -233,13 +277,14 @@ $\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$.
 \end{proposition}
 
 The proof of this theorem was given by Pemantle and Wilson
-\cite{PemWil08}. Here we will derive the concrete solution for $C_d$. The
-first task is to find the solution of $\mu(x) = \lambda$.
+\cite{PemWil08}. Here we will derive the concrete solution for $C_d$,
+where $\phi(x) = 1$ and $\nu(x) = x + x^2 + \ldots +x^d$. The first task
+is to find the solution of $\mu(x) = \lambda$.
 
 \begin{proposition}
 \label{th:mu}
-The equation $\mu_d(x) = x\nu'(x)/\nu(x) = \lambda$ has a single solution
-$x_\lambda$ for $0 \leq \lambda \leq d$.
+The equation $\mu(x) = x\nu'(x)/\nu(x) = \lambda$ has a single solution
+$x_\lambda$ for $1 \leq \lambda \leq d$.
 \end{proposition}
 
 \begin{proof}
@@ -247,16 +292,16 @@ We first demonstrate that for $x \geq 0$, $\mu$ is strictly increasing.
 
 \begin{equation}
 \label{eq:mu}
-\mu_d(x) = x\frac{\nu'(x)}{\nu(x)} =
-x\frac{1+2x+3x^2+\ldots+dx^{d-1}}{1+x+\ldots+x^d} =
-(d+1)\frac{x^{d+1}}{x^{d+1}-1} - \frac{x}{x-1}.
+\mu(x) = x\frac{\nu'(x)}{\nu(x)} =
+\frac{x+2x^2+3x^3+\ldots+dx^d}{x+x^2+\ldots+x^d} =
+d+\frac{1}{1-x} - \frac{d}{1-x^d}.
 \end{equation} 
 
 Differentiating the last expression we obtain
 
 \begin{equation}
 \label{eq:muprime}
-\mu_d'(x) = \frac{1}{(1-x)^2} -\frac{(d+1)^2x^d}{(1-x^{d+1})^2}.
+\mu'(x) = \frac{1}{(1-x)^2} -\frac{d^2x^{d-1}}{(1-x^d)^2}.
 \end{equation}
 
 The function $f(\alpha) = x^{\alpha} = e^{\alpha \log(x)}$ is strictly
@@ -264,19 +309,19 @@ convex for every $x > 0$ and $x \neq 1$. Applying the definition of
 convexity, we obtain the inequality
 
 \begin{eqnarray*}
-\frac{f(0)+\ldots+f(d)}{d+1} &>&
-f\left(\frac{0+1+2+\ldots+d}{d+1}\right) \\
-\frac{1+x+\ldots+x^d}{d+1} &>& f(d/2) = x^{d/2} \\
-\frac{1-x^{d+1}}{1-x} &>& (d+1)x^{d/2} \\
-\frac{1}{(1-x)^2} &>& \frac{(d+1)^2x^d}{(1-x^{d+1})^2}.
+\frac{f(0)+\ldots+f(d-1)}{d} &>&
+f\left(\frac{0+1+2+\ldots+d-1}{d}\right) \\
+\frac{1+x+\ldots+x^{d-1}}{d} &>& f\left(\frac{d-1}{2}\right)
+= x^{(d-1)/2} \\
+\frac{1-x^d}{1-x} &>& dx^{(d-1)/2} \\
+\frac{1}{(1-x)^2} &>& \frac{d^2x^{d-1}}{(1-x^d)^2}.
 \end{eqnarray*}
 
 Combined with equation (\ref{eq:muprime}), the last inequality shows that
-$\mu_d'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu_d'(0) = 1$ and
-$\mu_d'(1) = d$, $\mu_d$ is strictly increasing. Observing that $\mu_d(0)
-= 0$ and $\lim_{x\rightarrow\infty} \mu_d(x) = d$, the equation $\mu_d(x)
-= \lambda$ has a unique solution $x_\lambda$, if $0 \leq \lambda \leq
-d$.
+$\mu'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu'(0) = 1$ and $\mu'(1)
+= (d+1)(d-1)/12$, $\mu$ is strictly increasing. Observing that $\mu(0) =
+1$ and $\lim_{x\rightarrow\infty} \mu(x) = d$, the equation $\mu(x) =
+\lambda$ has a unique solution provided $1 \leq \lambda \leq d$.
 \end{proof}
 
 \begin{remark}
@@ -612,10 +657,6 @@ and $n x_\lambda^d \approx 18.89$. The simulations give
 $18.85$. In comparison, the Lander-Waterman estimate is $ne^{-nd/k} =
 33.69$.
 \end{example}
-
-Clarke, L. and Carbon, J. (1976) A colony bank containing synthetic ColE1
-hybrid plasmids representative of the entire E. coli genome. Cell, 9,
-91-101
 
 %---------------------------------------------------------------
 %	REFERENCE LIST
