@@ -325,136 +325,25 @@ $\mu'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu'(0) = 1$ and $\mu'(1)
 \end{proof}
 
 \begin{remark}
-There is no solution to this equation for $\lambda > d$ because $a_{k,n} =
-0$ for $k > nd$, or equivalently $\lambda > d$. Indeed, there is no
-concatenation of $n$ $d$-intervals with size greater than $nd$.
+The cases $\lambda > d$ and $\lambda < 1$ correspond to limits where $k >
+nd$ and $k < n$, respectively. Since the size of a collection of $n$
+$d$-intervals is between $n$ and $nd$, we have the trivial asymptotic
+behavior $a_{k,n} = 0$ in both cases.
 \end{remark}
 
 
 The value of $x_\lambda$ can be found numerically. Once it is available,
-computing $\nu(x_\lambda)$ and $\sigma(x_\lambda^2)$ is trivial, but
-numeric precision can become an issue, especially if $d$ and $n$ are
-large. To avoid this, we use the equivalent forms
+we can compute $\nu(x_\lambda)$ and $\sigma(x_\lambda^2)$ from their
+definitions, but numeric precision can become an issue if $n$ or $d$ is
+very large. To avoid this, we use the equivalent forms
+
 
 \begin{gather}
-\nu(x_\lambda) = \frac{d+1}{1 +
-  (1-x_\lambda)(d-\lambda)}, \label{eq:nu} \\
-\sigma(x_\lambda)^2 = (\lambda+1)(d-\lambda) -
-  \frac{d-2\lambda}{1-x_\lambda}. \label{eq:sigma}
-\end{gather}
-
-
-\begin{example}
-
-Suppose that we want to assemble a genome of 25,000 nucleotides and that
-we have 10,001 reads taken uniformly at random from this genome. What is
-the probability that all the reads are within 25 nucleotides of their
-immediate neighbors?
-
-Here $k=25000$, $n=10000$, $d=25$ and $\lambda = 2.5$. We solve equation
-equation (\ref{eq:mu}) by the Newton-Raphson method and obtain $x_\lambda
-\approx 0.714626$. Using equations (\ref{eq:nu}) and (\ref{eq:sigma}) we
-obtain $\nu(x_\lambda) \approx 3.503616$ and $\sigma(x_\lambda)^2 \approx
-8.666415$. We compute equation (\ref{eq:Cd}) in logarithmic space and
-obtain
-
-\begin{eqnarray*}
-\log(a_{k,n}) &\approx& 10000 \log(3.503616) - 25000 \log(0.714626) \\
-&-& \log(10000)/2 - \log(8.666415)/2 - \log(2\pi)/2
-\approx 20931.25.
-\end{eqnarray*}
-
-This is to be compared to the total number of configurations in
-logarithmic space, which according to equation (\ref{eq:C}) is
-
-\begin{equation*}
-\log { 34999 \choose 9999 } \approx 20932.83.
-\end{equation*}
-
-The estimated probability that a configuration corresponds to a coverage
-by $25$-intervals is
-thus
-
-\begin{equation*}
-\exp(20931.25-20932.83) \approx 0.207.
-\end{equation*}
-
-Random simulations with 10,000 samples gave an estimate for this
-probability equal to $0.206$, strikingly close to the numerical
-approximation.
-
-\end{example}
-
-In practice, the sampling scheme is not the same as described above.
-$n+1$ reads are drawn from the genome at random. If the distance between
-the most extreme left ends is $k$, each of the remaining $n-1$ reads can
-be at $k+1$ positions, for a total of $(k+1)^{n-1}$ possibilities. To see
-why this differs from the number given in (\ref{eq:C}), let us consider an
-interval of size $a > 0$. There must be a read mapping to some location
-$x$, and another one mapping to the location $x+a$. If the read mapping to
-$x$ is drawn first or second, we obtain two different configurations from
-the $(k+1)^{n-1}$ possibilities. Now if the size of the interval is 0, two
-reads map to some location $x$, but whichever is drawn first does not
-affect the configuration. So the discrepancy comes from intervals of
-length 0.
-
-Based on this observation, it would be more convenient to consider only
-the reads that are distinct, \textit{i.e.} only the intervals of positive
-size. It is easy to see that
-
-\begin{eqnarray*}
-I_*(x,y) &=& \sum_{k=1}^\infty x^ky = \frac{xy}{1-x} \\
-C_*(x,y) &=& \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
-= \frac{1}{1-xy/(1-x)}.
-\end{eqnarray*}
-
-Using the same method as for deriving equation (\ref{eq:C}), we see that 
-
-\begin{equation}
-\label{eq:Cstar}
-[x^ky^n]C_*(x,y) = [x^k] \left( \frac{x}{1-x} \right)^n
-= {k-1 \choose n-1}.
-\end{equation}
-
-Similarly, we obtain 
-
-\begin{eqnarray*}
-I_{d*}(x,y) &=& (x + x^2 + \ldots + x^d)y \\
-C_{d*}(x,y) &=& \sum_{n=0}^\infty \left((x+ \ldots + x^d)y
-\right)^n
-= \frac{1}{1-y(x+x^2+\ldots+x^d)}.
-\end{eqnarray*}
-
-Since $C_{d*}(x,y)$ is a Riordan array, we can still use proposition
-\ref{th:PW}. We only need to find the solutions of the equations when
-$\nu(x) = 1+ x+ \ldots x^d$ is replaced by $\nu_*(x) = x+x^2+\ldots +x^d$.
-
-\begin{proposition}
-The equation $\mu_{d*}(x) = x\nu_*'(x)/\nu_*(x) = \lambda$ has a unique
-solution for $1 \leq \lambda \leq d$.
-\end{proposition}
-
-\begin{proof}
-\label{th:mustar}
-\begin{equation}
-\label{eq:mustar}
-\mu_{d*}(x) = 1 + d\frac{x^d}{x^d-1} - \frac{x}{x-1}.
-\end{equation}
-
-By comparison with equation (\ref{eq:mu}), we see that the solution of
-$\mu_{d*}(x) = \lambda$ is the same as the solution of $\mu_{d-1}(x) =
-\lambda - 1$. By proposition \ref{th:mu}, this solution exists and is
-unique for $0 \leq \lambda -1 \leq d-1$, which completes the proof.
-\end{proof}
-
-Similarly as above, we compute $\nu_*(x_\lambda)$ and
-$\sigma(x_\lambda)^2$ with the numerically stable expressions
-
-\begin{gather}
-\label{eq:nustar}
-\nu_*(x_\lambda) = \frac{dx_\lambda}{1+(d-\lambda)(1-x_\lambda)}, \\
-\sigma_*(x_\lambda)^2 = \lambda(d-\lambda) -
-  \frac{d-2\lambda+1}{1-x_\lambda}. \label{eq:sigmastar}
+\label{eq:nu} %% Equation for nu.
+\nu(x_\lambda) = \frac{dx_\lambda}{1+(d-\lambda)(1-x_\lambda)}, \\
+\label{eq:sigma} %% Equation for sigma2.
+\sigma(x_\lambda)^2 = \lambda(d-\lambda) -
+  \frac{d-2\lambda+1}{1-x_\lambda}.
 \end{gather}
 
 
