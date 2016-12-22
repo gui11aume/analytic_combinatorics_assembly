@@ -60,6 +60,11 @@ chance that assembly will be possible. This can be done efficiently only
 if the statistical properties of the assembly are also understood when it
 is likely to be possible.
 
+These are asymptotic estimates, which means that unlike the classical
+estimators, they get more accurate when the number of reads increases. In
+practice, they are accurate to within 1\% even for a few hundred reads
+taken from a genome of a few hunder nucleotides.
+
 All the results shown here are based on original proofs using analytic
 combinatorics \cite{AnalComb2009}. The general strategy of analytic
 combinatorics is to (i) describe simple combinatorial objects by a
@@ -113,9 +118,9 @@ results.
 If $(q_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate array, the generating
 function of the array is by definition
 
-\begin{equation}
+\begin{equation*}
 Q(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty q_{k,n}x^ky^n.
-\end{equation}
+\end{equation*}
 
 When $q_{k,n}$ counts a number of objects, we will say that $Q(x,y)$ is
 the generating function of those objects. We will refer to $q_{k,n}$ as
@@ -157,7 +162,6 @@ sum to $k$ and weights sum to $n$. The number of such pairs is
 $\sum_{l=0}^k \sum_{m=0}^n a_{l,m}b_{k-l,n-m}$ so the generating function
 of objects in $\mathcal{A} \times \mathcal{B}$ is
 
-
 \begin{gather*}
 \sum_{k=0}^\infty \sum_{n=0}^\infty \left( \sum_{l=0}^k \sum_{m=0}^n
   a_{m,l}b_{k-l,n-m}\right) x^k y^l = \\ 
@@ -183,74 +187,65 @@ of objects in $\mathcal{A}$). Since joining $n$ consecutive intervals
 gives a new interval whose size is the sum of individual sizes and whose
 weight is the number of (atomic) intervals, $I(x,y)^n$ is the generating
 function of the concatenation of $n$ intervals. It follows that the
-generating function of all concatenations of intervals is
+generating function of all joined intervals is
 
 \begin{equation}
 \label{eq:config}
-C(x,y) = I(x,y)^0 + I(x,y)^1 +\ldots
+J(x,y) = I(x,y)^0 + I(x,y)^1 +\ldots
 = \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
 = \frac{1-x}{1 - x - xy}.
 \end{equation}
 
-
-The coefficient of $x^ky^n$ in $C(x,y)$ is the number of concatenations of
-intervals of total size $k$ and total weight $n$, \textit{i.e.} the number
-of ways to arrange $n+1$ reads such that the extreme left ends are
-separated by $k$ nucleotides. It is thus interesting to extract this
-coefficient from the generating function. The intermediate representation
-in formula (\ref{eq:config}) shows that $[x^ky^n]C(x,y) = [x^k]
-x^n/(1-x)^n$. To compute it, we derive $n-1$ times the equality $1/(1-x) =
-1 + x + x^2 + \ldots$ to obtain
+By construction, the value of $[x^ky^n]J(x,y)$ is the number of joined
+intervals of total size $k$ and total weight $n$. It is thus interesting to
+extract this coefficient from the generating function.  The intermediate
+representation in formula (\ref{eq:config}) shows that $[x^ky^n]J(x,y) =
+[x^k] x^n/(1-x)^n$. To compute it, we derive $n-1$ times the equality
+$1/(1-x) = 1 + x + x^2 + \ldots$ to obtain
 
 \begin{equation*}
 (n-1)! \left( \frac{1}{1-x} \right)^n =
 \sum_{k=n-1}^\infty k \cdot (k-1) \ldots (k-n+2) x^{k-n+1}.
 \end{equation*}
 
-Mutiplying through by $x^n/(n-1)!$ and rearranging the terms, we obtain
+Mutiplying through by $x^n/(n-1)!$ and shifting the index by 1, we obtain
 
 \begin{gather}
 \notag
 \left( \frac{x}{1-x} \right)^n =
 \sum_{k=n}^\infty \frac{(k-1) \ldots (k-n+2)}{(n-1)!} x^k
 = \sum_{k=n}^\infty {k-1 \choose n-1} x^k \text{, \textit{i.e.}} \\
-\label{eq:C}
-[x^ky^n]C(x,y) = {k-1 \choose n-1}.
+\label{eq:J}
+[x^ky^n]J(x,y) = {k-1 \choose n-1}.
 \end{gather}
 
-Equation (\ref{eq:C}) expresses the number of ways to arrange $n+1$ reads
-such that the extreme left ends are separated by $k$ nucleotides. The main
-question of the assembly problem is to determine how many of those consist
-exclusively of $d$-intervals. If this represents a small fraction, chances
-are that gaps will be present and that the assembly will be impossible.
-Following the same rationale as above, we find the generating function of
-concatenations of $d$-intervals to be
-
-In addition, we define intervals of size no greater than $d$ as
+Equation (\ref{eq:J}) says that there are ${k-1 \choose n-1}$ ways to
+arrange $n$ intervals so as to cover a total size $k$. However, it may not
+be possible to achieve complete assembly in all cases. Only if all the
+intervals are small can we merge the reads from one end to the other.  We
+therefore introduce intervals of size no greater than $d$ and call them
 ``$d$-intervals''. Since the case $d=1$ is trivial, we will assume $d > 1$
-throughout the manuscript. Following the same rationale as bove, we find
-the generating function of $d$-intervals to be
+throughout the manuscript.  Following the same rationale as bove, we find
+that the generating function of $d$-intervals is $I_d(x,y) =
+(x+x^2+\ldots+x^d)y$, and that the generating function of joined
+$d$-intervals is
 
 \begin{equation}
-\label{eq:dintervals}
-I_d(x,y) = (x+x^2+\ldots+x^d)y.
-\end{equation}
-
-\begin{equation}
-\label{eq:dinter}
-C_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
+\label{eq:Jd}
+J_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
 \frac{1}{1-y(x+x^2+\ldots+x^d)}.
 \end{equation}
 
-The coefficients of $x^ky^n$ in $C_d(x,y)$ are known as the polynomial
-coefficients. Unforunately, they cannot be computed via a simple
-expression, so we will need to use an asymptotic approximation.
+By construction, the value of $[x^ky^n]J_d(x,y)$ is the number of joined
+$d$-intervals of total size $k$ and total weight $n$. These numbers are
+known as the polynomial coefficients, but unfortunately they cannot be
+expressed in closed form, so we will need to use an asymptotic
+approximation.
 
-\subsection{Asymptotic approximations}
+\subsection{Asymptotics of Riordan arryas}
 
-Formulas (\ref{eq:config}) and (\ref{eq:dinter}) are the generating
-functions of so called Riordan arrays, \textit{i.e.} bivariate sequences
-$(a_{k,n})_{k,n}$ such that
+Expression (\ref{eq:Jd}) is the generating function of a so called Riordan
+array, \textit{i.e.} a bivariate array $(a_{k,n})_{k,n}$ such that
 
 \begin{equation*}
 \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n} x^k y^n =
@@ -262,11 +257,11 @@ easy, but for Riordan arrays, such results are available.
 
 \begin{proposition}
 \label{th:PW}
-Assume that $F(x,y)$ is the generating function of a Riordan array, that
-$k$ and $n$ tend to infinity and that $\lim k/n = \lambda$, then
+Assume that $F(x,y)$ is the generating function of a Riordan array, and
+that $k$ and $n$ tend to infinity with $\lim k/n = \lambda$, then
 
 \begin{equation}
-\label{eq:Cd}
+\label{eq:assRA}
 [x^ky^n]F(x,y) \sim \frac{\nu(x_\lambda)^n\phi(x_\lambda)}
   {x_\lambda^k\sqrt{2\pi n \sigma(x_\lambda)^2}},
 \end{equation}
@@ -276,10 +271,12 @@ where $x_\lambda$ is the solution of
 $\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$.
 \end{proposition}
 
-The proof of this theorem was given by Pemantle and Wilson
-\cite{PemWil08}. Here we will derive the concrete solution for $C_d$,
-where $\phi(x) = 1$ and $\nu(x) = x + x^2 + \ldots +x^d$. The first task
-is to find the solution of $\mu(x) = \lambda$.
+In essence, proposition \ref{th:PW} says that if $k \sim \lambda n$ and we
+can find the solution of the equation $\mu(x) = \lambda$, then we get the
+symptotic growth of $a_{k,n}$.  The proof of this theorem was given by
+Pemantle and Wilson \cite{PemWil08,AnalComb2013}, here we will only derive
+the concrete solution for $J_d$, where $\phi(x) = 1$ and $\nu(x) = x + x^2
++ \ldots +x^d$.
 
 \begin{proposition}
 \label{th:mu}
@@ -332,10 +329,11 @@ behavior $a_{k,n} = 0$ in both cases.
 \end{remark}
 
 
-The value of $x_\lambda$ can be found numerically. Once it is available,
-we can compute $\nu(x_\lambda)$ and $\sigma(x_\lambda^2)$ from their
-definitions, but numeric precision can become an issue if $n$ or $d$ is
-very large. To avoid this, we use the equivalent forms
+The value of $x_\lambda$ can be found numerically using expression
+(\ref{eq:mu}).  Once it is available, we can compute $\nu(x_\lambda)$ and
+$\sigma(x_\lambda^2)$ from their definitions, but numeric precision can
+become an issue if $n$ or $d$ is very large. To avoid this, we can use the
+equivalent forms
 
 
 \begin{gather}
@@ -354,12 +352,11 @@ and 10,001 reads. We assume that the reads are drawn uniformly at random
 without replacement.
 
 As above, $k=25000$, $n=10000$, $d=25$ and $\lambda = 2.5$. We solve
-equation equation (\ref{eq:mustar}) by applying the Newton-Raphson method
-to equation (\ref{eq:mu}) with $\lambda-1$ and $d-1$ and obtain
-$x_\lambda \approx 0.60001177$. Using equations (\ref{eq:nustar}) and
-(\ref{eq:sigmastar}) we obtain $\nu_*(x_\lambda) \approx 1.50006684$ and
+equation equation (\ref{eq:mu}) with the Newton-Raphson method and obtain
+$x_\lambda \approx 0.60001177$. Using equations (\ref{eq:nu}) and
+(\ref{eq:sigma}) we obtain $\nu(x_\lambda) \approx 1.50006684$ and
 $\sigma(x_\lambda)^2 \approx 3.747554$. We compute equation
-(\ref{eq:Cd}) in logarithmic space and obtain
+(\ref{eq:assRA}) in logarithmic space and obtain
 
 \begin{eqnarray*}
 \log(a_{k,n}) &\approx& 10000\log(1.50006684) - 25000\log(0.60001177) \\
@@ -367,8 +364,8 @@ $\sigma(x_\lambda)^2 \approx 3.747554$. We compute equation
 \approx 16819.0783
 \end{eqnarray*}
 
-This is to be compared to the total number of configurations in
-logarithmic space, which according to equation (\ref{eq:Cstar}) is
+We also have to compute the total number of configurations in
+logarithmic space, which according to equation (\ref{eq:J}) is
 
 \begin{equation*}
 \log { 24999 \choose 9999 } \approx 16819.1067
