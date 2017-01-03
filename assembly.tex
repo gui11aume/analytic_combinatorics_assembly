@@ -6,9 +6,10 @@
 \usepackage{amsthm}
 \usepackage{cite}
 
+\newtheorem{example}{Example}
+\newtheorem{lemma}{Lemma}
 \newtheorem{proposition}{Proposition}
 \newtheorem*{remark}{Remark}
-\newtheorem{example}{Example}
 
 %---------------------------------------------------------------
 
@@ -140,10 +141,11 @@ size $k$ and weight 1 ($k > 0$), and zero interval in all other cases, so
 $a_{k,n} = 1$ if $n = 1$ and $k > 0$, and $a_{k,n} = 0$ otherwise. The
 generating function of intervals is thus
 
-\begin{equation*}
+\begin{equation}
+\label{eq:F}
 F(x,y) = xy + x^2y + x^3y + \ldots
 = xy(1+x+x^2+\ldots) = \frac{xy}{1-x}.
-\end{equation*}
+\end{equation}
 
 In this expression, we say that $x$ ``marks'' the size and that $y$
 ``marks'' the weight.
@@ -199,47 +201,48 @@ generating function of all joined intervals is
 
 \begin{equation}
 \begin{split}
-\label{eq:J}
-J(x,y) &= \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
+\label{eq:C}
+C(x,y) &= \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
 = \frac{1}{1 - xy/(1-x)} \\
 &= \frac{1-x}{1-x(1+y)} = (1-x) \sum_{k=0}^\infty \left(x(1+y) \right)^k.
 \end{split}
 \end{equation}
 
 Using Newton's binomial formula, we can easily obtain an explicit
-expression for the coefficients of $J(x,y)$, namely
+expression for the coefficients of $C(x,y)$, namely
 
 \begin{equation*}
-J(x,y) = (1-x)\sum_{k=0}^\infty x^k\sum_{n=0}^k {k \choose n} y^n
+C(x,y) = (1-x)\sum_{k=0}^\infty x^k\sum_{n=0}^k {k \choose n} y^n
 = \sum_{k=0}^\infty\sum_{n=0}^\infty{k \choose n} (x^ky^n - x^{k+1}y^n).
 \end{equation*}
 
 It follows that
 
 \begin{equation}
-\label{eq:coefJ}
-[x^ky^n] J(x,y) =
+\label{eq:coefC}
+[x^ky^n] C(x,y) =
 {k \choose n} - {k-1 \choose n} = {k-1 \choose n-1}
 \text{, provided $k > 0$, $n > 0$}.
 \end{equation}
 
-In the cases not covered by formula (\ref{eq:coefJ}), the coefficients are
+In the cases not covered by formula (\ref{eq:coefC}), the coefficients are
 equal to 0, except for $k = n = 0$ where the coefficient is equal to 1.
 
 \begin{remark}
-The last expression in (\ref{eq:J}) gives an alternative construction for
+The last expression in (\ref{eq:C}) gives an alternative construction for
 sequences of intervals. The term $1+y$ is the generating function of bits,
 \textit{i.e.} elements of $\{0,1\}$, so $(x(1+y))^k$ is the generating
-function of bit strings where $x$ marks the size. By encoding left ends of
-intervals with a $1$ and all other positions with a $0$, we see that
-sequences of intervals are equivalent to bit strings.
+function of bit strings where $x$ marks the size. Sequences of intervals
+are equivalent to bit strings, because we can encode left end of intervals
+with a $1$ and every other position with a $0$.
 \end{remark}
 
 In this example, we were able to obtain an explicit expression for the
 number of ways that $n$ intervals can cover $k$ nucleotides. We could use
 Stirling's formula to obtain the asymptotic behavior of those
 coefficients, but in general this information is directly available from
-the generating function.
+the generating function, especially when it has a simple form such as
+(\ref{eq:C}).
 
 Riordan arrays are bivariate arrays $(a_{k,n})_{k,n}$ such that the
 generating function satisfies
@@ -248,9 +251,6 @@ generating function satisfies
 \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n} x^k y^n =
 \frac{\phi(x)}{1-y \nu(x)}.
 \end{equation*}
-
-Finding simple asymptotic estimates of bivariate sequences is usually not
-easy, but for Riordan arrays, such results are available.
 
 \begin{proposition}
 \label{th:PW}
@@ -264,77 +264,81 @@ that $k$ and $n$ tend to infinity with $\lim k/n = \lambda$, then
 \end{equation}
 
 \noindent
-where $x_\lambda$ is the solution of
-$\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$.
+where $x_\lambda$ is the solution of $\mu(x) = x\nu'(x)/\nu(x) = \lambda$
+and where $\sigma(x)^2 = x \mu'(x)$.
 \end{proposition}
 
-In essence, proposition \ref{th:PW} says that if $k \sim \lambda n$ and we
-can find the solution of the equation $\mu(x) = \lambda$, then we get the
-symptotic growth of $a_{k,n}$. The proof of this theorem was given by
-Pemantle and Wilson \cite{PemWil08,AnalComb2013}, here we only derive
-concrete solutions for the practical problems under study.
+In essence, proposition \ref{th:PW} says that if $k \sim \lambda n$ and if
+we can find the solution of the equation $\mu(x) = \lambda$, then we get
+the asymptotic growth of the Riordan array $a_{k,n}$. The proof of this
+theorem is outside the scope of this article, the interested reader is
+referred to the original results of Pemantle and Wilson
+\cite{PemWil08,AnalComb2013}.
 
-\begin{remark}
-Notice that expression (\ref{eq:J}) can be written as
-
-\begin{equation*}
-J(x,y) = \frac{1}{1 - yx/(1-x)}.
-\end{equation*}
-
-This form shows that $J(x,y)$ is the generating function of a Riordan
-array with $\phi(x) = 1$ and $\nu(x) = x/(1-x)$. It is interesting to see
-how proposition \ref{th:PW} applies to $J(x,y)$ for exposition purposes,
-because $x_\lambda$ has an explicit expression in this case. Here $\nu'(x)
-= 1/(1-x)^2$, $\mu(x) = 1/(1-x)$ and $\sigma^2(x) = x/(1-x)^2$, so we
-obtain $x_\lambda = (\lambda -1)/\lambda$, $\nu(x_\lambda) = \lambda -1$,
-and $\sigma^2(x_\lambda) = \lambda(\lambda-1)$. Combining these results
-with $\lambda \sim k/n$ we obtain
-
-\begin{equation*}
-{k-1 \choose n-1} \sim \frac{k^{k-1}}{n^{n-1}(k-n)^{k-n}}
-\sqrt{\frac{k}{2\pi n(k-n)}}.
-\end{equation*}
-
-This expression is a standard approximation of the binomial coefficients,
-usually obtained by applying the Stirling formula.
-\end{remark}
-Equation (\ref{eq:J}) says that there are ${k-1 \choose n-1}$ ways to
-arrange $n$ intervals so as to cover a total size $k$. However, it may not
-be possible to achieve complete assembly in all cases. Only if all the
-intervals are small can we merge the reads from one end to the other.  We
-therefore introduce intervals of size no greater than $d$ and call them
-``$d$-intervals''. Since the case $d=1$ is trivial, we will assume $d > 1$
-throughout the manuscript.  Following the same rationale as bove, we find
-that the generating function of $d$-intervals is $I_d(x,y) =
-(x+x^2+\ldots+x^d)y$, and that the generating function of joined
-$d$-intervals is
+Expression (\ref{eq:C}) shows that $C(x,y)$ is the generating function of
+a Riordan array with $\phi(x) = 1$ and $\nu(x) = x/(1-x)$.  Here $\mu(x) =
+1/(1-x)$ and $\sigma^2(x) = x/(1-x)^2$, so we obtain $x_\lambda = (\lambda
+-1)/\lambda$, $\nu(x_\lambda) = \lambda -1$, and $\sigma^2(x_\lambda) =
+\lambda(\lambda-1)$. Combining this with $\lambda \sim k/n$ we obtain
 
 \begin{equation}
-\label{eq:Jd}
-J_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
+\label{eq:assBC}
+{k-1 \choose n-1} \sim \frac{k^{k-1}}{n^{n-1}(k-n)^{k-n}}
+\sqrt{\frac{k}{2\pi n(k-n)}}.
+\end{equation}
+
+This section illustrates the strategy of analytic combinatorics: we
+specify combinatorial structures through generating functions, and we use
+general theorems to extract coefficient asymptotics. This approach may
+seem counter-intuitive or overly complex, but we will see in the next
+sections how it can lead to results that are otherwise not available. 
+
+\subsection{Successful assembly}
+
+In the shotgun strategy of genome assembly, reads are merged if they
+overlap by some minimum amount of nucleotides. The process continues with
+consecutive reads in both directions, as long as they overlap by this
+minimum amount of nucleotides. The merged sequences are called
+\emph{contigs}, and the assembly of a chromosome is theoretically possible
+if it consists of a single contig (in practice, the fact that biological
+sequences are interspersed with repeats makes assembly more difficult). It
+is thus interesting to determine the \textit{a priori} probability of this
+event.
+
+From here on, $d$ will denote the maximal allowed distance between the
+left ends of consecutive reads that can be merged. Note that the minimum
+amount of nucleotides that reads must overlp is $L-d$, where $L$ is their
+length. We also introduce intervals of size no greater than $d$ and call
+them ``$d$-intervals''. Since the case $d=1$ is trivial, we will assume $d
+> 1$ throughout.
+
+Following the same rationale as bove, we first need to find the generating
+function of $d$-intervals. This is done easily by stopping the sum in
+(\ref{eq:F}) after $x^dy$, so we obtain $F_d(x,y) = (x+x^2+\ldots+x^d)y$.
+Since a contig is a sequence of $d$-intervals, the generating function of
+contigs is
+
+\begin{equation}
+\label{eq:Cd}
+C_d(x,y) = \sum_{n=0}^\infty \left(y(x+x^2+\ldots+x^d)\right)^n =
 \frac{1}{1-y(x+x^2+\ldots+x^d)}.
 \end{equation}
 
-By construction, the value of $[x^ky^n]J_d(x,y)$ is the number of joined
-$d$-intervals of total size $k$ and total weight $n$. These numbers are
-known as the polynomial coefficients, but unfortunately they cannot be
-expressed in closed form, so we will need to use an asymptotic
-approximation.
+The coefficients of $C_d(x,y)$ are known as the polynomial coefficients,
+but they cannot be expressed in closed form. However, this is not an issue
+because (\ref{eq:Cd}) is the generating function of a Riordan with
+$\phi(x) = 1$ and $\nu(x) = x + x^2 + \ldots + x^d$, so we can extract
+their asymptotic behavior from proposition \ref{th:PW}.
 
-\subsection{Asymptotics of Riordan arryas}
-
-
-We now turn to the study of $J_d(x,y)$, where according to equation
-(\ref{eq:Jd}), $\phi(x) = 1$ and $\nu(x) = x+x^2+\ldots+x^d$.
-
-\begin{proposition}
+\begin{lemma}
 \label{th:mu}
-For $J_d(x,y)$, the equation $\mu(x) = x\nu'(x)/\nu(x) = \lambda$ has a
-single solution $x_\lambda$ for $1 \leq \lambda \leq d$.
-\end{proposition}
+For $\nu(x) = x+x^2+\ldots+x^d$, the equation $\mu(x) = x\nu'(x)/\nu(x) =
+\lambda$ has a single solution $x_\lambda$ for $1 \leq \lambda \leq d$.
+\end{lemma}
 
 \begin{proof}
 We first demonstrate that for $x \geq 0$, $\mu$ is strictly increasing.
+This will ensure that if the solution is unique if it exists.
 
 \begin{equation}
 \label{eq:mu}
@@ -365,9 +369,11 @@ f\left(\frac{0+1+2+\ldots+d-1}{d}\right) \\
 
 Combined with equation (\ref{eq:muprime}), the last inequality shows that
 $\mu'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu'(0) = 1$ and $\mu'(1)
-= (d+1)(d-1)/12$, $\mu$ is strictly increasing. Observing that $\mu(0) =
-1$ and $\lim_{x\rightarrow\infty} \mu(x) = d$, the equation $\mu(x) =
-\lambda$ has a unique solution provided $1 \leq \lambda \leq d$.
+= (d+1)(d-1)/12$, $\mu$ is strictly increasing (note that $\mu'(1)$ is
+properly defined but that $\mu'(0)$ must be defined by continuity).
+Observing that $\mu(0) = 1$ and $\lim_{x\rightarrow\infty} \mu(x) = d$,
+the equation $\mu(x) = \lambda$ has a unique solution provided $1 \leq
+\lambda \leq d$.
 \end{proof}
 
 \begin{remark}
@@ -382,7 +388,7 @@ The value of $x_\lambda$ can be found numerically using expression
 (\ref{eq:mu}).  Once it is available, we can compute $\nu(x_\lambda)$ and
 $\sigma(x_\lambda^2)$ from their definitions, but numeric precision can
 become an issue if $n$ or $d$ is very large. To avoid this, we can use the
-equivalent forms
+equivalent expressions
 
 
 \begin{gather}
@@ -393,82 +399,101 @@ equivalent forms
   \frac{d-2\lambda+1}{1-x_\lambda}.
 \end{gather}
 
+The coefficients of $C(x,y)$ give the total number of configurations, and
+those of $C_d(x,y)$ give the number of configurations with a single
+contig. The probability that a chromosome can be assembled is thus
+$[x^ky^n] C_d(x,y) / [x^ky^n] C(x,y)$, which can be approximated with the
+asymptotic formulas developed above.
 
 \begin{example}
+Let us consider a genome of size 25,000. We assume that 10,001 reads are
+drawn uniformly at random without replacement. This translates into
+$k=25000$ and $n=10000$. Setting the maximum distance between reads in a
+contig to $d=25$, what is the probability that the genome can be
+assembled?
 
-Let us consider the same problem as above, with a genome of size 25,000
-and 10,001 reads. We assume that the reads are drawn uniformly at random
-without replacement.
-
-As above, $k=25000$, $n=10000$, $d=25$ and $\lambda = 2.5$. We solve
-equation equation (\ref{eq:mu}) with the Newton-Raphson method and obtain
-$x_\lambda \approx 0.60001177$. Using equations (\ref{eq:nu}) and
-(\ref{eq:sigma}) we obtain $\nu(x_\lambda) \approx 1.50006684$ and
-$\sigma(x_\lambda)^2 \approx 3.747554$. We compute equation
-(\ref{eq:assRA}) in logarithmic space and obtain
-
-\begin{eqnarray*}
-\log(a_{k,n}) &\approx& 10000\log(1.50006684) - 25000\log(0.60001177) \\
-&-& \log(10000)/2 - \log(3.747554)/2 - \log(2\pi)/2
-\approx 16819.0783
-\end{eqnarray*}
-
-We also have to compute the total number of configurations in
-logarithmic space, which according to equation (\ref{eq:J}) is
+First, we get $\lambda = k/n = 2.5$. We then solve equation (\ref{eq:mu})
+with the Newton-Raphson method and obtain $x_\lambda \approx 0.600011377$.
+Using equations (\ref{eq:nu}) and (\ref{eq:sigma}) we obtain
+$\nu(x_\lambda) \approx 1.50006684$ and $\sigma(x_\lambda)^2 \approx
+3.747554$. We compute equation (\ref{eq:assRA}) in logarithmic space and
+obtain
 
 \begin{equation*}
-\log { 24999 \choose 9999 } \approx 16819.1067
+\begin{split}
+10000&\log(1.50006684) - 25000\log(0.600011377) \\
+- &\log(10000)/2 - \log(3.747554)/2 - \log(2\pi)/2
+\approx 16819.0786.
+\end{split}
+\end{equation*}
+
+We also compute 
+
+\begin{equation*}
+\log { 24999 \choose 9999 } \approx 16819.1067.
 \end{equation*}
 
 The estimated probability that a configuration corresponds to a coverage
-by $25$-intervals is
-thus
+by $25$-intervals is thus
 
 \begin{equation*}
 \exp(16819.0783-16819.1067) \approx 0.972.
 \end{equation*}
 
-Random simulations with 10,000 samples gave an estimate for this
-probability equal to $0.973$, again very close to the numerical
-approximation. In this example, $x_\lambda$ and $\nu_*(x_\lambda)$ must be
-approximated to eight digits to obtain an approximate accute to within
-1\%. On real problems, $n$ and $k$ can be several orders of magnitude
-higher, which shows the importance of using numerically accurate formulas.
-
+Randomly sampling 200,000 configurations gives an estimate for this
+probability equal to $0.972$, close to the numerical approximation by
+three digits. In this example, $x_\lambda$ and $\nu(x_\lambda)$ must be
+approximated to eight digits in order to obtain an approximate accurate to
+within 1\%. Using the definition of $\nu$ instead of (\ref{eq:nu}), we
+would obtain an estimate equal to $0.983$. The difference is negligible
+here, but on real problems, $n$ and $k$ can be several orders of magnitude
+higher, which will increase the difference.
 \end{example}
 
-It is possible to remove duplicate reads, but it would be useful to know
-upfront how many unique reads we expect. If there are $k+1$ possible
-locations and $n+1$ reads, each position is sampled on average
-$(n+1)/(k+1)$ times. Using the Poisson approximation, the probability that
-a position is not sampled is $e^{-(n+1)/(k+1)}$ so that the frequency of
-sampled positions is $1-e^{-(n+1)/(k+1)}$.
+In the above, we have assumed that all the reads map to different
+locations. It is possible to enforce this by removing duplicate reads, but
+it would be more useful to estimate the probability that the chromosome
+can be assembled before resources are spent. 
+
+Each nucleotide of the chromosome corresponds to the left end of a read
+$n/k$ times on average. Because $k$ and $n$ are both large, we can
+approximate the number of time a nucleotide is drawn by a Poisson
+distribution with mean $n/k$. The probability that a position is not
+sampled is approximately $e^{-n/k}$ so that the frequency of sampled
+positions is $1-e^{-n/k}$. The strategy is thus to replace the true number
+of reads by the expected number of distinct reads
+
+\begin{equation}
+\label{eq:nstar}
+n_* = k(1-e^{-n/k}).
+\end{equation}
 
 
 \begin{example}
+We consider the same problem as in the previous example, with a genome of
+size 25,000 and 10,001 reads at a maximum distance of 25 ncleotides, but
+this time the reads are drawn uniformly at random with replacement. As
+above, $k=25000$, but we need to replace $n$ by $n_* = 25000 \cdot
+(1-e^{-10000/25000}) \approx 8241.9988$.
 
-Once again we consider a problem with a genome of size 25,000 and 10,001
-reads. We assume that the reads are drawn uniformly at random with
-replacement.
-
-As above, $k=25000$ and $d=25$, but we need to replace $n=10000$ by the
-estimated number of unique reads $n_* = 25000 \cdot e^{-10001/25001} =
-8241.999 \approx 8242$. This give a value for $\lambda$ approximately
-equal to 3.033. We follow the same calculations as in the previous example
-and we obtain $x_\lambda \approx 0.67044393$, $\nu_*(x_\lambda) \approx
-2.03429224$ and $\sigma_*(x_\lambda)^2 \approx 6.144598$.
-
-\begin{eqnarray*}
-\log(a_{k,n}) &\approx& 8242\log(2.03429224) - 25000\log(0.67044393) \\
-&-& \log(8242)/2 - \log(6.144598)/2 - \log(2\pi)/2
-\approx 15842.084.
-\end{eqnarray*}
-
-The total number of configurations in logarithmic space is again
-obtained from equation (\ref{eq:Cstar}) as
+We now obtain $\lambda = k/n_* \approx 3.033$. Following the same
+calculations as in the previous example, we obtain $x_\lambda \approx
+0.67044394$, $\nu_*(x_\lambda) \approx 2.03429230$ and
+$\sigma_*(x_\lambda)^2 \approx 6.144599$. Computing (\ref{eq:assRA}) in
+logarithmic space with the new values yields
 
 \begin{equation*}
-\log { 24999 \choose 8241 } \approx 15842.457.
+\begin{split}
+8241.9988\log(2.03429230) - &25000\log(0.67044394) \\
+- \log(8241.9988)/2 - &\log(6.144599)/2 - \log(2\pi)/2
+\approx 15842.084.
+\end{split}
+\end{equation*}
+
+Likewise, we also have
+
+\begin{equation*}
+\log { 24999 \choose 8240.9988 } \approx 15842.457.
 \end{equation*}
 
 Finally, the estimated probability that a configuration corresponds to a
@@ -478,14 +503,39 @@ coverage by $25$-intervals is
 \exp(15842.084-15842.457) \approx 0.689.
 \end{equation*}
 
-For comparison, random simulations with 10,000 samples gave an estimate
-for this probability equal to $0.688$.
-
+Randomly sampling 200,000 configurations gives an estimate for this
+probability equal to $0.688$. This is less accurate than in the previous
+example, but still within 1\% of the real value.
 \end{example}
 
-In summary, the asymptotic estimates are accurate in the range where they
-are useful, namely when the probability of covering the genome is not
-exceedingly close to 0 or to 1.
+In conclusion, we can continue to assume that reads are all distinct, and
+use formula (\ref{eq:nstar}) whenever the assumption does not hold.
+
+\begin{remark}
+Allowing intervals and $d$-intervals to have size $0$ is not the proper
+way to address this issue because it gives a different sampling scheme.
+For $4$ reads covering $2$ nucleotides (\textit{i.e.} $k=1$ and $n=3$),
+the probability that the first two intervals have size $0$ would be $1/3$,
+whereas it should be $2/7$.
+\end{remark}
+
+In summary, estimates of the chances of success of the assembly are
+accurate in the range where they are the most useful, namely when the
+value is not exceedingly close to 0 or to 1. The steps required to
+automate the estimation are recapitulated here:
+
+\begin{enumerate}
+\item Compute the expected number of distinct reads $n_*$ using
+(\ref{eq:nstar}). 
+\item Compute $\lambda = k/n_*$.
+\item Solve $\mu(x_\lambda) = \lambda$ by the Newton-Raphson method using
+(\ref{eq:mu}) and (\ref{eq:muprime}).
+\item Compute $\nu(x_\lambda)$ and $\sigma^2(x_\lambda)$ using
+(\ref{eq:nu}) and (\ref{eq:sigma}).
+\item Compute (\ref{eq:assRA}) in logarithmic space.
+\item Compute (\ref{eq:coefC}) in logarithmic space.
+\item Take the difference of the last two terms and exponentiate.
+\end{enumerate}
 
 \subsection{The average number of contigs}
 \label{sec:av}
