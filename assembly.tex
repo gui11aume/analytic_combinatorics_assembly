@@ -100,6 +100,7 @@ distribution of the largest contig using models of occupancy.
 \section{Results}
 
 \subsection{Analytic combinatorics of the assembly problem}
+\label{sec:config}
 
 If $(a_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate array, the generating
 function of the array is by definition
@@ -293,17 +294,19 @@ general theorems to extract coefficient asymptotics. This approach may
 seem counter-intuitive or overly complex, but we will see in the next
 sections how it can lead to results that are otherwise not available. 
 
-\subsection{Successful assembly}
+\subsection{Probability of tight coverage}
+\label{sec:compass}
 
+% This is where I define tight coverage.
 In the shotgun strategy of genome assembly, reads are merged if they
 overlap by some minimum amount of nucleotides. The process continues with
 consecutive reads in both directions, as long as they overlap by this
 minimum amount of nucleotides. The merged sequences are called
 \emph{contigs}, and the assembly of a chromosome is theoretically possible
 if it consists of a single contig (in practice, the fact that biological
-sequences are interspersed with repeats makes assembly more difficult). It
-is thus interesting to determine the \textit{a priori} probability of this
-event.
+sequences are interspersed with repeats makes assembly more difficult). We
+call this event ``tight coverage'', and it is interesting to determine
+its \textit{a priori} probability.
 
 From here on, $d$ will denote the maximal allowed distance between the
 left ends of consecutive reads that can be merged. Note that the minimum
@@ -406,7 +409,7 @@ $[x^ky^n] C_d(x,y) / [x^ky^n] C(x,y)$, which can be approximated with the
 asymptotic formulas developed above.
 
 \begin{example}
-Let us consider a genome of size 25,000. We assume that 10,001 reads are
+Let us consider a genome of size 25,001. We assume that 10,001 reads are
 drawn uniformly at random without replacement. This translates into
 $k=25000$ and $n=10000$. Setting the maximum distance between reads in a
 contig to $d=25$, what is the probability that the genome can be
@@ -455,31 +458,32 @@ locations. It is possible to enforce this by removing duplicate reads, but
 it would be more useful to estimate the probability that the chromosome
 can be assembled before resources are spent. 
 
-Each nucleotide of the chromosome corresponds to the left end of a read
-$n/k$ times on average. Because $k$ and $n$ are both large, we can
-approximate the number of time a nucleotide is drawn by a Poisson
-distribution with mean $n/k$. The probability that a position is not
-sampled is approximately $e^{-n/k}$ so that the frequency of sampled
-positions is $1-e^{-n/k}$. The strategy is thus to replace the true number
-of reads by the expected number of distinct reads
+Assume that there is a total of $n_*$ reads and that they are drawn with
+replacement. Each nucleotide of the chromosome corresponds to the left end
+of a read $n_*/k$ times on average. Because $k$ and $n$ are both large, we
+can approximate the number of time a nucleotide is drawn by a Poisson
+distribution with mean $n_*/k$. The probability that a position is not
+sampled is approximately $e^{-n_*/k}$ so that the frequency of sampled
+positions is $1-e^{-n_*/k}$. The strategy is thus to replace the true
+number of reads by the expected number of distinct reads
 
 \begin{equation}
 \label{eq:nstar}
-n_* = k(1-e^{-n/k}).
+n = k(1-e^{-n_*/k}).
 \end{equation}
 
 
 \begin{example}
 We consider the same problem as in the previous example, with a genome of
-size 25,000 and 10,001 reads at a maximum distance of 25 ncleotides, but
+size 25,001 and 10,001 reads at a maximum distance of 25 ncleotides, but
 this time the reads are drawn uniformly at random with replacement. As
-above, $k=25000$, but we need to replace $n$ by $n_* = 25000 \cdot
+above, $k=25000$, but we need to replace $n$ by $25000 \cdot
 (1-e^{-10000/25000}) \approx 8241.9988$.
 
-We now obtain $\lambda = k/n_* \approx 3.033$. Following the same
+We now obtain $\lambda = k/n \approx 3.033$. Following the same
 calculations as in the previous example, we obtain $x_\lambda \approx
-0.67044394$, $\nu_*(x_\lambda) \approx 2.03429230$ and
-$\sigma_*(x_\lambda)^2 \approx 6.144599$. Computing (\ref{eq:assRA}) in
+0.67044394$, $\nu(x_\lambda) \approx 2.03429230$ and
+$\sigma(x_\lambda)^2 \approx 6.144599$. Computing (\ref{eq:assRA}) in
 logarithmic space with the new values yields
 
 \begin{equation*}
@@ -525,9 +529,9 @@ value is not exceedingly close to 0 or to 1. The steps required to
 automate the estimation are recapitulated here:
 
 \begin{enumerate}
-\item Compute the expected number of distinct reads $n_*$ using
+\item Compute the expected number of distinct reads $n$ using
 (\ref{eq:nstar}). 
-\item Compute $\lambda = k/n_*$.
+\item Compute $\lambda = k/n$.
 \item Solve $\mu(x_\lambda) = \lambda$ by the Newton-Raphson method using
 (\ref{eq:mu}) and (\ref{eq:muprime}).
 \item Compute $\nu(x_\lambda)$ and $\sigma^2(x_\lambda)$ using
@@ -537,130 +541,289 @@ automate the estimation are recapitulated here:
 \item Take the difference of the last two terms and exponentiate.
 \end{enumerate}
 
-\subsection{The average number of contigs}
+\subsection{The average number and size of contigs}
 \label{sec:av}
 
-We now introduce $d$-gaps as intervals of size greater than $d$. The same
-way as we used $y$ to mark $d$-intervals, we will use $z$ to mark
-$d$-gaps. In other words the generating function of $d$-gaps is
+If the coverage is not tight, it is interesting to know the expected
+number of contigs and their expected size. For this, we need to introduce
+``$d$-gaps'', that are intervals of size greater than $d$. By definition,
+contigs are flanked by $d$-gaps so we can count the $d$-gaps and  infer
+the number of contigs.
+
+The generating function of $d$-gaps is $x^{d+1}y + x^{d+2}y + \ldots =
+yx^{d+1}/(1-x)$. Note that an interval is either a $d$-interval or a
+$d$-gap, and since a configuration is a sequence of intervals, we can
+write their generating function as
+
+\begin{equation}
+\label{eq:C2ndform}
+C(x,y) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+y\frac{x^{d+1}}{1-x}\right)^n.
+\end{equation}
+
+It is elementary to verify that this expression is equivalent to
+(\ref{eq:C}). We can use it to mark the number of gaps by the variable
+$u$. The same was as multiplying the generating function of intervals by
+$y$ ensured that the coefficient of $y^n$ indicates the number of
+configurations with $n$ intervals, we multiply the generating function of
+$d$-gaps by $u$, so that the coefficient of $u^m$ indicates the number of
+configurations with $m$ $d$-gaps.
 
 \begin{equation*}
-G_d(x,z) = yz(x^{d+1}+x^{d+2}+\ldots) = yz\frac{x^{d+1}}{1-x}.
+H(x,y,u) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+uy\frac{x^{d+1}}{1-x}\right)^n
+= \frac{1-x}{1-x-y\left(x(1-x^d) +ux^{d+1}\right)}.
 \end{equation*}
 
-By joining $d$-intervals or $d$-gaps we obtain the configuration of an
-assembly problem, with generating function
-
-\begin{equation*}
-\begin{split}
-A(x,y,z) &= \sum_{n=0}^\infty \left(J_d(x,y) + G_d(x,z) \right) \\
-&= \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-yz\frac{x^{d+1}}{1-x}\right)^n =
-\frac{1-x}{1-x-y\left(x(1-x^d) +zx^{d+1}\right)}.
-\end{split}
-\end{equation*}
-
-$A(x,y,z)$ is the generating function of a three-dimensional array
+$H(x,y,u)$ is the generating function of a three-dimensional array
 $(a_{k,n,m})$, where each term is the number of configurations of total
-size $k$ with $n$ $d$-intervals and $m$ $d$-gaps. The average number of
-$d$-gaps for a given value $k$ and $n$ is
+size $k$, total weight $n$ and with $m$ $d$-gaps. Note that both
+$d$-intervals and $d$-gaps contribute to the weight, so that it still
+indicates the number of distinct reads. For a given value of $k$ and $n$,
+the cumulative number of $d$-gaps is $\sum_{m=0}^\infty ma_{k,n,m}$. Since
+for the same values of $k$ and $n$ the total number of configurations is
+$\sum_{m=0}^\infty a_{k,n,m}$ the average number of $d$-gaps is
 
 \begin{equation}
 \label{eq:average}
 \sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m}.
 \end{equation}
 
-To compute the generating function of the denomiator of
-(\ref{eq:average}), observe that
+As usual, we will find the generating functions for the numerator and the
+denomiator of (\ref{eq:average}) and use proposition \ref{th:PW} to obtain
+asymptotic estimates. Observe that
 
 \begin{equation*}
-A(x,y,1) = \sum_{k=0}^\infty\sum_{n=0}^\infty
-\left(\sum_{m=0}^\infty a_{k,n,m}\right) x^ky^n.
-\end{equation*}
-
-So by setting $z$ to 1, we obtain the generating function of the
-denominator of (\ref{eq:average}) as
-
-\begin{equation*}
-\frac{1-x}{1-x-xy} = \frac{1}{1-yx/(1-x)} = J(x,y).
-\end{equation*}
-
-Even though we know the coefficients of this generating function, we will
-not need them to obtain a simple asymptotic approximation of
-(\ref{eq:average}). To compute the numerator of (\ref{eq:average}), we
-differentiate $A(x,y,z)$ with respect to $z$ and we observe that
-
-\begin{equation*}
-\frac{\partial A(x,y,z)}{\partial z}\Bigr|_{\substack{\\z=1}} =
+\begin{split}
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}} &=
 \sum_{k=0}^\infty\sum_{n=0}^\infty
-\left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n.
+\left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n \text{, and} \\
+H(x,y,1) &= \sum_{k=0}^\infty\sum_{n=0}^\infty
+\left(\sum_{m=0}^\infty a_{k,n,m} \right)x^ky^n.
+\end{split}
 \end{equation*}
 
-So by differentiating $A(x,y,z)$ and settig $z$ to 1, we obtain the
-generating function of the numerator of (\ref{eq:average}) as
+This implies that we can compute (\ref{eq:average}) from the coefficients
+of $H(x,y,u)$ and its partial derivative at $u=1$. It is easier to start
+with the denominator as the results are already available. Equation
+(\ref{eq:C2ndform}) implies that $H(x,y,1) = C(x,y)$. We could extract the
+coefficients as per expression (\ref{eq:coefC}) and proceed as in the
+previous section, but we can obtain a much simpler result as will appear
+shortly. Now turning to the numerator we obtain
 
 \begin{equation*}
-\frac{yx^{d+1}(1-x)}{\left(1-x-xy\right)^2}.
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+= \frac{yx^{d+1}(1-x)}{\left(1-x-xy\right)^2}.
 \end{equation*}
 
-This is not the generating function of a Riordan array, but observe that
-it is equal to $y\partial D(x,y)/\partial y$, where
+Careful attention shows that this expression is ``almost'' the generating
+function of a Riordan array. Observe that
 
 \begin{equation*}
-D(x,y) = \frac{x^d(1-x)}{1-x-xy} =
-\frac{x^d}{1-yx/(1-x)}.
+\frac{\partial C(x,y)}{\partial y} = 
+\frac{x(1-x)}{\left(1-x-yx\right)^2}.
 \end{equation*}
 
-$D(x,y)$ is the generating function of a Riordan array with $\phi(x) =
-x^d$ and $\nu(x) = x/(1-x)$. We can obtain obtain accurate asymptotic
-estimates of $[x^ky^n]D(x,y)$, and since $[x^ky^n]y\partial D(x,y) /
-\partial y = n[x^ky^n]D(x,y)$, we can also obtain accurate asymptotics for
-the numerator of (\ref{eq:average}).
-
-We also note that the function $\nu$ is the same for $J(x,y)$ and
-$D(x,y)$, so according to proposition \ref{th:PW}, the values of
-$x_\lambda$, $\nu(x_\lambda)$ and $\sigma(x_\lambda)^2$ are the same in
-both cases. This implies that
+So $\partial H(x,y,u)/\partial u|_{\substack{\\u=1}} = yx^d\partial
+C(x,y)/\partial y$, and since $\lim k/n = \lambda$ implies $\lim (k-d)/n =
+\lambda$, we can use proposition \ref{th:PW} to derive asymptotics for the
+numerator of (\ref{eq:average}). More significantly, the ratio is now
+greatly simplified:
 
 \begin{equation*}
-\sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m} \sim
-n x_\lambda^d.
+\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
+{[x^ky^n]H(x,y,1)} =
+\frac{n[x^{k-d}y^n]C(x,y)}{[x^ky^n]C(x,y)}
+\sim n x_\lambda^d.
 \end{equation*}
 
-We have seen in the remark after proposition \ref{th:PW} that $x_\lambda =
-(\lambda-1)/\lambda$, so the average number of gaps is $n(1-1/\lambda)^d$,
-which we can express the general form
+We have seen in section \ref{sec:config} that $x_\lambda =
+(\lambda-1)/\lambda$, so the average number of $d$-gaps is
+$n(1-1/\lambda)^d$, which we can express in the more general form
 
 \begin{equation*}
 n\left(1-n/k\right)^d.
 \end{equation*}
 
+Recall that this formula assumes that reads are distinct (which implies
+among others that $n \leq k$). In order to obtain the average number of
+$d$-gaps when reads are not assumed to be distinct, we use expression
+(\ref{eq:nstar}) and obtain
+
+\begin{equation}
+\label{eq:avstar}
+k(1-e^{-n_*/k})e^{-n_*d/k}.
+\end{equation}
+
 \begin{example}
-Consider a genome of size 25,000 and 5,001 reads. Here $k = $ and $n =
-5000$ (so $\lambda = 5$) and $d = 25$. We obtain $x_\lambda = 0.8$
-and $n x_\lambda^d \approx 18.89$. The simulations give
-$18.85$. In comparison, the Lander-Waterman estimate is $ne^{-nd/k} =
-33.69$.
+Consider the same examle as above, with a genome of size 25,001 and 10,001
+reads drawn uniformly at random with replacement (\textit{i.e.} $k =
+25000$ and $n_* = 10000$. Formula (\ref{eq:avstar}) immediately yields an
+average equal to 0.374.
+
+Randomly sampling 200,000 configurations gives an estimate for this
+average equal to $0.375$, again within 1\% of the estimate.
 \end{example}
+
+When the number of $d$-gaps is small, we can just add $1$ to obtain an
+estimate for the number of contigs. However, at low coverage the first or
+the last interval may be a $d$-gap, or two $d$-gaps may lie next to each
+other, so the approximation will overstimate the number of contigs. In
+such cases, we need to count contigs directly, which is slightly more
+tedious.
+
+In the above, the function $H(x,y,u)$ is a ``counting function'' and $u$
+is the ``counting parameter''. We can count any object, including contigs,
+by decorating their generating function with $u$. As above, the average
+number of those objects in configurations of size $k$ and weight $n$ will
+be given by the ratio
+
+\begin{equation*}
+\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
+{[x^ky^n]H(x,y,1)}.
+\end{equation*}
+
+We can thus exhibit the counting function of contigs and use the same
+method as above. It is intuitively clear that configurations consist of
+non-empty sequences of contigs and non-empty sequences of $d$-gaps.
+Non-empty contigs are non-empty sequences of $d$-intervals, so their
+generating function is
+
+\begin{equation*}
+C_{d*}(x,y) = \sum_{n=1}^\infty \left(yx\frac{1-x^d}{1-x} \right)^n
+= \frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
+\end{equation*}
+
+Similarly, the generating function of non-empty sequences of $d$-gaps is
+
+\begin{equation*}
+G_{d*}(x,y) = \sum_{n=1}^\infty \left(y\frac{x^{d+1}}{1-x} \right)^n
+= \frac{yx^{d+1}/(1-x)}{1-yx^{d+1}/(1-x)}.
+\end{equation*}
+
+The basic unit of configurations is a non-empty contig followed by a
+non-empty sequence of $d$-gaps, whose generating function is
+$uC_{d*}(x,y)G_{d*}(x,y)$. The presence of $u$ here indicates that each
+unit adds 1 to the count of contigs. A configuration is a sequence of such
+units, but it starts with a potentially empty sequence of $d$-gaps, whose
+generating function is $1+G_{d*}(x,y)$, and it ends with a potentially
+empty contig, whose generating function is $1+uC_{d*}(x,y)$. The counting
+function thus comes out as
+
+\begin{equation*}
+\begin{split}
+H(x,y,u) &= \left( 1+G_{d*}(x,y) \right)
+\left( \sum_{n=0}^\infty (uC_{d*}(x,y)G_{d*}(x,y))^n \right)
+\left( 1+uC_{d*}(x,y) \right) \\
+& = \frac{(1+G_{d*}(x,y))(1+uC_{d*}(x,y))}{1-uC_{d*}(x,y)G_{d*}(x,y)}.
+\end{split}
+\end{equation*}
+
+One can check from the definitions of $C_{d*}$ and $G_{d*}$ that $H(x,y,1)
+= C(x,y)$ as expected. After a similar calculation as above, we would
+obtain
+
+\begin{equation*}
+\partial H(x,y,u)/\partial u|_{\substack{\\u=1}}
+= y(1-x^d) \frac{\partial C}{\partial y} - y^2\frac{x}{1-x}(1-x^d)^2
+\frac{\partial C}{\partial y}.
+\end{equation*}
+
+Applying proposition \ref{th:PW} once again, we obtain after some basic
+manipulations
+
+\begin{equation}
+\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
+{[x^ky^n]H(x,y,1)} \sim n(1-x_\lambda^d) - (n-1)(1-x_\lambda^d)^2.
+\end{equation}
+
+After substituting $x_\lambda$ by $(\lambda-1)/\lambda = 1-n/k$, the
+asymptotic average number of contigs for a configuration of size $k$ and
+weight $n$ appears as
+
+\begin{equation}
+\label{eq:avcont}
+\begin{split}
+\left( 1+(n-1)(1-n/k)^d \right) \left(1-(1-n/k)^d\right) \text{, or} \\
+\left( 1 + k(1-e^{-n_*/k})e^{-n_*d/k} \right) (1+e^{-n_*d/k}).
+\end{split}
+\end{equation}
+
+Both formulas show the estimate mentioned above (1 plus the number of
+$d$-gaps) mutiplied by and a correction factor. For large $n$ or $n_*$ the
+correction factor is close to 1 and can be neglected.  Note that in the
+second expression, $n-1$ has been replaced by $n$ before applying
+(\ref{eq:nstar}). This yields a simpler expression at a negligible cost
+for accuracy.
 
 \subsection{The average size of contigs}
 
-In the section above, $z$ was used to mark gaps. Here we will use it to
-mark their size, so the generating function of $d$-gaps will be defined as
-$x^{d+1}z^{d+1} + x^{d+2}z^{d+2} + \ldots = x^{d+1}z^{d+1}/(1-xz)$.
+It is also interesting to compute the average size of contigs when
+coverage is not tight. We can exhibit a counting function for the size of
+$d$-intervals and derive asymptotic estimates using the same strategy as
+in the previous section. All we have to do is decorate the size of a
+$d$-intervals with corresponding powers of $u$ in expression
+(\ref{eq:C2ndform}). The decorated generating function of $d$-intervals
+becomes $y(xu + x^2u^2 + \ldots x^du^d) = yxu(1-x^du^d)/(1-xu)$. The
+counting function is thus
 
 \begin{equation*}
-\tilde{A}_d(x,y,z) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-y\frac{x^{d+1}z^{d+1}}{1-xz}\right)^n =
-\frac{1}{1-y \left(x\frac{1-x^d}{1-x} +
-\frac{x^{d+1}z^{d+1}}{1-xz} \right)}.
+\begin{split}
+H(x,y,u) &= \sum_{n=0}^\infty \left(yxu\frac{1-x^du^d}{1-xu} +
+y\frac{x^{d+1}}{1-x}\right)^n \\
+&= \frac{1}{1-y \left(xu(1-x^du^d)/(1-xu) +
+x^{d+1}/(1-x) \right)}.
+\end{split}
 \end{equation*}
+
+Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
+with respect to $u$, we obtain
 
 \begin{equation*}
-\frac{\partial\tilde{A}_d(x,y,z)}{\partial z}\Bigr|_{\substack{\\z=1}} =
-\sum_{k=0}^\infty\sum_{n=0}^\infty
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+= y \frac{(d+1)x^{d+1}-dx^{d+2}}{(1-x)^2} \frac{\partial C(x,y)}
+{\partial y}.
 \end{equation*}
 
+%The simplest strategy is to compute the cumulative
+%size of $d$-gaps and get the cumulative size of contigs by
+%complementarity.
+%$y(x^{d+1}u^{d+1} +
+%x^{d+2}u^{d+2} + \ldots) = yx^{d+1}u^{d+1}/(1-x^{d+1}u^{d+1})$. The
+%counting function thus comes out as
+%
+%\begin{equation*}
+%\begin{split}
+%H(x,y,u) &= \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+%y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
+%&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
+%x^{d+1}u^{d+1}/(1-xu) \right)}.
+%\end{split}
+%\end{equation*}
+%
+%Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
+%with respect to $u$, we obtain
+%
+%\begin{equation*}
+%\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+%= y \frac{(d+1)x^{d+1}-dx^{d+2}}{(1-x)^2} \frac{\partial C(x,y)}
+%{\partial y}.
+%\end{equation*}
+%
+%From the relation above and from proposition \ref{th:PW}, we obtain the
+%asymptotic cumulative size of $d$-gaps as $n(1-1/\lambda)^d(\lambda+d)$.
+%Since the expected asymptotic number of $d$-gaps is $n(1-1/\lambda)^d$, we
+%see that their individual size is asymptotic to $\lambda+d$ or $k/n+d$, or
+%in terms of raw number of reads $1/(1-e^{-n_*/k}) + d$. Intuitively, the
+%size of $d$-gaps is very large when $n$ or $n_*$ are much smaller than
+%$k$.
+%
+%To answer the original question, we compute the total size of contigs by
+%complementary as $k-n(1-1/\lambda)^d(\lambda+d)$.
+%
+%\begin{equation}
+%\frac{k-(1-k/n)^d(n/k+d)}{1+n(1-n/k)^d}.
+%\end{equation}
 
 %---------------------------------------------------------------
 %---------------------------------------------------------------
