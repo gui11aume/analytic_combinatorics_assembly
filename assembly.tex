@@ -272,9 +272,9 @@ and where $\sigma(x)^2 = x \mu'(x)$.
 In essence, proposition \ref{th:PW} says that if $k \sim \lambda n$ and if
 we can find the solution of the equation $\mu(x) = \lambda$, then we get
 the asymptotic growth of the Riordan array $a_{k,n}$. The proof of this
-theorem is outside the scope of this article, the interested reader is
+theorem is outside the scope of this article; interested readers are
 referred to the original results of Pemantle and Wilson
-\cite{PemWil08,AnalComb2013}.
+\cite{PemWil02,AnalComb2013}.
 
 Expression (\ref{eq:C}) shows that $C(x,y)$ is the generating function of
 a Riordan array with $\phi(x) = 1$ and $\nu(x) = x/(1-x)$.  Here $\mu(x) =
@@ -652,7 +652,7 @@ $d$-gaps when reads are not assumed to be distinct, we use expression
 
 \begin{equation}
 \label{eq:avstar}
-k(1-e^{-n_*/k})e^{-n_*d/k}.
+k(1-e^{-n_*/k})e^{-dn_*/k}.
 \end{equation}
 
 \begin{example}
@@ -744,35 +744,36 @@ weight $n$ appears as
 \begin{equation}
 \label{eq:avcont}
 \begin{split}
-\left( 1+(n-1)(1-n/k)^d \right) \left(1-(1-n/k)^d\right) \text{, or} \\
-\left( 1 + k(1-e^{-n_*/k})e^{-n_*d/k} \right) (1+e^{-n_*d/k}).
+\left( 1+n(1-n/k)^d \right) \left(1-(1-n/k)^d\right) \text{, or} \\
+( 1 + k(1-e^{-n_*/k})e^{-dn_*/k} ) (1+e^{-dn_*/k}).
 \end{split}
 \end{equation}
 
 Both formulas show the estimate mentioned above (1 plus the number of
 $d$-gaps) mutiplied by and a correction factor. For large $n$ or $n_*$ the
-correction factor is close to 1 and can be neglected.  Note that in the
-second expression, $n-1$ has been replaced by $n$ before applying
-(\ref{eq:nstar}). This yields a simpler expression at a negligible cost
-for accuracy.
+correction factor is close to 1 and can be neglected.  Note that $n-1$ has
+been replaced by $n$ before applying (\ref{eq:nstar}). This yields a
+simpler expression at a negligible cost for accuracy.
 
 \subsection{The average size of contigs}
 
 It is also interesting to compute the average size of contigs when
-coverage is not tight. We can exhibit a counting function for the size of
-$d$-intervals and derive asymptotic estimates using the same strategy as
-in the previous section. All we have to do is decorate the size of a
-$d$-intervals with corresponding powers of $u$ in expression
-(\ref{eq:C2ndform}). The decorated generating function of $d$-intervals
-becomes $y(xu + x^2u^2 + \ldots x^du^d) = yxu(1-x^du^d)/(1-xu)$. The
-counting function is thus
+coverage is not tight. The simplest strategy is to compute the cumulative
+size of $d$-gaps and get the cumulative size of contigs by
+complementarity. We can exhibit a counting function for the size of
+$d$-gaps and derive asymptotic estimates using the same strategy as in the
+previous section. All we have to do is decorate the size of a $d$-gaps
+with corresponding powers of $u$ in expression (\ref{eq:C2ndform}). The
+decorated generating function of $d$-aps becomes $y(x^{d+1}u^{d+1} +
+x^{d+2}u^{d+2} + \ldots ) = yx^{d+1}u^{d+1}/(1-xu)$. The counting function
+is thus
 
 \begin{equation*}
 \begin{split}
-H(x,y,u) &= \sum_{n=0}^\infty \left(yxu\frac{1-x^du^d}{1-xu} +
-y\frac{x^{d+1}}{1-x}\right)^n \\
-&= \frac{1}{1-y \left(xu(1-x^du^d)/(1-xu) +
-x^{d+1}/(1-x) \right)}.
+H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
+y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
+&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
+x^{d+1}u^{d+1}/(1-xu) \right)}.
 \end{split}
 \end{equation*}
 
@@ -785,45 +786,40 @@ with respect to $u$, we obtain
 {\partial y}.
 \end{equation*}
 
-%The simplest strategy is to compute the cumulative
-%size of $d$-gaps and get the cumulative size of contigs by
-%complementarity.
-%$y(x^{d+1}u^{d+1} +
-%x^{d+2}u^{d+2} + \ldots) = yx^{d+1}u^{d+1}/(1-x^{d+1}u^{d+1})$. The
-%counting function thus comes out as
-%
-%\begin{equation*}
-%\begin{split}
-%H(x,y,u) &= \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-%y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
-%&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
-%x^{d+1}u^{d+1}/(1-xu) \right)}.
-%\end{split}
-%\end{equation*}
-%
-%Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
-%with respect to $u$, we obtain
-%
-%\begin{equation*}
-%\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
-%= y \frac{(d+1)x^{d+1}-dx^{d+2}}{(1-x)^2} \frac{\partial C(x,y)}
-%{\partial y}.
-%\end{equation*}
-%
-%From the relation above and from proposition \ref{th:PW}, we obtain the
-%asymptotic cumulative size of $d$-gaps as $n(1-1/\lambda)^d(\lambda+d)$.
-%Since the expected asymptotic number of $d$-gaps is $n(1-1/\lambda)^d$, we
-%see that their individual size is asymptotic to $\lambda+d$ or $k/n+d$, or
-%in terms of raw number of reads $1/(1-e^{-n_*/k}) + d$. Intuitively, the
-%size of $d$-gaps is very large when $n$ or $n_*$ are much smaller than
-%$k$.
-%
-%To answer the original question, we compute the total size of contigs by
-%complementary as $k-n(1-1/\lambda)^d(\lambda+d)$.
-%
-%\begin{equation}
-%\frac{k-(1-k/n)^d(n/k+d)}{1+n(1-n/k)^d}.
-%\end{equation}
+From the relation above and from proposition \ref{th:PW}, we obtain the
+asymptotic cumulative size of $d$-gaps as $n(1-1/\lambda)^d(\lambda+d)$ or
+in more general terms $n(1-n/k)^d(k/n+d)$.  Since the expected asymptotic
+number of $d$-gaps is $n(1-n/k)^d$, we see that their individual size is
+asymptotic to $k/n+d$, or in terms of raw number of reads
+$1/(1-e^{-n_*/k}) + d$. Intuitively, the size of $d$-gaps is very large
+when $n$ or $n_*$ are much smaller than $k$.
+
+We can also compute the expected unassembled fraction, \textit{i.e.} the
+fraction of nucleotides covered by $d$-gaps. For this we just have to
+divide the cumulative size of $d$-gaps by the total size $k$ and we obtain
+$(1-n/k)^d(1+dn/k)$ or in terms of raw reads
+$e^{-dn_*/k}(1+d(1-e^{-n_*/k}))$.
+
+To answer the original question, we compute the total size of contigs by
+complementary as $k-n(1-n/k)^d(k/n+d)$. Now dividing by the
+average number of contigs, we find that the expected asymptotic size as
+
+\begin{equation}
+\frac{k-(1-n/k)^d(k+dn)}
+{\left(1+n(1-n/k)^d\right)\left(1-(1-n/k)^d \right)}.
+\end{equation}
+
+This expression is somewhat cumbersome, but it becomes approximately equal
+to $k/(1+n(1-n/k)^d)$ when $n$ is close to $k$. This quantity expressed in
+terms of raw number of reads is
+
+\begin{equation}
+\frac{k-ke^{-dn_*/k}(1+d(1-e^{-n_*/k}))}{( 1 + k(1-e^{-n_*/k})e^{-dn_*/k}
+) (1+e^{-dn_*/k})}.
+\end{equation}
+
+Similarly, when $n_*$ is of the order of $k$, this expression becomes
+approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
 
 %---------------------------------------------------------------
 %---------------------------------------------------------------
