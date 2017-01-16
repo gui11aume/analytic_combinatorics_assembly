@@ -4,8 +4,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage[font=small]{caption}
 \usepackage{cite}
+\usepackage{graphicx}
 
+\newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
 \newtheorem{lemma}{Lemma}
 \newtheorem{proposition}{Proposition}
@@ -13,7 +16,8 @@
 
 %---------------------------------------------------------------
 
-\title{The expected number of contigs}
+\title{Analytic combinatorics for bioinformatics: applications to
+contig assembly and seeding}
 \author{
 \textsc{Guillaume Filion} \\ [1ex]
 \normalsize CRG, Barcelona
@@ -102,115 +106,166 @@ distribution of the largest contig using models of occupancy.
 \subsection{Analytic combinatorics of the assembly problem}
 \label{sec:config}
 
+\begin{definition}
 If $(a_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate array, the generating
 function of the array is by definition
 
 \begin{equation*}
-F(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n}x^ky^n.
+A(x,y) = \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n}x^ky^n.
 \end{equation*}
 
 When $a_{k,n}$ counts the number of objects in a set $\mathcal{A}$, we
-will say that $F(x,y)$ is the generating function of those objects. When
-the emphasis is on the generating function, will refer to $a_{k,n}$ as the
-``coefficient of $x^ky^n$ in $F(x,y)$'', and denote it as ``$[x^ky^n]
-F(x,y)$'' when convenient. The function $F$ and the bivariate sequence
-$(a_{k,n})_{k \geq 0, n \geq 0}$ carry the same information, but some
-combinatorial operations are easier to perform with $F$, as we will see
-below.
+will say that $A(x,y)$ is the generating function of those objects, or the
+generating function of $\mathcal{A}$. We will refer to $a_{k,n}$ as the
+``coefficient of $x^ky^n$ in $A(x,y)$'', and denote it as ``$[x^ky^n]
+A(x,y)$'' whenever convenient.
+
+For convenience, we will call the variable associated to $x$ the
+\emph{size} and the variable associated to $y$ the \emph{weight}. The
+coefficient of $x^ky^n$ in $A(x,y)$ is thus the number of objects in
+$\mathcal{A}$ of size $k$ and weight $n$.
+\end{definition}
+
+The function $A$ and the bivariate sequence $(a_{k,n})_{k \geq 0, n \geq
+0}$ carry the same information, but some combinatorial operations are
+easier to perform with $A$, as we will see below.
 
 The first combinatorial object that we will consider is the ``interval'',
 defined here as the distance between the left ends of two consecutive
-reads. We will call this distance the \emph{size} of the interval, and we
-will impose it to be a strictly positive integer. This means that two
-reads cannot map to the same location, but we will later see how to relax
-this constraint. We will also give each interval a \emph{weight} equal to
-$1$. This may seem odd, but it will allow us to count intervals when we
-create more complex objects.
+reads. We will call this distance the size of the interval, and we will
+impose it to be a strictly positive integer. This means that two reads
+cannot map to the same location, but we will later see how to relax this
+constraint. We will also give each interval a weight equal to $1$. This
+will later allow us to count intervals when we create more complex
+objects.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.89]{Fig1.pdf}
+\caption{\textbf{Representation of the assembly problem}. Here we consider
+a single linear chromosome. Reads of identical length are drawn uniformly
+without replacement from the chromosome. The distance between the left
+ends of consecutive reads forms an interval of requivalent size. We assume
+that the leftmost and the rightmost reads always map to the ends of the
+chromosome so that intervals always cover exactly $k$ nucleotides.}
+\label{fig:sketchass}
+\end{figure}
+
+Figure \ref{fig:sketchass} shows the relationships between reads and
+intervals. The ``distance'' between two reads will always be the number of
+nucleotides between their left ends, which corresponds to an interval of
+the same size. Also note that we assume that the leftmost and the
+rightmost nucleotides of the genome are exactly covered by reads. This is
+not realistic, but such border effects will have negiligible influence on
+the asymptotic estimates.
 
 \begin{remark}
-In the fields of combinatorics, the coverage of $k$ nucleotides by $n$
-intervals corresponds to a composition, \textit{i.e.} the break-down of
-$k$ as a sum of $n$ positive integers \cite{AnalComb2009}. All the results
-presented in this article can be interpreted more widely as properties of
-compositions.
+In combinatorics, the coverage of $k$ nucleotides by $n$ intervals
+corresponds to a \emph{composition}, \textit{i.e.} the break-down of $k$
+as a sum of $n$ positive integers \cite{AnalComb2009}.
 \end{remark}
 
-We will use analytic combinatoric to derive asymptotic estimates in a
-context where the results will be familiar. For this, we need to obtain
-the generating function of intervals. There is exactly one interval of
-size $k$ and weight 1 ($k > 0$), and zero interval in all other cases, so
-$a_{k,n} = 1$ if $n = 1$ and $k > 0$, and $a_{k,n} = 0$ otherwise. The
-generating function of intervals is thus
+The first question of interest is to know the number of different
+configurations for a given value of $k$ and $n$. This problem is simple
+enough to showcase the methodology of analytic combinatorics, and the
+solution will turn out to be very useful. For now, we observe that we can
+``construct'' configurations from intervals.
+
+\begin{definition}
+A configuration is a sequence of intervals. The generating function of
+configurations is denoted $C(x,y)$.
+\end{definition}
+
+The general strategy to count configurations will be to find an expression
+for $C(x,y)$, extract its coefficients and find asymptotic estimates for
+them. For this, we first need to obtain $I(x,y)$, the generating function
+of intervals. For $k > 0$ there is exactly one interval of size $k$ and
+weight 1, so the coefficient of $x^ky^n$ equals $1$ if $n = 1$ and $k >
+0$, and $0$ otherwise. The generating function of intervals is thus
 
 \begin{equation}
 \label{eq:F}
-F(x,y) = xy + x^2y + x^3y + \ldots
+I(x,y) = xy + x^2y + x^3y + \ldots
 = xy(1+x+x^2+\ldots) = \frac{xy}{1-x}.
 \end{equation}
 
-In this expression, we say that $x$ ``marks'' the size and that $y$
-``marks'' the weight.
+\begin{remark}
+Wherever the equality $1+x+x^2+\ldots = 1/(1-x)$ is used, the condition
+$|x| < 1$ is assumed to hold.
+\end{remark}
 
 Operations on generating functions allow us to create more complex
-combinatorial objects through mathematical operations.  We have already
-used additions, which corresponds to disjoint unions. For instance, the
-generating function above says that an interval is either an interval of
-size 1 and weight 1, or an interval of size 2 and weight 1, or an interval
-of size 3 and weight 1 \textit{etc}. More generally, if $Q(x,y)$ and
-$R(x,y)$ are the generating functions of objects in disjoint sets
-$\mathcal{Q}$ and $\mathcal{R}$, then $Q(x,y)+R(x,y)$ is the generating
-function of objects in $\mathcal{Q} \cup \mathcal{R}$.
+combinatorial objects. We have already used additions, which correspond
+to disjoint unions. For instance, the generating function above says that
+an interval is either an interval of size 1 and weight 1, or an interval
+of size 2 and weight 1, or an interval of size 3 and weight 1
+\textit{etc}. More generally, if $A(x,y)$ and $B(x,y)$ are the generating
+functions of objects in disjoint sets $\mathcal{A}$ and $\mathcal{B}$,
+then $A(x,y)+B(x,y)$ is the generating function of objects in $\mathcal{A}
+\cup \mathcal{B}$.
 
 Multiplications correspond to Cartesian products. More specifically, if
-$Q(x,y)$ and $R(x,y)$ are the generating functions of objects in sets
-$\mathcal{Q}$ and $\mathcal{R}$ (disjoint or not), then $Q(x,y)R(x,y)$ is
-the generating function of objects in $\mathcal{Q} \times \mathcal{R}$,
-provided the attributes are \emph{additive}. For instance, we can take
-both $\mathcal{Q}$ and $\mathcal{R}$ as the set of intervals. If we define
-the size of a pair of intervals as the sum of their sizes (by placing the
-ends next to each other) and its weight as 2, then size and weight are
-additive, so the generating function of pairs of intervals is $Q(x,y)^2$.
+$A(x,y)$ and $B(x,y)$ are the generating functions of objects in sets
+$\mathcal{A}$ and $\mathcal{B}$ (disjoint or not), then $A(x,y)B(x,y)$ is
+the generating function of objects in $\mathcal{A} \times \mathcal{B}$.
+By doing so, we implicitly assume that the size of $(a,b) \in \mathcal{A}
+\times \mathcal{B}$ is the size of $a$ plus the size of $b$, and that the
+same goes for the weight.
 
-To see this, observe that the pairs of intervals of size $k$ and weight
-$n$ are made of all pairwise combinations of intervals whose sizes sum to
-$k$ and weights sum to $n$. The number of such pairs is $\sum_{l=0}^k
-\sum_{m=0}^n q_{l,m}q_{k-l,n-m}$ so the generating function is
+To prove this identity, observe that the pairs of size $k$ and weight $n$
+are made of all pairwise combinations of objects whose sizes sum to $k$
+and weights sum to $n$. The number of such pairs is $\sum_{l=0}^k
+\sum_{m=0}^n a_{l,m}b_{k-l,n-m}$ so the generating function of pairs is
 
 \begin{equation*}
 \begin{split}
 \sum_{k=0}^\infty &\sum_{n=0}^\infty \left( \sum_{l=0}^k \sum_{m=0}^n
-  q_{l,m}q_{k-l,n-m}\right) x^k y^n \\
+  a_{l,m}b_{k-l,n-m}\right) x^k y^n \\
 &= \sum_{l=0}^\infty \sum_{m=0}^\infty \sum_{k=l}^\infty \sum_{n=m}^\infty
-  q_{l,m}q_{k-l,n-m}x^{l + k-l} y^{m + n-m} \\ 
-&= \sum_{l=0}^\infty \sum_{m=0}^\infty q_{l,m} x^l y^m
+  a_{l,m}b_{k-l,n-m}x^{l + k-l} y^{m + n-m} \\ 
+&= \sum_{l=0}^\infty \sum_{m=0}^\infty a_{l,m} x^l y^m
   \sum_{k=l}^\infty \sum_{n=m}^\infty
-  q_{k-l,n-m}x^{k-l} y^{n-m} \\
-&= Q(x,y) \sum_{l=0}^\infty \sum_{m=0}^\infty q_{l,m} x^l y^m
- = Q(x,y)Q(x,y).
+  b_{k-l,n-m}x^{k-l} y^{n-m} \\
+&= B(x,y) \sum_{l=0}^\infty \sum_{m=0}^\infty a_{l,m} x^l y^m
+ = A(x,y)B(x,y).
 \end{split}
 \end{equation*}
 
+% Explain that the size just counts the intervals.
+By taking both $\mathcal{A}$ and $\mathcal{B}$ as the set of intervals, we
+see that the generating function of pairs of intervals is $I(x,y)^2$.
+Applying this formula multiple times, we also see that $I(x,y)^n$ is the
+generating function of sequences of $n$ of intervals. Since a sequence of
+intervals is either a sequence of $0$ interval, or a sequence of $1$
+interval, or a sequence of $2$ intervals \textit{etc}., we can write the
+generating function of configurations as
 
-Applying the formula above multiple times, we see that if $A(x,y)$ is the
-generating function of objects in $\mathcal{A}$, then $A(x,y)^n$ is the
-generating function of objects in $\mathcal{A}^n$ (representing $n$-tuples
-of objects in $\mathcal{A}$). Since joining $n$ consecutive intervals
-gives a new interval whose size is the sum of individual sizes and whose
-weight is the number of (atomic) intervals, $I(x,y)^n$ is the generating
-function of the concatenation of $n$ intervals. It follows that the
-generating function of all joined intervals is
+\begin{equation*}
+C(x,y) = \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
+= \frac{1}{1 - xy/(1-x)}.
+\end{equation*}
+
+\begin{remark}
+Note that a sequence of $n$ intervals has weight $n$, so the weight is a
+proxy for the number of intervals in the configuration.  We say that $y$
+``marks'' the number of intervals.
+\end{remark}
+
+We have used $I(x,y)$ to obtain an algebraic expression for $C(x,y)$. The
+coefficient of $x^ky^n$ in $C(x,y)$ is the number of configurations where
+$n$ intervals cover $k$ nucleotides, but its value does not appear
+spontaneously. Fortunately, we can write $C(x,y)$ in such a way that it
+will become more obvious. Observe that
 
 \begin{equation}
-\begin{split}
 \label{eq:C}
-C(x,y) &= \sum_{n=0}^\infty \left( \frac{xy}{1-x} \right)^n
-= \frac{1}{1 - xy/(1-x)} \\
-&= \frac{1-x}{1-x(1+y)} = (1-x) \sum_{k=0}^\infty \left(x(1+y) \right)^k.
-\end{split}
+C(x,y) = \frac{1-x}{1-x(1+y)} =
+(1-x) \sum_{k=0}^\infty \left(x(1+y) \right)^k.
 \end{equation}
 
-Using Newton's binomial formula, we can easily obtain an explicit
-expression for the coefficients of $C(x,y)$, namely
+
+Using Newton's binomial formula, we can expand $(1+y)^k$ so as to extract
+the powers of $y$, namely
 
 \begin{equation*}
 C(x,y) = (1-x)\sum_{k=0}^\infty x^k\sum_{n=0}^k {k \choose n} y^n
@@ -226,24 +281,324 @@ It follows that
 \text{, provided $k > 0$, $n > 0$}.
 \end{equation}
 
-In the cases not covered by formula (\ref{eq:coefC}), the coefficients are
-equal to 0, except for $k = n = 0$ where the coefficient is equal to 1.
+It can also be seen that the cases $k = 0$ and $n = 0$ give coefficients
+equal to $0$, except for $k = n = 0$ where the coefficient is equal to
+$1$.
 
 \begin{remark}
 The last expression in (\ref{eq:C}) gives an alternative construction for
 sequences of intervals. The term $1+y$ is the generating function of bits,
 \textit{i.e.} elements of $\{0,1\}$, so $(x(1+y))^k$ is the generating
-function of bit strings where $x$ marks the size. Sequences of intervals
-are equivalent to bit strings, because we can encode left end of intervals
-with a $1$ and every other position with a $0$.
+function of bit strings where $x$ marks the size and $y$ marks the number
+of bits set to $1$. To exhibit a bijection we can encode left ends of
+intervals with a $1$ and every other position with a $0$. The factor $1-x$
+is a correction for the fact that the first bit is always set to $1$ (see
+Figure \ref{fig:sketchass}).
 \end{remark}
 
-In this example, we were able to obtain an explicit expression for the
-number of ways that $n$ intervals can cover $k$ nucleotides. We could use
-Stirling's formula to obtain the asymptotic behavior of those
-coefficients, but in general this information is directly available from
-the generating function, especially when it has a simple form such as
-(\ref{eq:C}).
+We now have the \emph{exact} number of configurations for every value of
+$k$ and $n$. To obtain asymptotic estimates, we can use Stirling's formula
+$n! \sim n^ne^{-n}\sqrt{2\pi n}$. After cancellations we see that the
+number of configurations is asymptotically equivalent to
+
+\begin{equation}
+\label{eq:assBC}
+[x^ky^n]C(x,y) \sim \frac{k^{k-1}}{n^{n-1}(k-n)^{k-n}}
+\sqrt{\frac{k}{2\pi n(k-n)}}.
+\end{equation}
+
+A more direct approach would have been to observe that a configuration is
+a draw of $n-1$ left ends among $k-1$ positions, leading directly to
+(\ref{eq:coefC}). The benefit of the analytic combinatorics approach is
+that we can now tinker the generating function $C(x,y)$ to obtain results
+that do not lend themselves to such direct approaches.
+
+
+
+
+%%%%%%%%%%%%% Average number of contigs %%%%%%%%%%%%%
+\subsection{Average number of contigs}
+\label{sec:av}
+
+Some configurations are better than others for the purpose of assembling
+the genome. In order to investigate the properties of ``good''
+configurations, we need to introduce new combinatorial objects.
+
+\begin{definition}
+A $d$-interval is an interval of size no greater than $d$ and a $d$-gap is
+an interval of size greater than $d$. The generating function of
+$d$-intervals is denoted $I_d(x,y)$ and the generating function of
+$d$-gaps is denoted $G_d(x,y)$.
+\end{definition}
+
+Intuitively, if two reads are separated by a $d$-interval, it will be
+possible to merge them, whereas if they are separated by a $d$-gap this
+will not be possible. The value of $d$ depends on the concrete assembly
+problem at hand and on the read length ($d$ is higher for longer reads).
+This natually lead to the following definition.
+
+\begin{definition}
+A contig is a non-empty sequence of $d$-intervals. The generating function
+of contigs is denoted $K(x,y)$.
+\end{definition}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.9]{Fig2.pdf}
+\caption{\textbf{Contigs and gaps}. In this example $d=4$, so contigs
+correspond to sequences of one of more $4$-intervals. The color of the
+double arrow is black for $4$-intervals and grey for $4$-gaps. The
+configuration contains two contigs.}
+\label{fig:contigs}
+\end{figure}
+
+In real assembly problems, there is no guarantee that merging consecutive
+reads will be possible every time their distance is no greater than some
+threshold $d$. Because of sequencing errors, repeated sequences and other
+practical complications, the number of contigs on real problems is
+systematically lower than on ideal problems.
+
+It is interesting to estimate the number of contigs that one may expect to
+obtain. Instead of jumping directly to this task, we will count $d$-gaps
+instead. This will be useful for exposition purposes, and the answer will
+bring some insight into the assembly problem.
+
+Following the strategy of analytic combinatorics, we must first find the
+generating functions of the objects under focus. Going back to the
+construction of intervals, we can see that the generating functions of
+$d$-intervals and $d$-gaps are
+
+\begin{equation*}
+\begin{split}
+I_d(x,y) &= yx + yx^2 + \ldots + yx^d = yx\frac{1-x^d}{1-x}\text{, and} \\
+G_d(x,y) &= yx^{d+1} + yx^{d+2} + \ldots = y\frac{x^{d+1}}{1-x}.
+\end{split}
+\end{equation*}
+
+Observe that $I_d(x,y)+G_d(x,y) = I(x,y)$ because an interval is either a
+$d$-interval or a $d$-gap (and because the intersection of $d$-intervals
+and $d$-gaps is empty). Using this, we can write the generation of
+configurations as
+
+\begin{equation}
+\label{eq:C2ndform}
+C(x,y) = \sum_{n=0}^\infty I(x,y)^n
+= \sum_{n=0}^\infty \left( I_d(x,y) + G_d(x,y) \right)^n.
+\end{equation}
+
+Since $d$-gaps appear explicitly in this expression of $C(x,y)$, we can
+use another variable, say $u$, to mark them. For this, we just have to
+multiply their generating function $G_d(x,y)$ by $u$ so that every time a
+$d$-gap appears in a configuration, the exponent of $u$ is raised by $1$.
+The same method was applied earlier to let $y$ mark the number of
+intervals. Transforming $C(x,y)$ as proposed, we obtain
+
+
+\begin{equation*}
+H(x,y,u) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+uy\frac{x^{d+1}}{1-x}\right)^n
+= \frac{1-x}{1-x-y\left(x(1-x^d) +ux^{d+1}\right)}.
+\end{equation*}
+
+$H(x,y,u)$ is the generating function of a three-dimensional array
+$(a_{k,n,m})$, where each term is the number of configurations of total
+size $k$, total weight $n$ and with $m$ $d$-gaps. Note that both
+$d$-intervals and $d$-gaps contribute to the weight, so that it still
+indicates the number of intervals. For a given value of $k$ and $n$, the
+cumulative number of $d$-gaps is $\sum_{m=0}^\infty ma_{k,n,m}$. Since for
+the same values of $k$ and $n$ the total number of configurations is
+$\sum_{m=0}^\infty a_{k,n,m}$ the average number of $d$-gaps is
+
+\begin{equation}
+\label{eq:average}
+\sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m}.
+\end{equation}
+
+As usual, we will find the generating functions of the numerator and the
+denomiator of (\ref{eq:average}) and extract their respective
+coefficients. Observe that
+
+\begin{equation*}
+\begin{split}
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}} &=
+\sum_{k=0}^\infty\sum_{n=0}^\infty
+\left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n \text{, and} \\
+H(x,y,1) &= \sum_{k=0}^\infty\sum_{n=0}^\infty
+\left(\sum_{m=0}^\infty a_{k,n,m} \right)x^ky^n.
+\end{split}
+\end{equation*}
+
+It is easier to start with the generating function of the denominator as
+the results are already available. Equation (\ref{eq:C2ndform}) says that
+$H(x,y,1) = C(x,y)$. This is intuitive, because counting $d$-gaps should
+not change the total number of configurations. Now turning to the
+numerator we obtain
+
+\begin{equation*}
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+= \frac{yx^{d+1}(1-x)}{\left(1-x(1+y)\right)^2}.
+\end{equation*}
+
+There is no obvious way to extract the coefficients of this generating
+function. Fortunately, it is close to another generating function for
+which we already know the coefficients. Observe that
+
+\begin{equation*}
+\frac{\partial C(x,y)}{\partial y} = 
+\frac{x(1-x)}{\left(1-x(1+y)\right)^2}.
+\end{equation*}
+
+So $\partial H(x,y,u)/\partial u|_{\substack{\\u=1}} = yx^d\partial
+C(x,y)/\partial y$ and the coefficient of $x^ky^n$ in the generating
+function of the numrator of (\ref{eq:average}) is $n[x^{k-d}y^n]C(x,y)$.
+The average number of $d$-gaps is thus
+
+\begin{equation*}
+n {k-d-1 \choose n-1} \Big/ {k-1 \choose n-1}.
+\end{equation*}
+
+For $k < d$ or $n > k-d$ the average number of gaps is $0$.  We can also
+use equation (\ref{eq:assBC}) or Sitrling's formula to obtain a simple
+asymptotic estimate for the expected number of $d$-gaps, namely
+
+\begin{equation*}
+n\left(1-n/k\right)^d.
+\end{equation*}
+
+\begin{remark}
+Here the benefits of the analytic combinatorics approach become obvious.
+It is much more difficult to tink of a direct approach leading to the same
+results.
+\end{remark}
+
+Recall that this formula assumes that reads cannot map to the same
+location. It is possible to filter out identical reads, but it would be
+useful to relax this constraint in order to compute estimates before any
+data is acquired.
+
+For this, let us assume that there is a total of $n_*$ reads drawn
+\emph{with} replacement. Each nucleotide of the chromosome corresponds to
+the left end of a read $n_*/k$ times on average. Because $k$ and $n_*$ are
+both large, we can approximate the number of time a nucleotide is drawn by
+a Poisson distribution with mean $n_*/k$. The probability that a position
+is the left end of a read is approximately $1-e^{-n_*/k}$, so $n \sim
+k(1-e^{-n_*/k})$.
+
+\begin{remark}
+Allowing intervals and $d$-intervals to have size $0$ is not the proper
+way to address this issue because it gives different sampling
+probabilities.  For $4$ reads covering $2$ nucleotides the probability
+that the first two intervals have size $0$ would be $1/3$, whereas it
+should be $2/7$.
+\end{remark}
+
+The final asymptotic estimate for the expected number of gaps as a
+function of the chromosome size $k$ and the number of reads $n_*$ is
+
+\begin{equation}
+\label{eq:avstar}
+k(1-e^{-n_*/k})e^{-dn_*/k}.
+\end{equation}
+
+Expression (\ref{eq:avstar}) is useful because at high coverage there will
+be approximately one $d$-gap between every pair of contigs, so we can
+estimate of the average number of contigs as $1 + k(1-e^{-n_*/k})
+e^{-dn_*/k}$. However, at low coverage this estimate is inaccurate
+because there will be many consecutive $d$-gaps not enclosing a contig.
+
+For the general case, we need to count contigs in a slightly more tedious
+way. The function $H(x,y,u)$ above is a ``counting function'' and $u$ is
+the ``counting parameter''. We can count contigs by decorating their
+generating function with $u$ and again compute their average number
+through the ratio
+
+\begin{equation*}
+\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
+{[x^ky^n]H(x,y,1)}.
+\end{equation*}
+
+All we need to do is to find a way to ``construct'' configurations from
+contigs and apply the same method as above. It is intuitively clear that
+configurations are composed of contigs and of non-empty sequences of
+$d$-gaps, so we need to find the generating functions of those objects.
+Contigs are non-empty sequences of $d$-intervals, so their generating
+function is
+
+\begin{equation*}
+K(x,y) = \sum_{n=1}^\infty \left( F_d(x,y) \right)^n
+= \sum_{n=1}^\infty \left(yx\frac{1-x^d}{1-x} \right)^n
+= \frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
+\end{equation*}
+
+Similarly, denoting $G(x,y)$ the generating function of non-empty
+sequences of $d$-gaps, we can express it as
+
+\begin{equation*}
+G(x,y) = \sum_{n=1}^\infty \left(G_d(x,y) \right)^n
+= \sum_{n=1}^\infty \left(y\frac{x^{d+1}}{1-x} \right)^n
+= \frac{yx^{d+1}/(1-x)}{1-yx^{d+1}/(1-x)}.
+\end{equation*}
+
+Now, the basic unit of configurations is a non-empty contig followed by a
+non-empty sequence of $d$-gaps, whose generating function is
+$uK(x,y)G(x,y)$. The presence of $u$ here indicates that each unit adds 1
+to the count of contigs. A configuration is a sequence of such units, but
+it starts with a potentially empty sequence of $d$-gaps, whose generating
+function is $1+G(x,y)$, and it ends with a potentially empty contig, whose
+generating function is $1+uK(x,y)$. The counting function thus comes out
+as
+
+\begin{equation*}
+\begin{split}
+H(x,y,u) &= \left( 1+G(x,y) \right)
+\left( \sum_{n=0}^\infty (uK(x,y)G(x,y))^n \right)
+\left( 1+uK(x,y) \right) \\
+& = \frac{(1+G(x,y))(1+uK(x,y))}{1-uK(x,y)G(x,y)}.
+\end{split}
+\end{equation*}
+
+One can check from the definitions of $K(x,y)$ and $G(x,y)$ that $H(x,y,1)
+= C(x,y)$ as expected. Again, the derivative of $H(x,y,1)$ is related to
+$C(x,y)$, and following the same strategy as above, we obtain
+
+\begin{equation*}
+\partial H(x,y,u)/\partial u|_{\substack{\\u=1}}
+= y(1-x^d)\left( 1 - y(x+\ldots+x^d) \right)
+\frac{\partial C(x,y)}{\partial y}.
+\end{equation*}
+
+The relationship between the coefficients of $\partial H(x,y,u) /\partial
+u|_{\substack{\\u=1}}$ and those of $C(x,y)$ is more cumbersome than for
+$d$-gaps, but we still obtain an exact expression for the exepected number
+of contigs. More interesting is the asymptotic estimate, which retains a
+relatively simple form, namely
+
+\begin{equation}
+\label{eq:avcont}
+\left( 1+n(1-n/k)^d \right) \left(1-(1-n/k)^d\right).
+\end{equation}
+
+We recognize in expression (\ref{eq:avcont}) our previous estimator
+$1+n(1-n/k)^d$, but here it is corrected by the factor $1-(1-n/k)^d$,
+which speicifically declines at low coverage.
+
+Using the Poisson approximation, we can again express the expected number
+of contigs as a function of the total number of reads as
+
+\begin{equation}
+\label{eq:avcontnstar}
+(1 + k(1-e^{-n_*/k})e^{-dn_*/k} ) (1-e^{-dn_*/k}).
+\end{equation}
+
+In conclusion, we have obtained formulas that are accurate at high and low
+coverage.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Probability of tight coverage}
+\label{sec:compass}
 
 Riordan arrays are bivariate arrays $(a_{k,n})_{k,n}$ such that the
 generating function satisfies
@@ -281,21 +636,6 @@ a Riordan array with $\phi(x) = 1$ and $\nu(x) = x/(1-x)$.  Here $\mu(x) =
 1/(1-x)$ and $\sigma^2(x) = x/(1-x)^2$, so we obtain $x_\lambda = (\lambda
 -1)/\lambda$, $\nu(x_\lambda) = \lambda -1$, and $\sigma^2(x_\lambda) =
 \lambda(\lambda-1)$. Combining this with $\lambda \sim k/n$ we obtain
-
-\begin{equation}
-\label{eq:assBC}
-{k-1 \choose n-1} \sim \frac{k^{k-1}}{n^{n-1}(k-n)^{k-n}}
-\sqrt{\frac{k}{2\pi n(k-n)}}.
-\end{equation}
-
-This section illustrates the strategy of analytic combinatorics: we
-specify combinatorial structures through generating functions, and we use
-general theorems to extract coefficient asymptotics. This approach may
-seem counter-intuitive or overly complex, but we will see in the next
-sections how it can lead to results that are otherwise not available. 
-
-\subsection{Probability of tight coverage}
-\label{sec:compass}
 
 % This is where I define tight coverage.
 In the shotgun strategy of genome assembly, reads are merged if they
@@ -541,219 +881,6 @@ automate the estimation are recapitulated here:
 \item Take the difference of the last two terms and exponentiate.
 \end{enumerate}
 
-\subsection{The average number and size of contigs}
-\label{sec:av}
-
-If the coverage is not tight, it is interesting to know the expected
-number of contigs and their expected size. For this, we need to introduce
-``$d$-gaps'', that are intervals of size greater than $d$. By definition,
-contigs are flanked by $d$-gaps so we can count the $d$-gaps and  infer
-the number of contigs.
-
-The generating function of $d$-gaps is $x^{d+1}y + x^{d+2}y + \ldots =
-yx^{d+1}/(1-x)$. Note that an interval is either a $d$-interval or a
-$d$-gap, and since a configuration is a sequence of intervals, we can
-write their generating function as
-
-\begin{equation}
-\label{eq:C2ndform}
-C(x,y) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-y\frac{x^{d+1}}{1-x}\right)^n.
-\end{equation}
-
-It is elementary to verify that this expression is equivalent to
-(\ref{eq:C}). We can use it to mark the number of gaps by the variable
-$u$. The same was as multiplying the generating function of intervals by
-$y$ ensured that the coefficient of $y^n$ indicates the number of
-configurations with $n$ intervals, we multiply the generating function of
-$d$-gaps by $u$, so that the coefficient of $u^m$ indicates the number of
-configurations with $m$ $d$-gaps.
-
-\begin{equation*}
-H(x,y,u) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
-uy\frac{x^{d+1}}{1-x}\right)^n
-= \frac{1-x}{1-x-y\left(x(1-x^d) +ux^{d+1}\right)}.
-\end{equation*}
-
-$H(x,y,u)$ is the generating function of a three-dimensional array
-$(a_{k,n,m})$, where each term is the number of configurations of total
-size $k$, total weight $n$ and with $m$ $d$-gaps. Note that both
-$d$-intervals and $d$-gaps contribute to the weight, so that it still
-indicates the number of distinct reads. For a given value of $k$ and $n$,
-the cumulative number of $d$-gaps is $\sum_{m=0}^\infty ma_{k,n,m}$. Since
-for the same values of $k$ and $n$ the total number of configurations is
-$\sum_{m=0}^\infty a_{k,n,m}$ the average number of $d$-gaps is
-
-\begin{equation}
-\label{eq:average}
-\sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m}.
-\end{equation}
-
-As usual, we will find the generating functions for the numerator and the
-denomiator of (\ref{eq:average}) and use proposition \ref{th:PW} to obtain
-asymptotic estimates. Observe that
-
-\begin{equation*}
-\begin{split}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}} &=
-\sum_{k=0}^\infty\sum_{n=0}^\infty
-\left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n \text{, and} \\
-H(x,y,1) &= \sum_{k=0}^\infty\sum_{n=0}^\infty
-\left(\sum_{m=0}^\infty a_{k,n,m} \right)x^ky^n.
-\end{split}
-\end{equation*}
-
-This implies that we can compute (\ref{eq:average}) from the coefficients
-of $H(x,y,u)$ and its partial derivative at $u=1$. It is easier to start
-with the denominator as the results are already available. Equation
-(\ref{eq:C2ndform}) implies that $H(x,y,1) = C(x,y)$. We could extract the
-coefficients as per expression (\ref{eq:coefC}) and proceed as in the
-previous section, but we can obtain a much simpler result as will appear
-shortly. Now turning to the numerator we obtain
-
-\begin{equation*}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
-= \frac{yx^{d+1}(1-x)}{\left(1-x-xy\right)^2}.
-\end{equation*}
-
-Careful attention shows that this expression is ``almost'' the generating
-function of a Riordan array. Observe that
-
-\begin{equation*}
-\frac{\partial C(x,y)}{\partial y} = 
-\frac{x(1-x)}{\left(1-x-yx\right)^2}.
-\end{equation*}
-
-So $\partial H(x,y,u)/\partial u|_{\substack{\\u=1}} = yx^d\partial
-C(x,y)/\partial y$, and since $\lim k/n = \lambda$ implies $\lim (k-d)/n =
-\lambda$, we can use proposition \ref{th:PW} to derive asymptotics for the
-numerator of (\ref{eq:average}). More significantly, the ratio is now
-greatly simplified:
-
-\begin{equation*}
-\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
-{[x^ky^n]H(x,y,1)} =
-\frac{n[x^{k-d}y^n]C(x,y)}{[x^ky^n]C(x,y)}
-\sim n x_\lambda^d.
-\end{equation*}
-
-We have seen in section \ref{sec:config} that $x_\lambda =
-(\lambda-1)/\lambda$, so the average number of $d$-gaps is
-$n(1-1/\lambda)^d$, which we can express in the more general form
-
-\begin{equation*}
-n\left(1-n/k\right)^d.
-\end{equation*}
-
-Recall that this formula assumes that reads are distinct (which implies
-among others that $n \leq k$). In order to obtain the average number of
-$d$-gaps when reads are not assumed to be distinct, we use expression
-(\ref{eq:nstar}) and obtain
-
-\begin{equation}
-\label{eq:avstar}
-k(1-e^{-n_*/k})e^{-dn_*/k}.
-\end{equation}
-
-\begin{example}
-Consider the same examle as above, with a genome of size 25,001 and 10,001
-reads drawn uniformly at random with replacement (\textit{i.e.} $k =
-25000$ and $n_* = 10000$. Formula (\ref{eq:avstar}) immediately yields an
-average equal to 0.374.
-
-Randomly sampling 200,000 configurations gives an estimate for this
-average equal to $0.375$, again within 1\% of the estimate.
-\end{example}
-
-When the number of $d$-gaps is small, we can just add $1$ to obtain an
-estimate for the number of contigs. However, at low coverage the first or
-the last interval may be a $d$-gap, or two $d$-gaps may lie next to each
-other, so the approximation will overstimate the number of contigs. In
-such cases, we need to count contigs directly, which is slightly more
-tedious.
-
-In the above, the function $H(x,y,u)$ is a ``counting function'' and $u$
-is the ``counting parameter''. We can count any object, including contigs,
-by decorating their generating function with $u$. As above, the average
-number of those objects in configurations of size $k$ and weight $n$ will
-be given by the ratio
-
-\begin{equation*}
-\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
-{[x^ky^n]H(x,y,1)}.
-\end{equation*}
-
-We can thus exhibit the counting function of contigs and use the same
-method as above. It is intuitively clear that configurations consist of
-non-empty sequences of contigs and non-empty sequences of $d$-gaps.
-Non-empty contigs are non-empty sequences of $d$-intervals, so their
-generating function is
-
-\begin{equation*}
-C_{d*}(x,y) = \sum_{n=1}^\infty \left(yx\frac{1-x^d}{1-x} \right)^n
-= \frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
-\end{equation*}
-
-Similarly, the generating function of non-empty sequences of $d$-gaps is
-
-\begin{equation*}
-G_{d*}(x,y) = \sum_{n=1}^\infty \left(y\frac{x^{d+1}}{1-x} \right)^n
-= \frac{yx^{d+1}/(1-x)}{1-yx^{d+1}/(1-x)}.
-\end{equation*}
-
-The basic unit of configurations is a non-empty contig followed by a
-non-empty sequence of $d$-gaps, whose generating function is
-$uC_{d*}(x,y)G_{d*}(x,y)$. The presence of $u$ here indicates that each
-unit adds 1 to the count of contigs. A configuration is a sequence of such
-units, but it starts with a potentially empty sequence of $d$-gaps, whose
-generating function is $1+G_{d*}(x,y)$, and it ends with a potentially
-empty contig, whose generating function is $1+uC_{d*}(x,y)$. The counting
-function thus comes out as
-
-\begin{equation*}
-\begin{split}
-H(x,y,u) &= \left( 1+G_{d*}(x,y) \right)
-\left( \sum_{n=0}^\infty (uC_{d*}(x,y)G_{d*}(x,y))^n \right)
-\left( 1+uC_{d*}(x,y) \right) \\
-& = \frac{(1+G_{d*}(x,y))(1+uC_{d*}(x,y))}{1-uC_{d*}(x,y)G_{d*}(x,y)}.
-\end{split}
-\end{equation*}
-
-One can check from the definitions of $C_{d*}$ and $G_{d*}$ that $H(x,y,1)
-= C(x,y)$ as expected. After a similar calculation as above, we would
-obtain
-
-\begin{equation*}
-\partial H(x,y,u)/\partial u|_{\substack{\\u=1}}
-= y(1-x^d) \frac{\partial C}{\partial y} - y^2\frac{x}{1-x}(1-x^d)^2
-\frac{\partial C}{\partial y}.
-\end{equation*}
-
-Applying proposition \ref{th:PW} once again, we obtain after some basic
-manipulations
-
-\begin{equation}
-\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
-{[x^ky^n]H(x,y,1)} \sim n(1-x_\lambda^d) - (n-1)(1-x_\lambda^d)^2.
-\end{equation}
-
-After substituting $x_\lambda$ by $(\lambda-1)/\lambda = 1-n/k$, the
-asymptotic average number of contigs for a configuration of size $k$ and
-weight $n$ appears as
-
-\begin{equation}
-\label{eq:avcont}
-\begin{split}
-\left( 1+n(1-n/k)^d \right) \left(1-(1-n/k)^d\right) \text{, or} \\
-( 1 + k(1-e^{-n_*/k})e^{-dn_*/k} ) (1+e^{-dn_*/k}).
-\end{split}
-\end{equation}
-
-Both formulas show the estimate mentioned above (1 plus the number of
-$d$-gaps) mutiplied by and a correction factor. For large $n$ or $n_*$ the
-correction factor is close to 1 and can be neglected.  Note that $n-1$ has
-been replaced by $n$ before applying (\ref{eq:nstar}). This yields a
-simpler expression at a negligible cost for accuracy.
 
 \subsection{The average size of contigs}
 
@@ -820,6 +947,18 @@ terms of raw number of reads is
 
 Similarly, when $n_*$ is of the order of $k$, this expression becomes
 approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
+
+\section{Discussion}
+
+Strictly speaking, we do not need the theorems by Pemantle and Wilson.
+Here we care only about approximations rather than asymptotics. We could
+have used earlier results by Drmota \cite{Drmota1994} or Gardy
+\cite{Gardy1995}, or we could have used the saddle point asymptotics
+method on $(x(1-x^d)/(1-x))^n$ we would obtain expression (\ref{eq:assRA})
+for fixed $n$ and $k$, which is sufficient for our purpose. However, this
+would have required to check that the function satisfies some conditions
+that are fairly technical. Proposition \ref{th:PW} is very general and it
+makes this step unnecessary.
 
 %---------------------------------------------------------------
 %---------------------------------------------------------------
