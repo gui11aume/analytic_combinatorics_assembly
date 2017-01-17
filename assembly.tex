@@ -338,6 +338,7 @@ problem at hand and on the read length ($d$ is higher for longer reads).
 This natually lead to the following definition.
 
 \begin{definition}
+\label{def:contig}
 A contig is a non-empty sequence of $d$-intervals. The generating function
 of contigs is denoted $K(x,y)$.
 \end{definition}
@@ -481,7 +482,7 @@ For this, let us assume that there is a total of $n_*$ reads drawn
 the left end of a read $n_*/k$ times on average. Because $k$ and $n_*$ are
 both large, we can approximate the number of time a nucleotide is drawn by
 a Poisson distribution with mean $n_*/k$. The probability that a position
-is the left end of a read is approximately $1-e^{-n_*/k}$, so $n \sim
+is the left end of a read is approximately $1-e^{-n_*/k}$, so $n \approx
 k(1-e^{-n_*/k})$.
 
 \begin{remark}
@@ -492,8 +493,8 @@ that the first two intervals have size $0$ would be $1/3$, whereas it
 should be $2/7$.
 \end{remark}
 
-The final asymptotic estimate for the expected number of gaps as a
-function of the chromosome size $k$ and the number of reads $n_*$ is
+The asymptotic estimate for the expected number of gaps as a function of
+the chromosome size $k$ and the number of reads $n_*$ is
 
 \begin{equation}
 \label{eq:avstar}
@@ -570,15 +571,27 @@ $C(x,y)$, and following the same strategy as above, we obtain
 The relationship between the coefficients of $\partial H(x,y,u) /\partial
 u|_{\substack{\\u=1}}$ and those of $C(x,y)$ is more cumbersome than for
 $d$-gaps, but we still obtain an exact expression for the exepected number
-of contigs. More interesting is the asymptotic estimate, which retains a
-relatively simple form, namely
+of contigs, namely
+
+\begin{equation*}
+\begin{split}
+n \Bigg[ {k-1 \choose n-1} - {k-d-1 \choose n-1} &- {k-2 \choose n-2}
+- \ldots - {k-d-1 \choose n-2} + \\
+&{k-d-2 \choose n-2} + \ldots + {k-2d-1 \choose n-2} \Bigg]
+\Big/ {k-1 \choose n-1}.
+\end{split}
+\end{equation*}
+
+
+More interesting is the asymptotic estimate, which comes in a
+simpler form. The formula above is asymptotically equal to
 
 \begin{equation}
 \label{eq:avcont}
 \left( 1+n(1-n/k)^d \right) \left(1-(1-n/k)^d\right).
 \end{equation}
 
-We recognize in expression (\ref{eq:avcont}) our previous estimator
+We recognize ur previous estimator
 $1+n(1-n/k)^d$, but here it is corrected by the factor $1-(1-n/k)^d$,
 which speicifically declines at low coverage.
 
@@ -590,14 +603,132 @@ of contigs as a function of the total number of reads as
 (1 + k(1-e^{-n_*/k})e^{-dn_*/k} ) (1-e^{-dn_*/k}).
 \end{equation}
 
-In conclusion, we have obtained formulas that are accurate at high and low
-coverage.
+Let us now examine a concrete example. In Figure~\ref{fig:avcontig} we
+consider a small genome of $k = 25,000$ nucleotides, where contigs are
+composed of $24$-intervals. We measure the average number of contigs over
+$100,000$ random samples for different number of reads $n$ and compare
+this value to the Lander-Waterman estimate $ne^{-dn/k}$, to the Roach
+estimate $1+(n-1)(1-d/k)^n$, and to the estimate given by formula
+(\ref{eq:avcontnstar}).
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.585]{Fig3.pdf}
+\caption{\textbf{Average number of contigs}. In this example, $k=25,000$
+and $d=24$. Between $100$ and $10,000$ reads were drawn at random with
+replacement and the number of contigs was calculated following definition
+\ref{def:contig}. Each case was replicated $100,000$ times and the average
+was plotted (circles). Dotted lines show the Lander-Waterman and Roach
+estimates (the lines are superimposed in the left panel) and the plain
+lines show the estimate computed from expression (\ref{eq:avcontnstar}).
+The lander-Waterman and Roach estimates are sustantially biased at low
+read count (left panel). At high read count (right panel), the Roach
+estimate is asymptotically unbiased, but the Lander-Waterman estimate is
+not. Here the estimate of this study never deviates by more than 2\%.}
+\label{fig:avcontig}
+\end{figure}
+
+It is clear that formula (\ref{eq:avcontnstar}) is the most accurate,
+especially at low number of reads. The absolute error is largest at the
+maximum number of contigs (around $1500$ reads), where the estimate is too
+small by approximately $3$ contigs. The relative error is largest at the
+lowest number of reads, where it is 5\% too low. Above $2000$ reads the
+relative error is below 1\% (in comparison, the relative error of the
+Roach estimate never drops below 8\% on this data). These small
+differences do not disppear for larger values of $k$, they are due to the
+Poisson approximation used to turn expression (\ref{eq:avcont}) into
+(\ref{eq:avcontnstar}), which brings small but systematic biases.
+
+In conclusion, we have obtained an estimator that is accurate at all
+values of the coverage. It is important to highlight that it derives from
+the standard analytic combinatorics and that it involves only basic
+mathematical manipulations.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Average contig size}
+
+It is interesting to compute the average size of the contigs. All the
+tools that we need to obtain an estimate have already been introduced.
+
+The simplest strategy is to compute the cumulative size of $d$-gaps and
+get the cumulative size of contigs by complementarity. We can exhibit a
+counting function for the size of $d$-gaps and derive asymptotic estimates
+using the same strategy as in the previous section. All we have to do is
+mark the size of a $d$-gaps with corresponding powers of $u$. In
+expression (\ref{eq:C2ndform}), $G_d(x,y)$ will be replaced by 
+$y(x^{d+1}u^{d+1} + x^{d+2}u^{d+2} + \ldots ) = yx^{d+1}u^{d+1}/(1-xu)$.
+The counting function for the size of $d$-gaps is thus
+
+\begin{equation*}
+\begin{split}
+H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
+y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
+&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
+x^{d+1}u^{d+1}/(1-xu) \right)}.
+\end{split}
+\end{equation*}
+
+Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
+with respect to $u$, we obtain
+
+\begin{equation*}
+\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+= y \frac{(d+1)x^{d+1}-dx^{d+2}}{(1-x)^2} \frac{\partial C(x,y)}
+{\partial y}.
+\end{equation*}
+
+This yields an exact expression for the cumulative size of $d$-gaps
+averaged over all configurations\footnote{This result is somewhat more
+technical than the previous ones and it requires the equality
+$(k+1){k \choose n} + k{k-1 \choose n} + \ldots = (n+1){k+2
+\choose n+2}$.}
+
+\begin{equation}
+(d+1)n {k-d \choose n+1} -dn {k-d-1 \choose n+1}.
+\end{equation}
+
+
+This is asymptotically equivalent to $k(1-n/k)^{d+1}(d+k/n)$.  Since the
+expected asymptotic number of $d$-gaps is $n(1-n/k)^d$, we see that their
+individual size is asymptotic to $(k/n-1)(d+k/n)$. Intuitively, the size
+of $d$-gaps is very large when $n$ is much smaller than $k$.
+
+We can also compute the expected unassembled fraction, \textit{i.e.} the
+fraction of nucleotides covered by $d$-gaps. For this we just have to
+divide the cumulative size of $d$-gaps by the total size $k$ and we obtain
+$(1-n/k)^{d+1}(d+k/n)$.
+
+To answer the original question, we compute the total size of contigs by
+complementary as $k-k(1-n/k)^{d+1}(d+k/n)$. Now dividing by the
+average number of contigs, we find that the expected asymptotic size as
+
+\begin{equation}
+\frac{k(1-(1-n/k)^{d+1}(d+k/n))}
+{\left(1+n(1-n/k)^d\right)\left(1-(1-n/k)^d \right)}.
+\end{equation}
+
+This expression is somewhat cumbersome, but it becomes approximately equal
+to $k/(1+n(1-n/k)^d)$ when $n$ is close to $k$. This quantity expressed in
+terms of raw number of reads is
+
+\begin{equation}
+\frac{k\left( 1-e^{-(d+1)n_*/k}(d+1/(1-e^{-n_*/k})) \right)}
+{( 1 + k(1-e^{-n_*/k})e^{-dn_*/k}) (1-e^{-dn_*/k})}.
+\end{equation}
+
+Similarly, when $n_*$ is of the order of $k$, this expression becomes
+approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
+
+
+
+
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Probability of tight coverage}
+\subsection{Probability of closure}
 \label{sec:compass}
 
 Riordan arrays are bivariate arrays $(a_{k,n})_{k,n}$ such that the
@@ -882,71 +1013,6 @@ automate the estimation are recapitulated here:
 \end{enumerate}
 
 
-\subsection{The average size of contigs}
-
-It is also interesting to compute the average size of contigs when
-coverage is not tight. The simplest strategy is to compute the cumulative
-size of $d$-gaps and get the cumulative size of contigs by
-complementarity. We can exhibit a counting function for the size of
-$d$-gaps and derive asymptotic estimates using the same strategy as in the
-previous section. All we have to do is decorate the size of a $d$-gaps
-with corresponding powers of $u$ in expression (\ref{eq:C2ndform}). The
-decorated generating function of $d$-aps becomes $y(x^{d+1}u^{d+1} +
-x^{d+2}u^{d+2} + \ldots ) = yx^{d+1}u^{d+1}/(1-xu)$. The counting function
-is thus
-
-\begin{equation*}
-\begin{split}
-H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
-y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
-&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
-x^{d+1}u^{d+1}/(1-xu) \right)}.
-\end{split}
-\end{equation*}
-
-Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
-with respect to $u$, we obtain
-
-\begin{equation*}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
-= y \frac{(d+1)x^{d+1}-dx^{d+2}}{(1-x)^2} \frac{\partial C(x,y)}
-{\partial y}.
-\end{equation*}
-
-From the relation above and from proposition \ref{th:PW}, we obtain the
-asymptotic cumulative size of $d$-gaps as $n(1-1/\lambda)^d(\lambda+d)$ or
-in more general terms $n(1-n/k)^d(k/n+d)$.  Since the expected asymptotic
-number of $d$-gaps is $n(1-n/k)^d$, we see that their individual size is
-asymptotic to $k/n+d$, or in terms of raw number of reads
-$1/(1-e^{-n_*/k}) + d$. Intuitively, the size of $d$-gaps is very large
-when $n$ or $n_*$ are much smaller than $k$.
-
-We can also compute the expected unassembled fraction, \textit{i.e.} the
-fraction of nucleotides covered by $d$-gaps. For this we just have to
-divide the cumulative size of $d$-gaps by the total size $k$ and we obtain
-$(1-n/k)^d(1+dn/k)$ or in terms of raw reads
-$e^{-dn_*/k}(1+d(1-e^{-n_*/k}))$.
-
-To answer the original question, we compute the total size of contigs by
-complementary as $k-n(1-n/k)^d(k/n+d)$. Now dividing by the
-average number of contigs, we find that the expected asymptotic size as
-
-\begin{equation}
-\frac{k-(1-n/k)^d(k+dn)}
-{\left(1+n(1-n/k)^d\right)\left(1-(1-n/k)^d \right)}.
-\end{equation}
-
-This expression is somewhat cumbersome, but it becomes approximately equal
-to $k/(1+n(1-n/k)^d)$ when $n$ is close to $k$. This quantity expressed in
-terms of raw number of reads is
-
-\begin{equation}
-\frac{k-ke^{-dn_*/k}(1+d(1-e^{-n_*/k}))}{( 1 + k(1-e^{-n_*/k})e^{-dn_*/k}
-) (1+e^{-dn_*/k})}.
-\end{equation}
-
-Similarly, when $n_*$ is of the order of $k$, this expression becomes
-approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
 
 \section{Discussion}
 
