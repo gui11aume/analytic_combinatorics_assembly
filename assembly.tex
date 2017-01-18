@@ -575,13 +575,12 @@ of contigs, namely
 
 \begin{equation*}
 \begin{split}
-n \Bigg[ {k-1 \choose n-1} - {k-d-1 \choose n-1} &- {k-2 \choose n-2}
-- \ldots - {k-d-1 \choose n-2} + \\
-&{k-d-2 \choose n-2} + \ldots + {k-2d-1 \choose n-2} \Bigg]
-\Big/ {k-1 \choose n-1}.
+\Bigg[ n{k-1 \choose n-1} - &n{k-d-1 \choose n-1} -
+(n-1){k-2 \choose n-2} - \ldots - (n-1) {k-d-1 \choose n-2} +
+\\ &(n-1){k-d-2 \choose n-2} +
+\ldots + (n-1){k-2d-1 \choose n-2} \Bigg] \Big/ {k-1 \choose n-1}.
 \end{split}
 \end{equation*}
-
 
 More interesting is the asymptotic estimate, which comes in a
 simpler form. The formula above is asymptotically equal to
@@ -646,7 +645,9 @@ the standard analytic combinatorics and that it involves only basic
 mathematical manipulations.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% Average contig size %%%%%%%%%%%%%
 \subsection{Average contig size}
 
 It is interesting to compute the average size of the contigs. All the
