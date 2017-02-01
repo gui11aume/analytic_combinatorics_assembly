@@ -6,45 +6,45 @@ Database file #1: pubmed.bib
 Database file #2: extra.bib
 Warning--empty year in pmid10890387
 Warning--empty year in pmid16901236
-You've used 11 entries,
+You've used 12 entries,
             2118 wiz_defined-function locations,
-            576 strings with 5543 characters,
-and the built_in function-call counts, 3249 in all, are:
-= -- 317
-> -- 124
+            581 strings with 5602 characters,
+and the built_in function-call counts, 3529 in all, are:
+= -- 345
+> -- 131
 < -- 0
-+ -- 51
-- -- 38
-* -- 234
-:= -- 555
-add.period$ -- 33
-call.type$ -- 11
-change.case$ -- 49
++ -- 54
+- -- 40
+* -- 256
+:= -- 602
+add.period$ -- 36
+call.type$ -- 12
+change.case$ -- 53
 chr.to.int$ -- 0
-cite$ -- 13
-duplicate$ -- 124
-empty$ -- 277
-format.name$ -- 38
-if$ -- 667
+cite$ -- 14
+duplicate$ -- 135
+empty$ -- 303
+format.name$ -- 40
+if$ -- 726
 int.to.chr$ -- 0
-int.to.str$ -- 11
-missing$ -- 14
-newline$ -- 58
-num.names$ -- 22
-pop$ -- 51
+int.to.str$ -- 12
+missing$ -- 15
+newline$ -- 63
+num.names$ -- 24
+pop$ -- 53
 preamble$ -- 1
-purify$ -- 41
+purify$ -- 44
 quote$ -- 0
-skip$ -- 77
+skip$ -- 84
 stack$ -- 0
-substring$ -- 226
-swap$ -- 11
+substring$ -- 249
+swap$ -- 12
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 38
+type$ -- 42
 warning$ -- 2
-while$ -- 34
-width$ -- 13
-write$ -- 119
+while$ -- 37
+width$ -- 14
+write$ -- 130
 (There were 2 warnings)

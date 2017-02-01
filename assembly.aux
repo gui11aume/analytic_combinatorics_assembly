@@ -23,19 +23,21 @@
 \newlabel{eq:coefC}{{3}{5}}
 \newlabel{eq:assBC}{{4}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Average number of contigs}{5}}
-\newlabel{sec:av}{{2.2}{5}}
+\newlabel{subsec:av}{{2.2}{5}}
 \newlabel{def:contig}{{4}{6}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Contigs and gaps}. In this example $d=4$, so contigs correspond to sequences of one of more $4$-intervals. The color of the double arrow is black for $4$-intervals and grey for $4$-gaps. The configuration contains two contigs.\relax }}{6}}
 \newlabel{fig:contigs}{{2}{6}}
 \newlabel{eq:C2ndform}{{5}{6}}
 \newlabel{eq:average}{{6}{7}}
 \newlabel{eq:avstar}{{7}{8}}
+\citation{pmid3294162}
+\citation{pmid8808467}
 \newlabel{eq:avcont}{{8}{10}}
 \newlabel{eq:avcontnstar}{{9}{10}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Average number of contigs}. In this example, $k=25,000$ and $d=24$. Between $100$ and $10,000$ reads were drawn at random with replacement and the number of contigs was calculated following definition \ref  {def:contig}. Each case was replicated $100,000$ times and the average was plotted (circles). Dotted lines show the Lander-Waterman and Roach estimates (the lines are superimposed in the left panel) and the plain lines show the estimate computed from expression (\ref  {eq:avcontnstar}). The lander-Waterman and Roach estimates are sustantially biased at low read count (left panel). At high read count (right panel), the Roach estimate is asymptotically unbiased, but the Lander-Waterman estimate is not. Here the estimate of this study never deviates by more than 2\%.\relax }}{10}}
 \newlabel{fig:avcontig}{{3}{10}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Probability of closure}{11}}
-\newlabel{sec:compass}{{2.3}{11}}
+\newlabel{def:closure}{{5}{11}}
 \newlabel{eq:RAGF}{{10}{11}}
 \citation{PemWil02,AnalComb2013}
 \newlabel{th:PW}{{1}{12}}
@@ -45,8 +47,14 @@
 \newlabel{eq:muprime}{{13}{12}}
 \newlabel{eq:nu}{{14}{13}}
 \newlabel{eq:sigma}{{15}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Average contig size}{14}}
-\newlabel{subsec:avctsz}{{2.4}{14}}
+\newlabel{alg:closure}{{1}{13}}
+\citation{pmid8808467}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Probability of closure}. In this example, $k=25,000$ and $d=24$. Between $7,000$ and $15,000$ reads were drawn at random with replacement and closure was determined following definition \ref  {def:closure}. Each case was replicated $500,000$ times and the average frequency of closure was plotted (circles). Dotted lines show the Roach estimate and the plain lines show the estimate computed with algorithm \ref  {alg:closure}. At its worst, the Roach estimate is off the target value by approximately 0.07, whereas the analytic combinatorics estimate never deviates by more than 0.002.\relax }}{14}}
+\newlabel{fig:closureprob}{{4}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Probability of $m$ contigs}{15}}
+\newlabel{subsec:probmcontigs}{{2.4}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Average contig size}{15}}
+\newlabel{subsec:avctsz}{{2.5}{15}}
 \citation{Drmota1994}
 \citation{Gardy1995}
 \bibdata{pubmed,extra}
@@ -55,11 +63,12 @@
 \bibcite{pmid3294162}{3}
 \bibcite{AnalComb2009}{4}
 \bibcite{PemWil02}{5}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Discussion}{15}}
 \bibcite{PemWil08}{6}
 \bibcite{AnalComb2013}{7}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Discussion}{16}}
 \bibcite{AnalComb1996}{8}
-\bibcite{pmid10890387}{9}
-\bibcite{pmid20686599}{10}
-\bibcite{pmid16901236}{11}
+\bibcite{pmid8808467}{9}
+\bibcite{pmid10890387}{10}
+\bibcite{pmid20686599}{11}
+\bibcite{pmid16901236}{12}
 \bibstyle{plain}

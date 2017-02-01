@@ -8,6 +8,7 @@
 \usepackage{cite}
 \usepackage{graphicx}
 
+\newtheorem{algorithm}{Algorithm}
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
 \newtheorem{lemma}{Lemma}
@@ -318,7 +319,7 @@ that do not lend themselves to such direct approaches.
 
 %%%%%%%%%%%%% Average number of contigs %%%%%%%%%%%%%
 \subsection{Average number of contigs}
-\label{sec:av}
+\label{subsec:av}
 
 % ######################################################## %
 % Make a note about the fact that they were called islands %
@@ -610,8 +611,9 @@ Let us now examine a concrete example. In Figure~\ref{fig:avcontig} we
 consider a small genome of $k = 25,000$ nucleotides, where contigs are
 composed of $24$-intervals. We measure the average number of contigs over
 $100,000$ random samples for different number of reads $n$ and compare
-this value to the Lander-Waterman estimate $ne^{-dn/k}$, to the Roach
-estimate $1+(n-1)(1-d/k)^n$, and to the estimate given by formula
+this value to the Lander-Waterman estimate $ne^{-dn/k}$
+\cite{pmid3294162}, to the Roach estimate $1+(n-1)(1-d/k)^n$
+\cite{pmid8808467}, and to the estimate given by formula
 (\ref{eq:avcontnstar}).
 
 
@@ -655,7 +657,6 @@ mathematical manipulations.
 
 %%%%%%%%%%%%% Probability of closure %%%%%%%%%%%%%
 \subsection{Probability of closure}
-\label{sec:compass}
 
 An important factor in the assembly problem is whether the read coverage
 will be tight enough to reconstruct whole chromosomes, \textit{i.e.}
@@ -663,6 +664,7 @@ whether they will consist of single contigs. To answer this question, we
 introduce the concept of ``closure''.
 
 \begin{definition}
+\label{def:closure}
 A closed configuration is such that all intervals are $d$-intervals.
 \end{definition}
 
@@ -812,19 +814,41 @@ approximation $1-e^{-n_*/k}$ because the weight $n$ is determined by the
 number of distinct reads.
 
 
-\begin{example}
-We consider a genome with $k = 25000$, and assembly conditions where $n_*
-= 10000$ and $d=24$. Using the Poisson approximation, we obtain
-$n \approx 25000 \cdot (1-e^{-10000/25000}) \approx 8241.9988$.
+\begin{algorithm}
+\label{alg:closure}
+
+Here are the steps required to compute the probability of obtaining a
+closed configuration for a genome of size $k$, with required overlap $d$
+and with $n_*$ reads.
+
+\begin{enumerate}
+\item Compute $n = k(1-e^{-n_*/k})$
+\item Compute $\lambda = k/n$
+\item Solve $\mu(x_\lambda) = \lambda$ by the Newton-Raphson method using
+(\ref{eq:mu}) and (\ref{eq:muprime})
+\item Compute $\nu(x_\lambda)$ and $\sigma^2(x_\lambda)$ using
+(\ref{eq:nu}) and (\ref{eq:sigma})
+\item Compute (\ref{eq:assRA}) in logarithmic space
+\item Compute (\ref{eq:coefC}) in logarithmic space
+\item Take the difference of the last two terms and exponentiate.
+\end{enumerate}
+
+Few Newton-Raphson iterations are required for convergence (less than ten)
+and the whole process completes in tens of microseconds or less on most
+computers.
+
+We illustrate this method on a genome with $k = 25000$, and assembly
+conditions where $n_* = 10000$ and $d=24$. Using the Poisson
+approximation, we obtain $n \approx 25000 \cdot (1-e^{-10000/25000})
+\approx 8241.9988$.
 
 From this, we obtain $\lambda = k/n \approx 3.033$. Using the
 Newton-Raphson method with expressions (\ref{eq:mu}) and
-(\ref{eq:muprime}), we solve the equation $\mu(x) = \lambda$ and obtain
-$x \approx 0.6704977625325838630$. Using equations (\ref{eq:nu}) and
-(\ref{eq:sigma}), we obtain $\nu(x_\lambda) \approx
-2.03474205785016781789$ and $\sigma(x_\lambda)^2 \approx
-6.1363543620747691420$. Computing (\ref{eq:assRA}) in logarithmic space
-with the new values yields
+(\ref{eq:muprime}), we solve the equation $\mu(x) = \lambda$ and obtain $x
+\approx 0.67049776$. Using equations (\ref{eq:nu}) and (\ref{eq:sigma}),
+we obtain $\nu(x_\lambda) \approx 2.03474206$ and $\sigma(x_\lambda)^2
+\approx 6.136354$. Computing (\ref{eq:assRA}) in logarithmic space with
+the new values yields
 
 \begin{equation*}
 \begin{split}
@@ -841,29 +865,51 @@ We compute the number of configurations in logarithmic space from equation
 \log { 24999 \choose 8240.9988 } \approx 15842.457.
 \end{equation*}
 
-Finally, the estimated probability that a configuration corresponds to a
-coverage by $25$-intervals is
+Finally, the estimated probability that a configuration is closed for a
+genome of size $k=25000$, with coverage $n_* = 10000$ reads and
+$24$-intervals is
 
 \begin{equation*}
 \exp(15842.084-15842.457) \approx 0.573.
 \end{equation*}
-\end{example}
 
-The list below recapitulates the steps to compute the probability of
-obtaining a closed configuration for a genome of size $k$, with required
-overlap $d$ and with $n_*$ reads.
 
-\begin{enumerate}
-\item Compute $n = k(1-e^{-n_*/k})$
-\item Compute $\lambda = k/n$
-\item Solve $\mu(x_\lambda) = \lambda$ by the Newton-Raphson method using
-(\ref{eq:mu}) and (\ref{eq:muprime})
-\item Compute $\nu(x_\lambda)$ and $\sigma^2(x_\lambda)$ using
-(\ref{eq:nu}) and (\ref{eq:sigma})
-\item Compute (\ref{eq:assRA}) in logarithmic space
-\item Compute (\ref{eq:coefC}) in logarithmic space
-\item Take the difference of the last two terms and exponentiate.
-\end{enumerate}
+\end{algorithm}
+
+
+Figure~\ref{fig:closureprob} follows up on the example given at the end of
+section \ref{subsec:av}, where $k = 25,000$ nucleotides and where $d=24$.
+The Roach estimate is $(1-(1-d/k)^n)^{n-1}$ \cite{pmid8808467}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.585]{Fig4.pdf}
+\caption{\textbf{Probability of closure}. In this example, $k=25,000$ and
+$d=24$. Between $7,000$ and $15,000$ reads were drawn at random with
+replacement and closure was determined following definition
+\ref{def:closure}. Each case was replicated $500,000$ times and the
+average frequency of closure was plotted (circles). Dotted lines show the
+Roach estimate and the plain lines show the estimate computed with
+algorithm \ref{alg:closure}. At its worst, the Roach estimate is off the
+target value by approximately 0.07, whereas the analytic combinatorics
+estimate never deviates by more than 0.002.}
+\label{fig:closureprob}
+\end{figure}
+
+
+
+
+%%%%%%%%%%%%% Average contig size %%%%%%%%%%%%%
+\subsection{Probability of $m$ contigs}
+\label{subsec:probmcontigs}
+
+We now turn our attention to a problem that will illustrate how to use the
+most advanced results of the analytic combinatorics toolbox. The question
+is to compute the probability that the configuration consists of a
+predefined number of contigs $m$. In other words, we are interested in the
+probability of the number of contigs for a genome of given size, and for a
+given number of reads.
+
 
 
 
@@ -873,74 +919,207 @@ overlap $d$ and with $n_*$ reads.
 \subsection{Average contig size}
 \label{subsec:avctsz}
 
-It is interesting to compute the average size of the contigs. All the
-tools that we need to obtain an estimate have already been introduced.
+Another feature of interest is the average size of the contigs. However
+tempting to estimate it as the ratio of the expected cumulative contig
+size and the expected number of contigs, this method is inaccurate. The
+number of contigs and their cumulative size are not statistically
+independent, so the expected value of their ratio is not equal to the
+ratio of their expected values. We need a more sophisticated estimator.
 
-The simplest strategy is to compute the cumulative size of $d$-gaps and
-get the cumulative size of contigs by complementarity. We can exhibit a
-counting function for the size of $d$-gaps and derive asymptotic estimates
-using the same strategy as in the previous section. All we have to do is
-mark the size of a $d$-gaps with corresponding powers of $u$. In
-expression (\ref{eq:C2ndform}), $G_d(x,y)$ will be replaced by 
-$y(x^{d+1}u^{d+1} + x^{d+2}u^{d+2} + \ldots ) = yx^{d+1}u^{d+1}/(1-xu)$.
-The counting function for the size of $d$-gaps is thus
+For this, we will use the counting function of contigs, to which we are
+will add a counter for the size of contigs. Following the method used to
+count contigs in subsection \ref{subsec:av}, the function that counts
+both contigs and their cumulative size is
 
 \begin{equation*}
 \begin{split}
-H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
-y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
-&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
-x^{d+1}u^{d+1}/(1-xu) \right)}.
+H(x,y,u,z) = \frac{(1+G(x,y))(1+uK(zx,y))}{1-uK(zx,y)G(x,y)}.
 \end{split}
 \end{equation*}
 
-Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
-with respect to $u$, we obtain
+The variable $z$ counts the cumulative size of contigs (and as before, the
+variable $u$ counts their number). The exponent of $x$ marks the total
+size of a configuration, and it is obvious that the exponent of $z$ in
+this function marks the ``amount of size'' allocated to contigs.
+$H(x,y,u,z)$ is the generating function of a four-dimensional array
+$(a_{k,n,m,p})$, where each term is the number of configurations of size
+$k$ and weight $n$, and with $m$ contigs of cumulative size $p$.
+
+As in subsection \ref{subsec:av}, averaging will reduce the number of
+variables to two, and we will need to extract the coefficients of a
+bivariate generating function. The average contig size of configurations
+of size $k$ and weight $m$ is
 
 \begin{equation*}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
-= y \frac{(d+1)x^d-dx^{d+1}}{1-x} \frac{\partial C(x,y)}
-{\partial y}.
+\sum_{m=1}^\infty\frac{1}{m}\sum_{p=0}^\infty pa_{k,n,m,p}.
 \end{equation*}
 
-This yields an exact expression for the cumulative size of $d$-gaps
-averaged over all configurations
+So the counting function of the average contig size is found by first
+differentiating $H(x,y,u,z)$ with respecto to $z$ and then integrating
+with respect to $u$. More specifically, the function we are looking for is
 
-\begin{equation}
-(d+1)(k-d) {k-d-1 \choose n-1} -d(k-d-1) {k-d-2 \choose n-1}.
-\end{equation}
+\begin{equation*}
+H^*(x,y) = \int \frac{1}{u}
+\frac{\partial H(x,y,u,z)}{\partial z}\Bigr|_{\substack{\\z=1}} du
+\biggr|_{\substack{\\u=1}}.
+\end{equation*}
+
+We now proceed as obvious.
+
+\begin{equation*}
+\begin{split}
+\frac{\partial H(x,y,u,z)}{\partial z} &=
+\frac{xu\left(1+G(x,y)\right)^2 \partial K(zx,y)/ \partial x}
+{\left(1-uK(zx,y)G(x,y)\right)^2} \text{, and} \\
+H^*(x,y) &=  x \frac{\partial K(x,y)}{\partial x}
+\frac{\left(1+G(x,y)\right)^2}{1-K(x,y)G(x,y)}.
+\end{split}
+\end{equation*}
+
+In the derivation above, it is important to choose the integration
+constant such that the coefficient of $u^0$ is $0$ so that the average
+contig size of a configuration without contig is $0$. Rearranging the
+terms, we obtain
+
+\begin{equation*}
+\begin{split}
+H^*(x,y) &= x \frac{\partial K(x,y)}{\partial x}
+\frac{1+G(x,y)}{1+K(x,y)}C(x,y) \\
+&= \frac{yx(1-(d+1)x^d+dx^{d+1})(1-x)^3}
+{\big(1-x-yx(1-x^d)\big)\big(1-x-yx^{d+1}\big)\big(1-x-yx\big)}.
+\end{split}
+\end{equation*}
 
 
-This is asymptotically equivalent to $k(1-n/k)^d(1+dn/k)$.  Since the
-expected asymptotic number of $d$-gaps is $n(1-n/k)^d$, we see that their
-individual size is asymptotic to $d+k/n$. Intuitively, the size
-of $d$-gaps is very large when $n$ is much smaller than $k$.
 
-We can also compute the expected unassembled fraction, \textit{i.e.} the
-fraction of nucleotides covered by $d$-gaps. For this we just have to
-divide the cumulative size of $d$-gaps by the total size $k$ and we obtain
-$(1-n/k)^{d+1}(d+k/n)$.
+%The simplest strategy is to compute the cumulative size of $d$-gaps and
+%get the cumulative size of contigs by complementarity. We can exhibit a
+%counting function for the size of $d$-gaps and derive asymptotic estimates
+%using the same strategy as in the previous section. All we have to do is
+%mark the size of a $d$-gaps with corresponding powers of $u$. In
+%expression (\ref{eq:C2ndform}), $G_d(x,y)$ will be replaced by 
+%$y(x^{d+1}u^{d+1} + x^{d+2}u^{d+2} + \ldots ) = yx^{d+1}u^{d+1}/(1-xu)$.
+%The counting function for the size of $d$-gaps is thus
+%
+%\begin{equation*}
+%\begin{split}
+%H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
+%y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
+%&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
+%x^{d+1}u^{d+1}/(1-xu) \right)}.
+%\end{split}
+%\end{equation*}
+%
+%Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
+%with respect to $u$, we obtain
+%
+%\begin{equation*}
+%\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+%= y \frac{(d+1)x^d-dx^{d+1}}{1-x} \frac{\partial C(x,y)}
+%{\partial y}.
+%\end{equation*}
+%
+%This yields an exact expression for the cumulative size of $d$-gaps
+%averaged over all configurations
+%
+%\begin{equation}
+%(d+1)(k-d) {k-d-1 \choose n-1} -d(k-d-1) {k-d-2 \choose n-1}.
+%\end{equation}
+%
+%
+%This is asymptotically equivalent to $k(1-n/k)^d(1+dn/k)$.  Since the
+%expected asymptotic number of $d$-gaps is $n(1-n/k)^d$, we see that their
+%individual size is asymptotic to $d+k/n$. Intuitively, the size
+%of $d$-gaps is very large when $n$ is much smaller than $k$.
+%
+%We can also compute the expected unassembled fraction, \textit{i.e.} the
+%fraction of nucleotides covered by $d$-gaps. For this we just have to
+%divide the cumulative size of $d$-gaps by the total size $k$ and we obtain
+%$(1-n/k)^{d+1}(d+k/n)$.
+%
+%To answer the original question, we compute the total size of contigs by
+%complementary as $k-k(1-n/k)^{d+1}(d+k/n)$. Now dividing by the
+%average number of contigs, we find that the expected asymptotic size as
+%
+%\begin{equation}
+%\frac{k(1-(1-n/k)^d(1+dn/k))}
+%{\left(1+n(1-n/k)^d\right)\left(1-(1-n/k)^d \right)}.
+%\end{equation}
+%
+%This expression is somewhat cumbersome, but it becomes approximately equal
+%to $k/(1+n(1-n/k)^d)$ when $n$ is close to $k$. This quantity expressed in
+%terms of raw number of reads is
+%
+%\begin{equation}
+%\frac{k\left( 1-e^{-(d+1)n_*/k}(d+1/(1-e^{-n_*/k})) \right)}
+%{( 1 + k(1-e^{-n_*/k})e^{-dn_*/k}) (1-e^{-dn_*/k})}.
+%\end{equation}
+%
+%Similarly, when $n_*$ is of the order of $k$, this expression becomes
+%approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
 
-To answer the original question, we compute the total size of contigs by
-complementary as $k-k(1-n/k)^{d+1}(d+k/n)$. Now dividing by the
-average number of contigs, we find that the expected asymptotic size as
 
-\begin{equation}
-\frac{k(1-(1-n/k)^d(1+dn/k))}
-{\left(1+n(1-n/k)^d\right)\left(1-(1-n/k)^d \right)}.
-\end{equation}
 
-This expression is somewhat cumbersome, but it becomes approximately equal
-to $k/(1+n(1-n/k)^d)$ when $n$ is close to $k$. This quantity expressed in
-terms of raw number of reads is
 
-\begin{equation}
-\frac{k\left( 1-e^{-(d+1)n_*/k}(d+1/(1-e^{-n_*/k})) \right)}
-{( 1 + k(1-e^{-n_*/k})e^{-dn_*/k}) (1-e^{-dn_*/k})}.
-\end{equation}
+%%%%%%%%%%%%% Target contig size %%%%%%%%%%%%%
+%\subsection{Target contig size}
+%
+%When the configuration is unlikely to be closed, it is interesting to know
+%if it may produce contigs of a certain minimum size. To investigate this
+%question, we need to see how to figure out the generating function of
+%configurations with a contig of given minimum size.
+%
+%We could describe such a configuration as a contig of minimum size and a
+%series of unconstrained intervals, or an unconstrained contig and a series
+%of intervals of maximum total size. We will use the second construction
+%because its generating function is easier to write.
+%
+%Choose $m$ such that $k-mm$ is the target (minimum) contig size. Recall
+%from expression (\ref{eq:C}) that the generating function of
+%configurations can be written
+%
+%\begin{equation*}
+%C(x,y) = \sum_{k=0}^\infty\sum_{n=0}^\infty a_{k,n}x^ky^n
+%= (1-x) \sum_{k=0}^\infty \left(x(1+y) \right)^k.
+%\end{equation*}
+%
+%Here and in what follows, $a_{k,n}$ designates the number of
+%configurations of size $k$ and weight $n$. Since the size appears
+%explicitly in this equation, we see that the generating function of
+%configurations of size no greater than $m$ is
+%
+%\begin{equation*}
+%\begin{split}
+%C^{[m]}(x,y) = \sum_{k=0}^m\sum_{n=0}^\infty a_{k,n}x^ky^n &=
+%(1-x) \sum_{k=0}^{m-1} \left(x(1+y) \right)^k +
+%\left(x(1+y) \right)^m \\
+%&= \frac{1-x-xy(x(1+y))^m}{1-x(1+y)}
+%\end{split}
+%\end{equation*}
+%
+%For each of these configurations, we can insert the contig between any
+%of the $n$ intervals, or at the first or last position, \textit{i.e.}
+%we have $n+1$ options. The total number of ways we can combine a contig
+%with a configuration of size no great than $m$ is thus
+%
+%\begin{equation*}
+%\sum_{k=0}^m\sum_{n=0}^\infty (n+1) a_{k,n}x^ky^n
+%= \frac{\partial yC^{[m]}(x,y)}{\partial y}
+%\end{equation*}
+%
+%% Sage output ((2*x + 1)*x^(2*d) - (x + 2)*x^d - (((m - 1)*x - m - 2)*x^d
+%% + 2*x^(2*d + 1) + 1)*((x^(d + 1) - 1)/(x^d - 1))^m - x^(3*d + 1) +
+%% 1)/(x^(2*d) - x^(3*d + 1))
+%
+%\begin{equation*}
+%\left( \frac{1-x^d}{x^d} \right)^2 -
+%\frac{2x^{2d+1} + (m - 1)x^{d+1} - (m+2)x^d + 1}
+%{x^{2d}(1-x^{d+1})}
+%\left( \frac{1-x^{d+1}}{1-x^d} \right)^m
+%\end{equation*}
 
-Similarly, when $n_*$ is of the order of $k$, this expression becomes
-approximately equal to $k/(1+ke^{-dn_*/k}(1-e^{-n_*/k}))$.
+
+
 
 
 \section{Discussion}
