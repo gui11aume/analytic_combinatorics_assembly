@@ -105,7 +105,7 @@ distribution of the largest contig using models of occupancy.
 \section{Results}
 
 \subsection{Analytic combinatorics of the assembly problem}
-\label{sec:config}
+\label{subsec:config}
 
 \begin{definition}
 If $(a_{k,n})_{k \geq 0, n \geq 0}$ is a bivariate array, the generating
@@ -152,7 +152,7 @@ chromosome so that intervals always cover exactly $k$ nucleotides.}
 \label{fig:sketchass}
 \end{figure}
 
-Figure \ref{fig:sketchass} shows the relationships between reads and
+Figure~\ref{fig:sketchass} shows the relationships between reads and
 intervals. The ``distance'' between two reads will always be the number of
 nucleotides between their left ends, which corresponds to an interval of
 the same size. Also note that we assume that the leftmost and the
@@ -294,7 +294,7 @@ function of bit strings where $x$ marks the size and $y$ marks the number
 of bits set to $1$. To exhibit a bijection we can encode left ends of
 intervals with a $1$ and every other position with a $0$. The factor $1-x$
 is a correction for the fact that the first bit is always set to $1$ (see
-Figure \ref{fig:sketchass}).
+Figure~\ref{fig:sketchass}).
 \end{remark}
 
 We now have the \emph{exact} number of configurations for every value of
@@ -330,118 +330,120 @@ the genome. In order to investigate the properties of ``good''
 configurations, we need to introduce new combinatorial objects.
 
 \begin{definition}
-A $d$-interval is an interval of size no greater than $d$ and a $d$-gap is
-an interval of size greater than $d$. The generating function of
-$d$-intervals is denoted $I_d(x,y)$ and the generating function of
-$d$-gaps is denoted $G_d(x,y)$.
+For a given positive integer $d$, an $\alpha$-interval is an interval of
+size at most $d$ and an $\omega$-interval is an interval of size greater
+than $d$. The generating function of $\alpha$-intervals is denoted
+$I_\alpha(x,y)$ and the generating function of $\omega$-intervals is
+denoted $I_\omega(x,y)$.
 \end{definition}
 
-Intuitively, if two reads are separated by a $d$-interval, it will be
-possible to merge them, whereas if they are separated by a $d$-gap this
-will not be possible. The value of $d$ depends on the concrete assembly
-problem at hand and on the read length ($d$ is higher for longer reads).
-This natually lead to the following definition.
+Intuitively, if two reads are separated by a $\alpha$-interval, it will be
+possible to merge them, whereas if they are separated by a
+$\omega$-interval this will not be possible. The value of $d$ depends on
+the concrete assembly problem at hand and on the read length ($d$ is
+higher for longer reads).  This natually lead to the following definition.
 
 \begin{definition}
 \label{def:contig}
-A contig is a non-empty sequence of $d$-intervals. The generating function
-of contigs is denoted $K(x,y)$.
+A contig is a non-empty sequence of $\alpha$-intervals. The generating
+function of contigs is denoted $K(x,y)$. A gap is a non-empty sequence of
+$\omega$-intervals. The generating function of gaps is denoted $G(x,y)$.
 \end{definition}
 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.9]{Fig2.pdf}
 \caption{\textbf{Contigs and gaps}. In this example $d=4$, so contigs
-correspond to sequences of one of more $4$-intervals. The color of the
-double arrow is black for $4$-intervals and grey for $4$-gaps. The
-configuration contains two contigs.}
+correspond to sequences of one or more intervals of size at most $4$. The
+double arrow is black for $\alpha$-intervals and grey for
+$\omega$-intervals. The configuration contains two contigs.}
 \label{fig:contigs}
 \end{figure}
 
-In real assembly problems, there is no guarantee that merging consecutive
-reads will be possible every time their distance is no greater than some
-threshold $d$. Because of sequencing errors, repeated sequences and other
-practical complications, the number of contigs on real problems is
-systematically lower than on ideal problems.
+Note that in real assembly problems, sequencing errors, repeated sequences
+and other practical complications may prevent the merging of
+$\alpha$-intervals. The properties of the assembly per se depend on the
+genome and on the practicalities of the problem at hand.
 
-It is interesting to estimate the number of contigs that one may expect to
-obtain. Instead of jumping directly to this task, we will count $d$-gaps
-instead. This will be useful for exposition purposes, and the answer will
-bring some insight into the assembly problem.
+In order to estimate the expected number of contigs, we start by the
+simpler task of estimating the number of $\omega$-intervals. This will
+better illustrate the methodolgy, while bringing some useful insight into
+the assembly problem.
 
-Following the strategy of analytic combinatorics, we must first find the
-generating functions of the objects under focus. Going back to the
+Following the strategy of analytic combinatorics, we first find the
+generating functions of the objects under study. Going back to the
 construction of intervals, we can see that the generating functions of
-$d$-intervals and $d$-gaps are
+$\alpha$-intervals and $\omega$-intervals are
 
 \begin{equation*}
 \begin{split}
-I_d(x,y) &= yx + yx^2 + \ldots + yx^d = yx\frac{1-x^d}{1-x}\text{, and} \\
-G_d(x,y) &= yx^{d+1} + yx^{d+2} + \ldots = y\frac{x^{d+1}}{1-x}.
+I_\alpha(x,y) &= yx + yx^2 + \ldots + yx^d
+= yx\frac{1-x^d}{1-x}\text{, and} \\
+I_\omega(x,y) &= yx^{d+1} + yx^{d+2} + \ldots = y\frac{x^{d+1}}{1-x}.
 \end{split}
 \end{equation*}
 
-Observe that $I_d(x,y)+G_d(x,y) = I(x,y)$ because an interval is either a
-$d$-interval or a $d$-gap (and because the intersection of $d$-intervals
-and $d$-gaps is empty). Using this, we can write the generation of
+Observe that $I_\alpha(x,y)+I_\omega(x,y) = I(x,y)$ because an interval is
+either an $\alpha$-interval or an $\omega$-interval (and because their
+intersection is empty). Using this, we can write the generation of
 configurations as
 
 \begin{equation}
 \label{eq:C2ndform}
 C(x,y) = \sum_{n=0}^\infty I(x,y)^n
-= \sum_{n=0}^\infty \left( I_d(x,y) + G_d(x,y) \right)^n.
+= \sum_{n=0}^\infty \left( I_\alpha(x,y) + I_\omega(x,y) \right)^n.
 \end{equation}
 
-Since $d$-gaps appear explicitly in this expression of $C(x,y)$, we can
-use another variable, say $u$, to mark them. For this, we just have to
-multiply their generating function $G_d(x,y)$ by $u$ so that every time a
-$d$-gap appears in a configuration, the exponent of $u$ is raised by $1$.
-The same method was applied earlier to let $y$ mark the number of
-intervals. Transforming $C(x,y)$ as proposed, we obtain
-
+Since $\omega$-intervals appear explicitly in this expression of $C(x,y)$,
+we can use another variable, say $u$, to mark them. For this, we just have
+to multiply their generating function by $u$ so that every time an
+$\omega$-interval appears in a configuration, the exponent of $u$ is
+raised by $1$. The same method was applied earlier to let $y$ mark the
+number of intervals. Transforming $C(x,y)$ as described, we obtain
 
 \begin{equation*}
-H(x,y,u) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
+Z(x,y,u) = \sum_{n=0}^\infty \left(xy\frac{1-x^d}{1-x} +
 uy\frac{x^{d+1}}{1-x}\right)^n
 = \frac{1-x}{1-x-y\left(x(1-x^d) +ux^{d+1}\right)}.
 \end{equation*}
 
-$H(x,y,u)$ is the generating function of a three-dimensional array
+$Z(x,y,u)$ is the generating function of a three-dimensional array
 $(a_{k,n,m})$, where each term is the number of configurations of total
-size $k$, total weight $n$ and with $m$ $d$-gaps. Note that both
-$d$-intervals and $d$-gaps contribute to the weight, so that it still
-indicates the number of intervals. For a given value of $k$ and $n$, the
-cumulative number of $d$-gaps is $\sum_{m=0}^\infty ma_{k,n,m}$. Since for
-the same values of $k$ and $n$ the total number of configurations is
-$\sum_{m=0}^\infty a_{k,n,m}$ the average number of $d$-gaps is
+size $k$, total weight $n$ and with $m$ $\omega$-intervals. Note that both
+$\alpha$-intervals and $\omega$-intervals contribute to the weight, so
+that it still indicates the number of intervals. For a given value of $k$
+and $n$, the cumulative number of $\omega$-intervals is $\sum_{m=0}^\infty
+ma_{k,n,m}$. Since for the same values of $k$ and $n$ the total number of
+configurations is $\sum_{m=0}^\infty a_{k,n,m}$ the average number of
+$\omega$-intervals is
 
 \begin{equation}
 \label{eq:average}
 \sum_{m=0}^\infty ma_{k,n,m}\Big/\sum_{m=0}^\infty a_{k,n,m}.
 \end{equation}
 
-As usual, we will find the generating functions of the numerator and the
-denomiator of (\ref{eq:average}) and extract their respective
-coefficients. Observe that
+Following the methodology of analytic combinatorics, we will find the
+generating functions of the numerator and the denomiator of
+(\ref{eq:average}) and extract their respective coefficients. Observe that
 
 \begin{equation*}
 \begin{split}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}} &=
+\frac{\partial Z(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}} &=
 \sum_{k=0}^\infty\sum_{n=0}^\infty
 \left(\sum_{m=0}^\infty ma_{k,n,m}\right) x^ky^n \text{, and} \\
-H(x,y,1) &= \sum_{k=0}^\infty\sum_{n=0}^\infty
+Z(x,y,1) &= \sum_{k=0}^\infty\sum_{n=0}^\infty
 \left(\sum_{m=0}^\infty a_{k,n,m} \right)x^ky^n.
 \end{split}
 \end{equation*}
 
-It is easier to start with the generating function of the denominator as
-the results are already available. Equation (\ref{eq:C2ndform}) says that
-$H(x,y,1) = C(x,y)$. This is intuitive, because counting $d$-gaps should
-not change the total number of configurations. Now turning to the
-numerator we obtain
+It is easier to start with the generating function of the denominator, as
+we already derived the solution. Equation (\ref{eq:C2ndform}) says that
+$Z(x,y,1) = C(x,y)$. This is intuitive, because counting
+$\omega$-intervals should not change the total number of configurations.
+Now turning to the numerator we obtain
 
 \begin{equation*}
-\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+\frac{\partial Z(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
 = \frac{yx^{d+1}(1-x)}{\left(1-x(1+y)\right)^2}.
 \end{equation*}
 
@@ -454,27 +456,29 @@ which we already know the coefficients. Observe that
 \frac{x(1-x)}{\left(1-x(1+y)\right)^2}.
 \end{equation*}
 
-So $\partial H(x,y,u)/\partial u|_{\substack{\\u=1}} = yx^d\partial
+So $\partial Z(x,y,u)/\partial u|_{\substack{\\u=1}} = yx^d\partial
 C(x,y)/\partial y$ and the coefficient of $x^ky^n$ in the generating
 function of the numrator of (\ref{eq:average}) is $n[x^{k-d}y^n]C(x,y)$.
-The average number of $d$-gaps is thus
+The average number of $\omega$-intervals is thus
 
 \begin{equation*}
 n {k-d-1 \choose n-1} \Big/ {k-1 \choose n-1}.
 \end{equation*}
 
-For $k < d$ or $n > k-d$ the average number of gaps is $0$.  We can also
-use equation (\ref{eq:assBC}) or Sitrling's formula to obtain a simple
-asymptotic estimate for the expected number of $d$-gaps, namely
+For $k < d$ or $n > k-d$ the average number of $\omega$-intervals is $0$.
+We can also use equation (\ref{eq:assBC}) or Sitrling's formula to obtain
+a simple asymptotic estimate for the expected number of
+$\omega$-intervals, namely
 
-\begin{equation*}
+\begin{equation}
+\label{eq:avomega}
 n\left(1-n/k\right)^d.
-\end{equation*}
+\end{equation}
 
 \begin{remark}
 Here the benefits of the analytic combinatorics approach become obvious.
-It is much more difficult to tink of a direct approach leading to the same
-results.
+It is much more difficult to think of a direct approach leading to this
+simple result.
 \end{remark}
 
 Recall that this formula assumes that reads cannot map to the same
@@ -482,13 +486,18 @@ location. It is possible to filter out identical reads, but it would be
 useful to relax this constraint in order to compute estimates before any
 data is acquired.
 
-For this, let us assume that there is a total of $n_*$ reads drawn
-\emph{with} replacement. Each nucleotide of the chromosome corresponds to
-the left end of a read $n_*/k$ times on average. Because $k$ and $n_*$ are
-both large, we can approximate the number of time a nucleotide is drawn by
-a Poisson distribution with mean $n_*/k$. The probability that a position
-is the left end of a read is approximately $1-e^{-n_*/k}$, so $n \approx
-k(1-e^{-n_*/k})$.
+For this, let us assume that we draw $n_*$ reads \emph{with} replacement.
+Each nucleotide of the chromosome corresponds to the left end of a read
+$n_*/k$ times on average. Because $k$ and $n_*$ are both large, we can
+approximate the number of times a nucleotide is drawn by a Poisson
+distribution with mean $n_*/k$. The probability that a position is the
+left end of a read is approximately $1-e^{-n_*/k}$, so
+
+
+\begin{equation}
+\label{eq:poiss}
+n \approx k(1-e^{-n_*/k}).
+\end{equation}
 
 \begin{remark}
 Allowing intervals and $d$-intervals to have size $0$ is not the proper
@@ -498,85 +507,75 @@ that the first two intervals have size $0$ would be $1/3$, whereas it
 should be $2/7$.
 \end{remark}
 
-The asymptotic estimate for the expected number of gaps as a function of
-the chromosome size $k$ and the number of reads $n_*$ is
+Expression (\ref{eq:avomega}) is useful because at high coverage there
+will be approximately one $\omega$-interval between every pair of contigs,
+so we can estimate of the average number of contigs as $1 + n(1-n/k)^d$,
+using expression (\ref{eq:poiss}) to express $n$ as a function of $n_*$.
+However, at low coverage this estimate is inaccurate because there will be
+many consecutive $\omega$-intervals not enclosing a contig.
 
-\begin{equation}
-\label{eq:avstar}
-k(1-e^{-n_*/k})e^{-dn_*/k}.
-\end{equation}
-
-Expression (\ref{eq:avstar}) is useful because at high coverage there will
-be approximately one $d$-gap between every pair of contigs, so we can
-estimate of the average number of contigs as $1 + k(1-e^{-n_*/k})
-e^{-dn_*/k}$. However, at low coverage this estimate is inaccurate
-because there will be many consecutive $d$-gaps not enclosing a contig.
-
-For the general case, we need to count contigs in a slightly more tedious
-way. The function $H(x,y,u)$ above is a ``counting function'' and $u$ is
-the ``counting parameter''. We can count contigs by decorating their
-generating function with $u$ and again compute their average number
-through the ratio
+To count the number of contigs more precisely, we can use a slightly more
+involved variation of the same strategy. The function $Z(x,y,u)$ above is
+a ``counting function'' and $u$ is the ``counting parameter''. We can
+count contigs by decorating their generating function with $u$ and again
+compute their average number through the ratio
 
 \begin{equation*}
-\frac{[x^ky^n] \partial H(x,y,u)/\partial u|_{\substack{\\u=1}}}
-{[x^ky^n]H(x,y,1)}.
+\frac{[x^ky^n] \partial Z(x,y,u)/\partial u|_{\substack{\\u=1}}}
+{[x^ky^n]Z(x,y,1)}.
 \end{equation*}
 
-All we need to do is to find a way to ``construct'' configurations from
+All we need to do is find a way to ``construct'' configurations from
 contigs and apply the same method as above. It is intuitively clear that
-configurations are composed of contigs and of non-empty sequences of
-$d$-gaps, so we need to find the generating functions of those objects.
-Contigs are non-empty sequences of $d$-intervals, so their generating
-function is
+configurations are composed of contigs and gaps, so we need to find the
+generating functions of those objects. Contigs are non-empty sequences of
+$\alpha$-intervals, so their generating function is
 
 \begin{equation*}
-K(x,y) = \sum_{n=1}^\infty \left( F_d(x,y) \right)^n
+K(x,y) = \sum_{n=1}^\infty \left( I_\alpha(x,y) \right)^n
 = \sum_{n=1}^\infty \left(yx\frac{1-x^d}{1-x} \right)^n
 = \frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
 \end{equation*}
 
-Similarly, denoting $G(x,y)$ the generating function of non-empty
-sequences of $d$-gaps, we can express it as
+Similarly, the generating function of gaps is
 
 \begin{equation*}
-G(x,y) = \sum_{n=1}^\infty \left(G_d(x,y) \right)^n
+G(x,y) = \sum_{n=1}^\infty \left(I_\omega(x,y) \right)^n
 = \sum_{n=1}^\infty \left(y\frac{x^{d+1}}{1-x} \right)^n
 = \frac{yx^{d+1}/(1-x)}{1-yx^{d+1}/(1-x)}.
 \end{equation*}
 
-Now, the basic unit of configurations is a non-empty contig followed by a
-non-empty sequence of $d$-gaps, whose generating function is
-$uK(x,y)G(x,y)$. The presence of $u$ here indicates that each unit adds 1
-to the count of contigs. A configuration is a sequence of such units, but
-it starts with a potentially empty sequence of $d$-gaps, whose generating
-function is $1+G(x,y)$, and it ends with a potentially empty contig, whose
-generating function is $1+uK(x,y)$. The counting function thus comes out
-as
+The basic unit of configurations is a contig followed by a gaps. The
+generating function of this basic unit is $uK(x,y)G(x,y)$. The presence of
+$u$ here indicates that each unit adds 1 to the count of contigs. Finally,
+a configuration starts with a potentially empty sequence gap whose
+generating function is $1+G(x,y)$, and it ends with a potentially empty
+contig, whose generating function is $1+uK(x,y)$. The counting function
+thus comes out as
 
 \begin{equation*}
 \begin{split}
-H(x,y,u) &= \left( 1+G(x,y) \right)
+Z(x,y,u) &= \left( 1+G(x,y) \right)
 \left( \sum_{n=0}^\infty (uK(x,y)G(x,y))^n \right)
 \left( 1+uK(x,y) \right) \\
 & = \frac{(1+G(x,y))(1+uK(x,y))}{1-uK(x,y)G(x,y)}.
 \end{split}
 \end{equation*}
 
-One can check from the definitions of $K(x,y)$ and $G(x,y)$ that $H(x,y,1)
-= C(x,y)$ as expected. Again, the derivative of $H(x,y,1)$ is related to
-$C(x,y)$, and following the same strategy as above, we obtain
+One can check from the definitions of $K(x,y)$ and $G(x,y)$ that $Z(x,y,1)
+= C(x,y)$ as expected. Again, the derivative of $Z(x,y,1)$ is related to
+$C(x,y)$, and following the same strategy as before, we obtain
 
 \begin{equation*}
-\partial H(x,y,u)/\partial u|_{\substack{\\u=1}}
+\partial Z(x,y,u)/\partial u|_{\substack{\\u=1}}
 = y(1-x^d)\left( 1 - y(x+\ldots+x^d) \right)
 \frac{\partial C(x,y)}{\partial y}.
 \end{equation*}
 
-The relationship between the coefficients of $\partial H(x,y,u) /\partial
-u|_{\substack{\\u=1}}$ and those of $C(x,y)$ is more cumbersome than for
-$d$-gaps, but we still obtain an exact expression for the exepected number
-of contigs, namely
+The relationship between the coefficients of $\partial Z(x,y,u) /\partial
+u|_{\substack{\\u=1}}$ and those of $C(x,y)$ is somewhat cumbersome, but
+we still obtain an exact expression for the exepected number of contigs,
+namely
 
 \begin{equation*}
 \begin{split}
@@ -587,34 +586,30 @@ of contigs, namely
 \end{split}
 \end{equation*}
 
-More interesting is the asymptotic estimate, which comes in a
-simpler form. The formula above is asymptotically equal to
+More interesting is the asymptotic estimate, which comes in a relatively
+simple form. The formula above is asymptotically equivalent to
 
 \begin{equation}
 \label{eq:avcont}
 \left( 1+n(1-n/k)^d \right) \left(1-(1-n/k)^d\right).
 \end{equation}
 
-We recognize ur previous estimator
-$1+n(1-n/k)^d$, but here it is corrected by the factor $1-(1-n/k)^d$,
-which speicifically declines at low coverage.
+We recognize the previous estimator $1+n(1-n/k)^d$, but here it is
+corrected by the factor $1-(1-n/k)^d$, which declines specifically at low
+coverage.
 
-Using the Poisson approximation, we can again express the expected number
-of contigs as a function of the total number of reads as
-
-\begin{equation}
-\label{eq:avcontnstar}
-(1 + k(1-e^{-n_*/k})e^{-dn_*/k} ) (1-e^{-dn_*/k}).
-\end{equation}
+Using the Poisson approximation (\ref{eq:poiss}), we can again express the
+expected number of contigs as a function of the total number of reads
+$n_*$.
 
 Let us now examine a concrete example. In Figure~\ref{fig:avcontig} we
-consider a small genome of $k = 25,000$ nucleotides, where contigs are
-composed of $24$-intervals. We measure the average number of contigs over
-$100,000$ random samples for different number of reads $n$ and compare
-this value to the Lander-Waterman estimate $ne^{-dn/k}$
-\cite{pmid3294162}, to the Roach estimate $1+(n-1)(1-d/k)^n$
+consider a small genome of $k = 25,000$ nucleotides, where $d=24$.
+We measure the average number of contigs over
+$100,000$ random samples for different number of reads $n_*$ and compare
+this value to the Lander-Waterman estimate $n_*e^{-dn_*/k}$
+\cite{pmid3294162}, to the Roach estimate $1+(n_*-1)(1-d/k)^{n_*}$
 \cite{pmid8808467}, and to the estimate given by formula
-(\ref{eq:avcontnstar}).
+(\ref{eq:avcont}).
 
 
 \begin{figure}[h]
@@ -626,7 +621,7 @@ replacement and the number of contigs was calculated following definition
 \ref{def:contig}. Each case was replicated $100,000$ times and the average
 was plotted (circles). Dotted lines show the Lander-Waterman and Roach
 estimates (the lines are superimposed in the left panel) and the plain
-lines show the estimate computed from expression (\ref{eq:avcontnstar}).
+lines show the estimate computed from expression (\ref{eq:avcont}).
 The lander-Waterman and Roach estimates are sustantially biased at low
 read count (left panel). At high read count (right panel), the Roach
 estimate is asymptotically unbiased, but the Lander-Waterman estimate is
@@ -634,22 +629,17 @@ not. Here the estimate of this study never deviates by more than 2\%.}
 \label{fig:avcontig}
 \end{figure}
 
-It is clear that formula (\ref{eq:avcontnstar}) is the most accurate,
+It is clear that formula (\ref{eq:avcont}) is the most accurate,
 especially at low number of reads. The absolute error is largest at the
 maximum number of contigs (around $1500$ reads), where the estimate is too
-small by approximately $3$ contigs. The relative error is largest at the
-lowest number of reads, where it is 5\% too low. Above $2000$ reads the
-relative error is below 1\% (in comparison, the relative error of the
-Roach estimate never drops below 8\% on this data). These small
-differences do not disppear for larger values of $k$, they are due to the
-Poisson approximation used to turn expression (\ref{eq:avcont}) into
-(\ref{eq:avcontnstar}), which brings small but systematic biases.
+small by approximately $3$ contigs. These small differences do not
+disppear for larger values of $k$, they are due to the Poisson
+approximation (\ref{eq:poiss}), which brings small but systematic biases.
 
 In conclusion, we have obtained an estimator that is accurate at all
-values of the coverage. It is important to highlight that it derives from
-the standard analytic combinatorics and that it involves only basic
-mathematical manipulations.
-
+values of the coverage. It was derived using the standard analytic
+combinatorics approach and that it involves only basic mathematical
+manipulations.
 
 
 
@@ -660,37 +650,37 @@ mathematical manipulations.
 
 An important factor in the assembly problem is whether the read coverage
 will be tight enough to reconstruct whole chromosomes, \textit{i.e.}
-whether they will consist of single contigs. To answer this question, we
-introduce the concept of ``closure''.
+whether the configuration consists of a single contig without gap. To
+answer this question, we introduce the concept of ``closure''.
 
 \begin{definition}
 \label{def:closure}
-A closed configuration is such that all intervals are $d$-intervals.
+A closed configuration is such that all intervals are $\alpha$-intervals.
 \end{definition}
 
 The probability of closure is the number of closed configurations divided
 by the total number of configurations. As before, we will use generating
-functions to count both types of configurations, and use their
-coefficients to compute the ratio.
+functions to count both types of configurations, and use asymptotic
+estimates of their coefficients to compute the probability.
 
 The generating function of configurations is $C(x,y)$, as we have seen
 multiple times. Closed configurations are simple contigs, so their
 generating function is $K(x,y)$, defined in section (\ref{subsec:avctsz}).
-The the probability we are looking for is
+The the probability we are looking for is thus
 
 \begin{equation*}
 \frac{[x^ky^n]K(x,y)}{[x^ky^n]C(x,y)}.
 \end{equation*}
 
-The issue is that we cannot extract the coefficients of $K(x,y)$. They are
-known as the ``polynomial coefficients'', but they cannot be expresssed in
-a simple or closed form. It is a good time to acknowledge that it is
-usually impossible to obtain an extact expression for the coefficients of
-a generating function. We were ``lucky'' in the previous examples, but
-luck is not necessary in the analytic combinatorics approach. The
+Unfortunately, we cannot extract the coefficients of $K(x,y)$. These
+numbers are known as the ``polynomial coefficients'', but they cannot be
+expresssed in a simple form. However, it is usually impossible to obtain
+an extact expression for the coefficients of a generating function. We
+were ``lucky'' in the previous examples, but luck is not necessary.  The
 asymptotic behavior of the coefficients is entirely captured by the
-generating function and it can be extracted in an nearly automatic way. We
-will now see how to do this using advanced theoretical results.
+generating function and it can be extracted in a nearly automatic way. We
+will now see how to do this with more advanced analytic combinatorics
+tools.
 
 \begin{definition}
 Riordan arrays are bivariate arrays $(a_{k,n})$, the generating function
@@ -703,13 +693,13 @@ of which can be written as
 \end{equation}
 \end{definition}
 
-The set of configurations is a Riordan array because their generating
-function $C(x,y)$ can be put in the form (\ref{eq:RAGF}) with $\phi(x) =
-1$ and $\nu(x) = x/(1-x)$. This also holds for $1+K(x,y)$ with $\phi(x) =
-1$ and $\nu(x) = x+x^2+\ldots+x^d = x(1-x^d)/(1-x)$, so the set of contigs
-is also a Riordan array (adding 1 only changes the number of objects of
-size 0 and weight 0, without any consequence for the asymptotic behavior
-of the coefficients).
+Configurations form a Riordan array because their generating
+function $C(x,y)$ can be written as (\ref{eq:RAGF}) with $\phi(x) =
+1$ and $\nu(x) = x/(1-x)$. The generating function $1+K(x,y)$ can also be
+written as (\ref{eq:RAGF}) with $\phi(x) = 1$ and $\nu(x) =
+x+x^2+\ldots+x^d = x(1-x^d)/(1-x)$, so contigs also form a Riordan array
+(adding 1 only changes the number of objects of size 0, without any
+consequence for the asymptotic behavior of the coefficients).
 
 The aymptotic behavior of Riordan arrays can be extracted from the
 generating function thanks to the following theorem of Pemantle and
@@ -727,8 +717,8 @@ that $k$ and $n$ tend to infinity with $\lim k/n = \lambda$, then
 \end{equation}
 
 \noindent
-where $x_\lambda$ is the solution of $\mu(x) = x\nu'(x)/\nu(x) = \lambda$
-and where $\sigma(x)^2 = x \mu'(x)$.
+where $x_\lambda$ is the solution of the ``saddle point equation ''
+$\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and where $\sigma(x)^2 = x \mu'(x)$.
 \end{proposition}
 
 The proof of this theorem is outside the scope of this manuscript;
@@ -810,7 +800,7 @@ equivalent expressions
 \end{gather}
 
 As above, we need to replace $n$ by its estimate from the Poisson
-approximation $1-e^{-n_*/k}$ because the weight $n$ is determined by the
+approximation (\ref{eq:poiss}) because the weight $n$ is determined by the
 number of distinct reads.
 
 
@@ -877,7 +867,7 @@ $24$-intervals is
 \end{algorithm}
 
 
-Figure~\ref{fig:closureprob} follows up on the example given at the end of
+Figure~\ref{fig:closureprob} expands the example given at the end of
 section \ref{subsec:av}, where $k = 25,000$ nucleotides and where $d=24$.
 The Roach estimate is $(1-(1-d/k)^n)^{n-1}$ \cite{pmid8808467}.
 
@@ -899,16 +889,159 @@ estimate never deviates by more than 0.002.}
 
 
 
-%%%%%%%%%%%%% Average contig size %%%%%%%%%%%%%
+%%%%%%%%%%%%% Probability of m contigs %%%%%%%%%%%%%
 \subsection{Probability of $m$ contigs}
 \label{subsec:probmcontigs}
 
 We now turn our attention to a problem that will illustrate how to use the
-most advanced results of the analytic combinatorics toolbox. The question
+most advanced results of the analytic combinatorics toolbox. The aim
 is to compute the probability that the configuration consists of a
-predefined number of contigs $m$. In other words, we are interested in the
-probability of the number of contigs for a genome of given size, and for a
-given number of reads.
+given number of contigs $m$.
+
+We start with the special case $m = 0$, which requires no additional
+concept. The probability that the configuration contains $0$ contig is the
+probability that it consists of a sequence of a single gap. It is thus the
+number of gaps divided by the total number of configurations. Recall from
+section \ref{subsec:av} that the generating function of gaps is
+
+\begin{equation*}
+G(x,y) = \sum_{n=1}^\infty \left( \frac{yx^{d+1}}{1-x} \right )^n.
+\end{equation*}
+
+The coefficient of $x^ky^n$ in $G(x,y)$ is thus equal to the coefficient
+of $x^k$ in $\left(x^{d+1}/(1-x)\right)^n$, or alternatively, the
+coefficient of $x^{k-dn-n}$ in $1/(1-x)^n$. From the Taylor expansion of
+$1/(1-x)^n$, this coefficient is easily seen to be equal to ${k-dn-1
+\choose n-1}$. The probability that the configuration contains eactly $0$
+contig is thus
+
+\begin{equation}
+\label{eq:m=0}
+{k-dn-1 \choose n-1} \Big/ {k-1 \choose n-1} \sim 
+\frac{(k/n)^{k-1/2}(k/n-d)^{k-dn-1/2}}
+ {(k/n-1)^{k-n+1/2}(k/n-d-1)^{k-(d+1)n-1/2}}.
+\end{equation}
+
+Proposition \ref{th:PW} gives the asymptotic growth directly, but this
+approach exhibits the exact solution for the record. For $m > 0$, the
+generating function is more complex, so it will not yield the exact
+solution, and we will need to use advanced tools to extract coefficient
+asymptotics.
+
+A configuration that contains exactly $1$ contig may contain up to two
+gaps: one before and/or one after the contig. The genrating function of
+the configurations that contain exactly $1$ contig is thus
+
+\begin{equation*}
+\begin{split}
+(1+G(x,y))K(x,y)(1+G(x,y)) =
+\frac{ya(x)}{1-ya(x)}
+\frac{1}{\left(1-yb(x)\right)^2}, \\
+\text{where $a(x) = x(1-x^d)/(1-x)$, and $b(x) = x^{d+1}/(1-x)$}.
+\end{split}
+\end{equation*}
+
+This generating function does not define a Riordan array, but it can be
+expressed as the ratio of two analytic functions. In this case, the points
+where the denominator vanishes hold everything we need to know about the
+asymptotic growth of the coefficients. We will use this example to
+illustrate the general method to extract coefficient asymptotics in
+similar cases. For convenience, we define $H_1(x,y) = 1-ya(x)$, $H_2(x,y)
+= 1-yb(x)$, and write the denomiator as $H(x,y) = H_1(x,y)H_2(x,y)$.
+
+\begin{definition}
+The points such that $H(x,y) = 0$ are called critical points.  The points
+such that $H_1(x,y) = H_2(x,y) = 0$ are called double points. Critical
+points that are not double points are called smooth points.
+\end{definition}
+
+This definition is a massive simplification from the work of Pemantle and
+Wilson. The original definitions are more complex, and there exists more
+types of critical points (which will not appear in the cases presented
+here). The interested reader is referred to the original literature
+\cite{PemWil02, PemWil08, AnalComb2013}.
+
+For smooth critical points, $H_i(x,y) = 0$, where $i$ is either $1$ or
+$2$. Each smooth critical point is associated with a single direction
+$\lambda = \lim k/n$ defined by the equation
+
+\begin{equation}
+\label{eq:minimal}
+\lambda =
+\frac{x\partial H_i(x,y)/\partial x}{y\partial H_i(x,y)/\partial y}.
+\end{equation}
+
+Double points are associated with infinitely many directions. The values
+of $\lambda$ correspond to a closed interval bounded by the two solutions
+of (\ref{eq:minimal}) for $i=1$ and $i=2$.
+
+More than one critical point may be associated with a given direction, but
+only the closest to the origin determines the asymptotic growth of the
+coefficients. The actual formula of the asymptotic growth then depends on
+whether this point is smooth or double. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.55]{Fig5.pdf}
+\caption{\textbf{Singular portrait of $H(x,y)$ for $d=24$}. The two curves
+labelled represent the points such that $H_1(x,y) = 0$ and $H_2(x,y) = 0$,
+respectively. The arrows indicate the ray associated with a critical
+point, and the grey triangle represents the cone of rays associated with
+the double point. The minimal critical points are shown in black, and the
+non minimal points in grey. Note that the $x$-axis does starts at 0.80.}
+\label{fig:singular}
+\end{figure}
+
+Figure~\ref{fig:singular} shows the critical points of $H(x,y)$ for
+$d=24$. The curves intersect at the point $\left( 1/2^{1/d}, 2^{1+1/d}-2
+\right)$, which is the only double point, associated with the directions
+in the interval bounded below by $\lambda_- = (d-(d-1)2^{1/d}) /
+(2^{1/d}-1)$ and above by $\lambda_+ = (d2^{1/d}-d+1) / (2^{1/d}-1)$,
+indicated as a black triangle.  Smooth points are associated with a single
+direction computed from equation (\ref{eq:minimal}) and indicated by
+arrows.
+
+The asymptotics of the coefficients are governed by three regimes: if the
+direction $\lambda = \lim k/n$ is between $1$ and $\lambda_-$, the minimal
+critical point is a smooth point solution of $H_1(x,y) = 0$. If $\lambda$
+is between $\lambda_-$ and $\lambda_+$, the minimal critical point is the
+double point. If $\lambda$ is higher than $\lambda_+$ the minimal critical
+point is a smooth point solution of $H_2(x,y) = 0$. In words, the behavior
+is governed by $K(x,y)$ when $k/n$ is low, by $G(x,y)$ when $k/n$ is high,
+and by a combination of the two when $k/n$ is intermediate.
+
+\begin{proposition}
+Let the generating function of the array $(a_{k,n})$ be
+
+\begin{equation*}
+F(x,y) = \frac{G(x,y)}{H(x,y)} =
+\frac{G(x,y)}{\prod_{i=1}^rH_i(x,y)}.
+\end{equation*}
+
+If the minimal critical point $(x,y)$ associated with the direction
+$\lambda = \lim k/n$ is smooth, then there exists only one $i \leq $ such
+that $H_i(x,y) = 0$ and
+
+\begin{equation*}
+a_{k,n} \sim [x^ky^n] \frac{G(x,y)}{H_i(x,y)}.
+\end{equation*}
+
+
+If the critical point is a double point, then
+
+\begin{equation*}
+\begin{split}
+a_{k,n} \sim x^{k-1}y^{n-1} \frac{G(x,y)}{\sqrt{\mathcal{H}}}
+\text{, where} \\
+\mathcal{H} = \frac{\partial^2H}{\partial x^2}
+  \frac{\partial^2H}{\partial y^2} -
+\left( \frac{\partial^2H}{\partial x\partial y} \right)^2.
+\end{split}
+\end{equation*}
+
+
+\end{proposition}
+
 
 
 
@@ -933,7 +1066,7 @@ both contigs and their cumulative size is
 
 \begin{equation*}
 \begin{split}
-H(x,y,u,z) = \frac{(1+G(x,y))(1+uK(zx,y))}{1-uK(zx,y)G(x,y)}.
+Z(x,y,u,z) = \frac{(1+G(x,y))(1+uK(zx,y))}{1-uK(zx,y)G(x,y)}.
 \end{split}
 \end{equation*}
 
@@ -941,7 +1074,7 @@ The variable $z$ counts the cumulative size of contigs (and as before, the
 variable $u$ counts their number). The exponent of $x$ marks the total
 size of a configuration, and it is obvious that the exponent of $z$ in
 this function marks the ``amount of size'' allocated to contigs.
-$H(x,y,u,z)$ is the generating function of a four-dimensional array
+$Z(x,y,u,z)$ is the generating function of a four-dimensional array
 $(a_{k,n,m,p})$, where each term is the number of configurations of size
 $k$ and weight $n$, and with $m$ contigs of cumulative size $p$.
 
@@ -955,12 +1088,12 @@ of size $k$ and weight $m$ is
 \end{equation*}
 
 So the counting function of the average contig size is found by first
-differentiating $H(x,y,u,z)$ with respecto to $z$ and then integrating
+differentiating $Z(x,y,u,z)$ with respecto to $z$ and then integrating
 with respect to $u$. More specifically, the function we are looking for is
 
 \begin{equation*}
 H^*(x,y) = \int \frac{1}{u}
-\frac{\partial H(x,y,u,z)}{\partial z}\Bigr|_{\substack{\\z=1}} du
+\frac{\partial Z(x,y,u,z)}{\partial z}\Bigr|_{\substack{\\z=1}} du
 \biggr|_{\substack{\\u=1}}.
 \end{equation*}
 
@@ -968,7 +1101,7 @@ We now proceed as obvious.
 
 \begin{equation*}
 \begin{split}
-\frac{\partial H(x,y,u,z)}{\partial z} &=
+\frac{\partial Z(x,y,u,z)}{\partial z} &=
 \frac{xu\left(1+G(x,y)\right)^2 \partial K(zx,y)/ \partial x}
 {\left(1-uK(zx,y)G(x,y)\right)^2} \text{, and} \\
 H^*(x,y) &=  x \frac{\partial K(x,y)}{\partial x}
@@ -1003,18 +1136,18 @@ H^*(x,y) &= x \frac{\partial K(x,y)}{\partial x}
 %
 %\begin{equation*}
 %\begin{split}
-%H(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
+%Z(x,y,u) &= \sum_{n=0}^\infty \left(yx\frac{1-x^d}{1-x} +
 %y\frac{x^{d+1}u^{d+1}}{1-xu}\right)^n \\
 %&= \frac{1}{1-y \left(x(1-x^d)/(1-x) +
 %x^{d+1}u^{d+1}/(1-xu) \right)}.
 %\end{split}
 %\end{equation*}
 %
-%Once again, it is easy to check that $H(x,y,1) = C(x,y)$. Differentiating
+%Once again, it is easy to check that $Z(x,y,1) = C(x,y)$. Differentiating
 %with respect to $u$, we obtain
 %
 %\begin{equation*}
-%\frac{\partial H(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
+%\frac{\partial Z(x,y,u)}{\partial u}\Bigr|_{\substack{\\u=1}}
 %= y \frac{(d+1)x^d-dx^{d+1}}{1-x} \frac{\partial C(x,y)}
 %{\partial y}.
 %\end{equation*}
