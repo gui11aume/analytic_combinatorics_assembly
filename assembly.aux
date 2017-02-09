@@ -13,7 +13,7 @@
 \citation{pmid20686599}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Results}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Analytic combinatorics of the assembly problem}{2}}
-\newlabel{sec:config}{{2.1}{2}}
+\newlabel{subsec:config}{{2.1}{2}}
 \citation{AnalComb2009}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Representation of the assembly problem}. Here we consider a single linear chromosome. Reads of identical length are drawn uniformly without replacement from the chromosome. The distance between the left ends of consecutive reads forms an interval of requivalent size. We assume that the leftmost and the rightmost reads always map to the ends of the chromosome so that intervals always cover exactly $k$ nucleotides.\relax }}{3}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
@@ -25,18 +25,19 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Average number of contigs}{5}}
 \newlabel{subsec:av}{{2.2}{5}}
 \newlabel{def:contig}{{4}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Contigs and gaps}. In this example $d=4$, so contigs correspond to sequences of one of more $4$-intervals. The color of the double arrow is black for $4$-intervals and grey for $4$-gaps. The configuration contains two contigs.\relax }}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Contigs and gaps}. In this example $d=4$, so contigs correspond to sequences of one or more intervals of size at most $4$. The double arrow is black for $\alpha $-intervals and grey for $\omega $-intervals. The configuration contains two contigs.\relax }}{6}}
 \newlabel{fig:contigs}{{2}{6}}
 \newlabel{eq:C2ndform}{{5}{6}}
 \newlabel{eq:average}{{6}{7}}
-\newlabel{eq:avstar}{{7}{8}}
+\newlabel{eq:avomega}{{7}{8}}
+\newlabel{eq:poiss}{{8}{8}}
 \citation{pmid3294162}
 \citation{pmid8808467}
-\newlabel{eq:avcont}{{8}{10}}
-\newlabel{eq:avcontnstar}{{9}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Average number of contigs}. In this example, $k=25,000$ and $d=24$. Between $100$ and $10,000$ reads were drawn at random with replacement and the number of contigs was calculated following definition \ref  {def:contig}. Each case was replicated $100,000$ times and the average was plotted (circles). Dotted lines show the Lander-Waterman and Roach estimates (the lines are superimposed in the left panel) and the plain lines show the estimate computed from expression (\ref  {eq:avcontnstar}). The lander-Waterman and Roach estimates are sustantially biased at low read count (left panel). At high read count (right panel), the Roach estimate is asymptotically unbiased, but the Lander-Waterman estimate is not. Here the estimate of this study never deviates by more than 2\%.\relax }}{10}}
+\newlabel{eq:avcont}{{9}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Average number of contigs}. In this example, $k=25,000$ and $d=24$. Between $100$ and $10,000$ reads were drawn at random with replacement and the number of contigs was calculated following definition \ref  {def:contig}. Each case was replicated $100,000$ times and the average was plotted (circles). Dotted lines show the Lander-Waterman and Roach estimates (the lines are superimposed in the left panel) and the plain lines show the estimate computed from expression (\ref  {eq:avcont}). The lander-Waterman and Roach estimates are sustantially biased at low read count (left panel). At high read count (right panel), the Roach estimate is asymptotically unbiased, but the Lander-Waterman estimate is not. Here the estimate of this study never deviates by more than 2\%.\relax }}{10}}
 \newlabel{fig:avcontig}{{3}{10}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Probability of closure}{11}}
+\newlabel{subsec:closure}{{2.3}{11}}
 \newlabel{def:closure}{{5}{11}}
 \newlabel{eq:RAGF}{{10}{11}}
 \citation{PemWil02,AnalComb2013}
@@ -51,10 +52,15 @@
 \citation{pmid8808467}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Probability of closure}. In this example, $k=25,000$ and $d=24$. Between $7,000$ and $15,000$ reads were drawn at random with replacement and closure was determined following definition \ref  {def:closure}. Each case was replicated $500,000$ times and the average frequency of closure was plotted (circles). Dotted lines show the Roach estimate and the plain lines show the estimate computed with algorithm \ref  {alg:closure}. At its worst, the Roach estimate is off the target value by approximately 0.07, whereas the analytic combinatorics estimate never deviates by more than 0.002.\relax }}{14}}
 \newlabel{fig:closureprob}{{4}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Probability of $m$ contigs}{15}}
-\newlabel{subsec:probmcontigs}{{2.4}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Average contig size}{15}}
-\newlabel{subsec:avctsz}{{2.5}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Probability of $m$ contigs}{14}}
+\newlabel{subsec:probmcontigs}{{2.4}{14}}
+\citation{PemWil02,PemWil08,AnalComb2013}
+\newlabel{eq:m=0}{{16}{15}}
+\newlabel{eq:minimal}{{17}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Singular portrait of $K_1(x,y)$ for $d=24$}. The two curves labelled represent the points such that $H_1(x,y) = 0$ and $H_2(x,y) = 0$, respectively. The arrows indicate the ray associated with a critical point, and the grey triangle represents the cone of rays associated with the double point. The minimal critical points are shown in black, and the non minimal points in grey. Note that the $x$-axis does starts at 0.80.\relax }}{16}}
+\newlabel{fig:singular}{{5}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Average contig size}{18}}
+\newlabel{subsec:avctsz}{{2.5}{18}}
 \citation{Drmota1994}
 \citation{Gardy1995}
 \bibdata{pubmed,extra}
@@ -65,10 +71,10 @@
 \bibcite{PemWil02}{5}
 \bibcite{PemWil08}{6}
 \bibcite{AnalComb2013}{7}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Discussion}{16}}
 \bibcite{AnalComb1996}{8}
 \bibcite{pmid8808467}{9}
 \bibcite{pmid10890387}{10}
 \bibcite{pmid20686599}{11}
 \bibcite{pmid16901236}{12}
 \bibstyle{plain}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Discussion}{20}}
