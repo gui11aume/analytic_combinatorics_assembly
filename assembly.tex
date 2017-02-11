@@ -919,8 +919,8 @@ contig is thus
 \begin{equation}
 \label{eq:m=0}
 {k-dn-1 \choose n-1} \Big/ {k-1 \choose n-1} \sim 
-\frac{(k/n-1)^{k-n+1/2}(k/n-d)^{k-dn-1/2}}
- {(k/n)^{k-1/2}(k/n-d-1)^{k-(d+1)n+1/2}}.
+\frac{(k/n)^{k-1/2}(k/n-d)^{k-dn-1/2}}
+ {(k/n-1)^{k-n+1/2}(k/n-d-1)^{k-(d+1)n-1/2}}.
 \end{equation}
 
 Proposition \ref{th:PW} gives the asymptotic growth directly, but this
@@ -933,12 +933,14 @@ A configuration that contains exactly $1$ contig may contain up to two
 gaps: one before and/or one after the contig. The genrating function of
 the configurations that contain exactly $1$ contig is thus
 
-\begin{gather*}
-K_1(x,y) = (1+G(x,y))K(x,y)(1+G(x,y)) =
+\begin{equation*}
+\begin{split}
+(1+G(x,y))K(x,y)(1+G(x,y)) =
 \frac{ya(x)}{1-ya(x)}
 \frac{1}{\left(1-yb(x)\right)^2}, \\
 \text{where $a(x) = x(1-x^d)/(1-x)$, and $b(x) = x^{d+1}/(1-x)$}.
-\end{gather*}
+\end{split}
+\end{equation*}
 
 This generating function does not define a Riordan array, but it can be
 expressed as the ratio of two analytic functions. In this case, the points
@@ -982,24 +984,23 @@ whether this point is smooth or double.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{Fig5.pdf}
-\caption{\textbf{Singular portrait of $K_1(x,y)$ for $d=24$}. The two
-curves labelled represent the points such that $H_1(x,y) = 0$ and
-$H_2(x,y) = 0$, respectively. The arrows indicate the ray associated with
-a critical point, and the grey triangle represents the cone of rays
-associated with the double point. The minimal critical points are shown in
-black, and the non minimal points in grey. Note that the $x$-axis does
-starts at 0.80.}
+\caption{\textbf{Singular portrait of $H(x,y)$ for $d=24$}. The two curves
+labelled represent the points such that $H_1(x,y) = 0$ and $H_2(x,y) = 0$,
+respectively. The arrows indicate the ray associated with a critical
+point, and the grey triangle represents the cone of rays associated with
+the double point. The minimal critical points are shown in black, and the
+non minimal points in grey. Note that the $x$-axis does starts at 0.80.}
 \label{fig:singular}
 \end{figure}
 
 Figure~\ref{fig:singular} shows the critical points of $H(x,y)$ for
-$d=24$. The curves intersect at the point $\left( 1/2^{1/d}, 2^{1+1/d}-2
-\right)$, which is the only double point, associated with the directions
-in the interval bounded below by $\lambda_- = (d-(d-1)2^{1/d}) /
-(2^{1/d}-1)$ and above by $\lambda_+ = (d2^{1/d}-d+1) / (2^{1/d}-1)$,
-indicated as a black triangle.  Smooth points are associated with a single
-direction computed from equation (\ref{eq:minimal}) and indicated by
-arrows.
+$d=24$. The curves intersect at the point $\left( 1/2^{\frac{1}{d}},
+2^{1+\frac{1}{d}}-2 \right)$, which is the only double point, associated
+with the directions in the interval bounded below by $\lambda_- =
+(d-(d-1)2^{\frac{1}{d}}) / (2^{\frac{1}{d}}-1)$ and above by $\lambda_+ =
+(d2^{\frac{1}{d}}-d+1) / (2^{\frac{1}{d}}-1)$, indicated as a black
+triangle.  Smooth points are associated with a single direction computed
+from equation (\ref{eq:minimal}) and indicated by arrows.
 
 The asymptotics of the coefficients are governed by three regimes: if the
 direction $\lambda = \lim k/n$ is between $1$ and $\lambda_-$, the minimal
@@ -1030,7 +1031,7 @@ If the minimal critical point is a double point, then
 
 \begin{equation*}
 \begin{split}
-a_{k,n} \sim x^{-k-1}y^{-n-1} \frac{g(x,y)}{\sqrt{-\mathcal{H}}}
+a_{k,n} \sim \frac{1}{x^{k+1}y^{n+1}} \frac{g(x,y)}{\sqrt{-\mathcal{H}}}
 \text{, where} \\
 \mathcal{H} = \frac{\partial^2H(x,y)}{\partial x^2}
   \frac{\partial^2H(x,y)}{\partial y^2} -
@@ -1048,21 +1049,23 @@ asymptotically equivalent to the coefficients of
 
 This case was studied in section \ref{subsec:closure}, so we can use
 algorithm \ref{alg:closure} to estimate the probability that the
-configuration has exactly $1$ contig.
+configuration contains exactly $1$ contig.
 
 When $\lambda_- \leq \lim k/n \leq \lambda_+$, the minimal critical point
-is the double point $\left( 1/2^{1/d}, 2^{1+1/d}-2 \right)$ and the number
-of configurations is asymptotically proportional to
-$2^{(k+1)/d-n-1}/(2^{1/d}-1)^{n+1}$. Since $g(1/2^{1/d}, 2^{1+1/d}-2) =
-1$, the constant is equal to $1/\sqrt{-\mathcal{H}}$. Using the asymptotic
-formula for the total number of configurations, we see that the
-probability that it contains exactly $1$ contig is asymptotically
-equivalent to
+is the double point $\left( 1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2
+\right)$ and the number of configurations is asymptotically proportional
+to $2^{\frac{k+1}{d}-n-1}/(2^{\frac{1}{d}}-1)^{n+1}$. Since
+$g(1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2) = 1$, the proportionality
+constant is equal to $1/\sqrt{-\mathcal{H}}$.  Using the asymptotic
+formula for the total number of configurations, the probability that it
+contains exactly $1$ contig is asymptotically equivalent to
 
-\begin{equation*}
-\frac{(k/n-1)^{k-n}2^{k/d-n}}{(k/n)^k(2^{1/d}-1)^{n+1}}
-\sqrt{\frac{2\pi k(k/n-1)}{3(7d^2-6d+3)2^{2/d} -(3d^2-d)2^{1+1/d} + d^2}}.
-\end{equation*}
+\begin{equation}
+\label{eq:1contig_case2}
+\frac{(k/n)^k2^{\frac{k}{d}-n}}{(k/n-1)^{k-n} (2^{\frac{1}{d}}-1)^{n+1}}
+\sqrt{\frac{2\pi k(k/n-1)}{3(7d^2-6d+3)2^{\frac{2}{d}}-
+(3d^2-d)2^{1+\frac{1}{d}} +d^2 }}.
+\end{equation}
 
 Finally, when $\lim k/n > \lambda_+$, the number of configurations is
 asymptotically equivalent to the coefficients of
@@ -1072,62 +1075,42 @@ asymptotically equivalent to the coefficients of
 \end{equation*}
 
 Observe that this generating function is related to the derivative of
-$G(x,y)$. More specifically, it is equal to
+$G(x,y)$. More specifically
 
 \begin{equation*}
-y(1-x^d)/x^d\frac{\partial G(x,y)}{\partial y}.
+\frac{\partial G(x,y)}{\partial y} =
+\frac{x^{d+1}/(1-x)}{\left( 1-yx^{d+1}/(1-x) \right)^2} =
+\frac{x^d}{1-x^d}\frac{yx(1-x^d)/(1-x)}{\left( 1-yx^{d+1}/(1-x)
+\right)^2}.
 \end{equation*}
 
-So the number of configurations with $1$ contig is asymptotically
-equivalent to $n \left( [x^{k+d}y^n]G(x,y)-[x^ky^n]G(x,y) \right)$.
-Modifying equation (\ref{eq:m=0}), we can obtain the asymptotic
+Thus, using equation (\ref{eq:m=0}), we can immediately give the asymptotic
 probability that the configuration contains exactly $1$ contig as
 
-\begin{equation*}
-\frac{n((k/n-d)^d-(k/n-d-1)^d)(k/n-1)^{k-n+1/2}(k/n-d)^{k-dn-1/2}}
- {(k/n)^{k-1/2}(k/n-d-1)^{k-(d+1)(n-1)-1/2}}.
-\end{equation*}
+\begin{equation}
+\label{eq:1contig_case3}
+\frac{n((k/n-d)^d-(k/n-d-1)^d)(k/n-1)^{k-n+\frac{1}{2}}
+(k/n-d)^{k-dn-\frac{1}{2}}}
+{(k/n)^{k-\frac{1}{2}}(k/n-d-1)^{k-(d+1)(n-1)-\frac{1}{2}}}.
+\end{equation}
 
-\textbf{Insert Figure 6 and discuss}.
-
-The cases $m > 1$ can be derived in the same way. A configuration with
-exactly $m$ contigs starts and ends with a potentially empty gap and
-also contains $m-1$ non-empty gaps, so the generating function of
-configurations with exactly $m$ contigs is
-
-\begin{equation*}
-K_m(x,y) = (1+G(x,y))^2K(x,y)^mG(x,y)^{m-1} =
-\frac{y^ma(x)^m}{\left(1-ya(x)\right)^m}
-\frac{y^{m-1}b(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
-\end{equation*}
-
-Surprisingly, the singular portraits of $K_m(x,y)$ are identical for $m >
-1$, and they are very similar to the singular portraits of $K_1(x,y)$.
-Indeed, the points where the denominator vanishes are the same. This also
-implies that for all $m > 0$, the asymptotic growth changes regime when
-$\lambda = \lim k/n$ reaches the values $\lambda_-$ and $\lambda_+$
-defined above.
-
-When $\lim k/n < \lambda_-$, the asymptotic growth is defined by the
-generating function
-
-\begin{equation*}
-\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-ya(x)\right)^m}.
-\end{equation*}
-
-When $\lambda_- \leq \lim k/n \leq \lambda_+$, the number of
-configurations with $m$ contigs is proportional to
-$2^{(k+1)/d-n-1}/(2^{1/d}-1)^{n+1}$. This is surprising, but the
-proportionality constant is different for every $m$.
-
-
-Finally, when $\lim k/n > \lambda_+$, the asymptotic growth is defined by
-the generating function
-
-\begin{equation*}
-\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
-\end{equation*}
-
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.55]{Fig6.pdf}
+\caption{\textbf{Probability that the configuration has $1$ contig}.
+As in the previous examples, $k=25,000$ and $d=24$. Between $100$ and
+$20,000$ reads were drawn at random with replacement. Each case was
+replicated $500,000$ times and the average frequency that the
+configuration has exactly $1$ contig was plotted (circles). The plain
+lines show the estimate computed from algorithm \ref{alg:closure}, formula
+(\ref{eq:1contig_case2}) and forumla (\ref{eq:1contig_case3}).
+The grey shadow shows for which values the double point determines the
+asymptotics, \textit{i.e.} where formula (\ref{eq:1contig_case2}) was
+used. The estimate never deviates by more than 0.002. The right panel
+shows the logarithm of the estimate to highlight the asymptotic behavior
+at low coverage.}
+\label{fig:1contig}
+\end{figure}
 
 
 
