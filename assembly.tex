@@ -935,7 +935,7 @@ the configurations that contain exactly $1$ contig is thus
 
 \begin{equation*}
 \begin{split}
-(1+G(x,y))K(x,y)(1+G(x,y)) =
+K_1(x,y) = (1+G(x,y))K(x,y)(1+G(x,y)) =
 \frac{ya(x)}{1-ya(x)}
 \frac{1}{\left(1-yb(x)\right)^2}, \\
 \text{where $a(x) = x(1-x^d)/(1-x)$, and $b(x) = x^{d+1}/(1-x)$}.
@@ -984,12 +984,13 @@ whether this point is smooth or double.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{Fig5.pdf}
-\caption{\textbf{Singular portrait of $H(x,y)$ for $d=24$}. The two curves
-labelled represent the points such that $H_1(x,y) = 0$ and $H_2(x,y) = 0$,
-respectively. The arrows indicate the ray associated with a critical
-point, and the grey triangle represents the cone of rays associated with
-the double point. The minimal critical points are shown in black, and the
-non minimal points in grey. Note that the $x$-axis does starts at 0.80.}
+\caption{\textbf{Singular portrait of $K_1(x,y)$ for $d=24$}. The two
+curves labelled represent the points such that $H_1(x,y) = 0$ and
+$H_2(x,y) = 0$, respectively. The arrows indicate the ray associated with
+a critical point, and the grey triangle represents the cone of rays
+associated with the double point. The minimal critical points are shown in
+black, and the non minimal points in grey. Note that the $x$-axis does
+starts at 0.80.}
 \label{fig:singular}
 \end{figure}
 
@@ -1111,6 +1112,44 @@ shows the logarithm of the estimate to highlight the asymptotic behavior
 at low coverage.}
 \label{fig:1contig}
 \end{figure}
+
+The cases $m > 1$ can be derived in the same way. A configuration with
+exactly $m$ contigs starts and ends with a potentially empty gap and
+also contains $m-1$ non-empty gaps, so the generating function of
+configurations with exactly $m$ contigs is
+
+\begin{equation*}
+K_m(x,y) = (1+G(x,y))^2K(x,y)^mG(x,y)^{m-1} =
+\frac{y^ma(x)^m}{\left(1-ya(x)\right)^m}
+\frac{y^{m-1}b(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
+\end{equation*}
+
+Surprisingly, the singular portraits of $K_m(x,y)$ are identical for $m >
+1$, and they are very similar to the singular portraits of $K_1(x,y)$.
+Indeed, the points where the denominator vanishes are the same. This also
+implies that for all $m > 0$, the asymptotic growth changes regime when
+$\lambda = \lim k/n$ reaches the values $\lambda_-$ and $\lambda_+$
+defined above.
+
+When $\lim k/n < \lambda_-$, the asymptotic growth is defined by the
+generating function
+
+\begin{equation*}
+\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-ya(x)\right)^m}.
+\end{equation*}
+
+When $\lambda_- \leq \lim k/n \leq \lambda_+$, the number of
+configurations with $m$ contigs is proportional to
+$2^{(k+1)/d-n-1}/(2^{1/d}-1)^{n+1}$. This is surprising, but the
+proportionality constant is different for every $m$.
+
+
+Finally, when $\lim k/n > \lambda_+$, the asymptotic growth is defined by
+the generating function
+
+\begin{equation*}
+\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
+\end{equation*}
 
 
 
