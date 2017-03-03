@@ -684,27 +684,27 @@ will now see how to do this with more advanced analytic combinatorics
 tools.
 
 \begin{definition}
-Riordan arrays are bivariate arrays $(a_{k,n})$, the generating function
-of which can be written as
+Riordan arrays are bivariate arrays $(a_{k,n})$ whose generating
+function can be written as
 
 \begin{equation}
 \label{eq:RAGF}
 \sum_{k=0}^\infty \sum_{n=0}^\infty a_{k,n} x^k y^n =
 \frac{\phi(x)}{1-y \nu(x)}.
 \end{equation}
+
+For simplicity, we will refer to generating functions of Riordan arrays
+as ``Riordan generating functions''.
 \end{definition}
 
-Configurations form a Riordan array because their generating
-function $C(x,y)$ can be written as (\ref{eq:RAGF}) with $\phi(x) =
-1$ and $\nu(x) = x/(1-x)$. The generating function $1+K(x,y)$ can also be
-written as (\ref{eq:RAGF}) with $\phi(x) = 1$ and $\nu(x) =
-x+x^2+\ldots+x^d = x(1-x^d)/(1-x)$, so contigs also form a Riordan array
-(adding 1 only changes the number of objects of size 0, without any
-consequence for the asymptotic behavior of the coefficients).
+Configurations form a Riordan array because $C(x,y)$ can be written as
+(\ref{eq:RAGF}) by setting $\phi(x) = 1$ and $\nu(x) = x/(1-x)$.
+Potentially empty contigs also form a Riordan array because the generating
+function $1+A(x,y)$ can be written as (\ref{eq:RAGF}) by setting $\phi(x)
+= 1$ and $\nu(x) = x+x^2+\ldots+x^d = x(1-x^d)/(1-x)$.
 
-The aymptotic behavior of Riordan arrays can be extracted from the
-generating function thanks to the following theorem of Pemantle and
-Wilson.
+The aymptotic behavior of Riordan arrays can be extracted from their
+generating function by the following theorem of Pemantle and Wilson.
 
 \begin{proposition}
 \label{th:PW}
@@ -713,37 +713,41 @@ that $k$ and $n$ tend to infinity with $\lim k/n = \lambda$, then
 
 \begin{equation}
 \label{eq:assRA}
-[x^ky^n]F(x,y) \sim \frac{\nu(x_\lambda)^n\phi(x_\lambda)}
-  {x_\lambda^k\sqrt{2\pi n \sigma(x_\lambda)^2}},
+[x^ky^n]F(x,y) \sim \frac{\nu(x_*)^n\phi(x_*)}
+  {x_*^k\sqrt{2\pi n \sigma(x_*)^2}},
 \end{equation}
 
 \noindent
-where $x_\lambda$ is the solution of the ``saddle point equation ''
-$\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and where $\sigma(x)^2 = x \mu'(x)$.
+where $x_*$ is the solution of the equation $\mu(x) =
+x\nu'(x)/\nu(x) = \lambda$ and where $\sigma(x)^2$ is the function $x
+\mu'(x)$. We will call $x_*$ the critical value associated with $k$ and
+$n$.
 \end{proposition}
 
 The proof of this theorem is outside the scope of this manuscript;
 interested readers are referred to the original results of Pemantle and
 Wilson \cite{PemWil02,AnalComb2013}.
 
-In essence, proposition \ref{th:PW} says that if $k \sim \lambda n$ and if
-we can find the solution of the equation $\mu(x) = \lambda$, then we get
-the asymptotic growth of the Riordan array. The following lemma shows that
-this is realitvely easy in the case of $K(x,y)$.
+In essence, proposition \ref{th:PW} says that if we can find the critical
+values of the generating function, then we get the asymptotic growth of
+the Riordan array. The following lemma shows that this is realitvely easy
+in the case of
+$A(x,y)$.
 
 \begin{lemma}
 \label{th:mu}
-For $\nu(x) = x+x^2+\ldots+x^d$, the equation $\mu(x) = x\nu'(x)/\nu(x) =
-\lambda$ has a single solution $x_\lambda$ for $1 \leq \lambda \leq d$.
+Riordan generating functions where $\nu(x) = a(x) = x+x^2+\ldots+x^d$
+have only one critical value $x_a$ for $1 \leq \lambda \leq d$.
 \end{lemma}
 
 \begin{proof}
-We first demonstrate that for $x \geq 0$, $\mu$ is strictly increasing.
-This will ensure that if the solution is unique if it exists.
+We first demonstrate that for $x \geq 0$, the function $\mu$ is
+strictly increasing. This will ensure that if the solution is unique if
+it exists.
 
 \begin{equation}
 \label{eq:mu}
-\mu(x) = x\frac{\nu'(x)}{\nu(x)} =
+\mu_a(x) = x\frac{a'(x)}{a(x)} =
 \frac{x+2x^2+3x^3+\ldots+dx^d}{x+x^2+\ldots+x^d} =
 d+\frac{1}{1-x} - \frac{d}{1-x^d}.
 \end{equation} 
@@ -752,7 +756,7 @@ Differentiating the last expression we obtain
 
 \begin{equation}
 \label{eq:muprime}
-\mu'(x) = \frac{1}{(1-x)^2} -\frac{d^2x^{d-1}}{(1-x^d)^2}.
+\mu_a'(x) = \frac{1}{(1-x)^2} -\frac{d^2x^{d-1}}{(1-x^d)^2}.
 \end{equation}
 
 The function $f(\alpha) = x^{\alpha} = e^{\alpha \log(x)}$ is strictly
@@ -769,35 +773,36 @@ f\left(\frac{0+1+2+\ldots+d-1}{d}\right) \text{, and then} \\
 \end{eqnarray*}
 
 Combined with equation (\ref{eq:muprime}), the last inequality shows that
-$\mu'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu'(0) = 1$ and $\mu'(1)
-= (d+1)(d-1)/12$, $\mu$ is strictly increasing (note that $\mu'(1)$ is
-properly defined but that $\mu'(0)$ must be defined by continuity).
-Observing that $\mu(0) = 1$ and $\lim_{x\rightarrow\infty} \mu(x) = d$,
-the equation $\mu(x) = \lambda$ has a unique solution provided $1 \leq
-\lambda \leq d$.
+$\mu_a'(x) > 0$ for $x > 0$ and $x \neq 1$. Since $\mu_a'(0) = 1$ and
+$\mu_a'(1) = (d+1)(d-1)/12$, $\mu_a$ is strictly increasing (note that
+$\mu_a'(1)$ is properly defined but that $\mu_a'(0)$ must be defined by
+continuity).  Observing that $\mu_a(0) = 1$ and
+$\lim_{x\rightarrow\infty} \mu_a(x) = d$, the equation
+$\mu_a(x) = \lambda$ has a unique solution
+provided $1 \leq \lambda \leq d$.
 \end{proof}
 
 \begin{remark}
 The cases $\lambda < 1$ and $\lambda > d$ correspond to limits where $nd <
 k$ and $n > k$, respectively. Since the size of a collection of $n$
 $d$-intervals is between $n$ and $nd$, we have the trivial asymptotic
-behavior $[x^ky^n]K(x,y) = 0$ in both cases.
+behavior $[x^ky^n]A(x,y) = 0$ in both cases.
 \end{remark}
 
 
-The value of $x_\lambda$ can be found numerically from expression
-(\ref{eq:mu}).  Once it is available, we can compute $\nu(x_\lambda)$ and
-$\sigma(x_\lambda^2)$ from their definitions, but numeric precision can
+The value of $x_a$ can be found numerically from expression
+(\ref{eq:mu}).  Once it is available, we can compute $\nu(x_a)$ and
+$\sigma_a(x_a)^2$ from their definitions, but numeric precision can
 become an issue if $n$ or $d$ is very large. To avoid this, we can use the
 equivalent expressions
 
 
 \begin{gather}
 \label{eq:nu} %% Equation for nu.
-\nu(x_\lambda) = \frac{dx_\lambda}{1+(d-\lambda)(1-x_\lambda)}, \\
+a(x_a) = \frac{dx_a}{1+(d-\lambda)(1-x_a)}, \\
 \label{eq:sigma} %% Equation for sigma2.
-\sigma(x_\lambda)^2 = \lambda(d-\lambda) -
-  \frac{d-2\lambda+1}{1-x_\lambda}.
+\sigma_a(x_a)^2 = \lambda(d-\lambda) -
+  \frac{d-2\lambda+1}{1-x_a}.
 \end{gather}
 
 As above, we need to replace $n$ by its estimate from the Poisson
@@ -815,9 +820,9 @@ and with $n_*$ reads.
 \begin{enumerate}
 \item Compute $n = k(1-e^{-n_*/k})$
 \item Compute $\lambda = k/n$
-\item Solve $\mu(x_\lambda) = \lambda$ by the Newton-Raphson method using
+\item Solve $\mu_a(x_a) = \lambda$ by the Newton-Raphson method using
 (\ref{eq:mu}) and (\ref{eq:muprime})
-\item Compute $\nu(x_\lambda)$ and $\sigma^2(x_\lambda)$ using
+\item Compute $a(x_a)$ and $\sigma_a^2(x_a)$ using
 (\ref{eq:nu}) and (\ref{eq:sigma})
 \item Compute (\ref{eq:assRA}) in logarithmic space
 \item Compute (\ref{eq:coefC}) in logarithmic space
@@ -835,11 +840,11 @@ approximation, we obtain $n \approx 25000 \cdot (1-e^{-10000/25000})
 
 From this, we obtain $\lambda = k/n \approx 3.033$. Using the
 Newton-Raphson method with expressions (\ref{eq:mu}) and
-(\ref{eq:muprime}), we solve the equation $\mu(x) = \lambda$ and obtain $x
-\approx 0.67049776$. Using equations (\ref{eq:nu}) and (\ref{eq:sigma}),
-we obtain $\nu(x_\lambda) \approx 2.03474206$ and $\sigma(x_\lambda)^2
-\approx 6.136354$. Computing (\ref{eq:assRA}) in logarithmic space with
-the new values yields
+(\ref{eq:muprime}), we solve the equation $\mu(x_a) = \lambda$ and obtain
+$x_a \approx 0.67049776$. Using equations (\ref{eq:nu}) and
+(\ref{eq:sigma}), we obtain $a(x_a) \approx 2.03474206$ and
+$\sigma_a(x_a)^2 \approx 6.136354$. Computing (\ref{eq:assRA}) in
+logarithmic space with the new values yields
 
 \begin{equation*}
 \begin{split}
@@ -894,27 +899,27 @@ estimate never deviates by more than 0.002.}
 \subsection{Probability of $m$ contigs}
 \label{subsec:probmcontigs}
 
-We now turn our attention to a problem that will illustrate how to use the
-most advanced results of the analytic combinatorics toolbox. The aim
-is to compute the probability that the configuration consists of a
-given number of contigs $m$.
+We now turn our attention to a problem that will illustrate how we can
+combine generating functions of Riordan arrays to describe more complex
+combinatorial objects. The aim is to compute the probability that the
+configuration consists of a given number of contigs $m$.
 
-We start with the special case $m = 0$, which requires no additional
-concept. The probability that the configuration contains $0$ contig is the
-probability that it consists of a sequence of a single gap. It is thus the
-number of gaps divided by the total number of configurations. Recall from
-section \ref{subsec:av} that the generating function of gaps is
+We start with the special case $m = 0$, which is handled differently from
+the others. A configuration contains $0$ contig if all the intervals are
+$\omega$-intervals, or in other words, if the configuration is a breach.
+Recall from section \ref{subsec:av} that the generating function of
+breaches is
 
 \begin{equation*}
-G(x,y) = \sum_{n=1}^\infty \left( \frac{yx^{d+1}}{1-x} \right )^n.
+B(x,y) = \sum_{n=1}^\infty \left( \frac{yx^{d+1}}{1-x} \right )^n.
 \end{equation*}
 
-The coefficient of $x^ky^n$ in $G(x,y)$ is thus equal to the coefficient
+The coefficient of $x^ky^n$ in $B(x,y)$ is thus equal to the coefficient
 of $x^k$ in $\left(x^{d+1}/(1-x)\right)^n$, or alternatively, the
 coefficient of $x^{k-dn-n}$ in $1/(1-x)^n$. From the Taylor expansion of
-$1/(1-x)^n$, this coefficient is easily seen to be equal to ${k-dn-1
-\choose n-1}$. The probability that the configuration contains eactly $0$
-contig is thus
+$1/(1-x)^n$, this coefficient is seen to be equal to ${k-dn-1 \choose
+n-1}$. The probability that the configuration contains eactly $0$ contig
+is thus
 
 \begin{equation}
 \label{eq:m=0}
@@ -923,235 +928,226 @@ contig is thus
  {(k/n-1)^{k-n+1/2}(k/n-d-1)^{k-(d+1)n-1/2}}.
 \end{equation}
 
-Proposition \ref{th:PW} gives the asymptotic growth directly, but this
-approach exhibits the exact solution for the record. For $m > 0$, the
-generating function is more complex, so it will not yield the exact
-solution, and we will need to use advanced tools to extract coefficient
-asymptotics.
+Proposition \ref{th:PW} gives the asymptotic growth directly, but the
+approach above exhibits the exact solution. For $m > 0$, the exact
+solution will be not available because the generating functions are
+more complex.
 
-A configuration that contains exactly $1$ contig may contain up to two
-gaps: one before and/or one after the contig. The genrating function of
-the configurations that contain exactly $1$ contig is thus
-
-\begin{equation*}
-\begin{split}
-K_1(x,y) = (1+G(x,y))K(x,y)(1+G(x,y)) =
-\frac{ya(x)}{1-ya(x)}
-\frac{1}{\left(1-yb(x)\right)^2}, \\
-\text{where $a(x) = x(1-x^d)/(1-x)$, and $b(x) = x^{d+1}/(1-x)$}.
-\end{split}
-\end{equation*}
-
-This generating function does not define a Riordan array, but it can be
-expressed as the ratio of two analytic functions. In this case, the points
-where the denominator vanishes hold everything we need to know about the
-asymptotic growth of the coefficients. We will use this example to
-illustrate the general method to extract coefficient asymptotics in
-similar cases. For convenience, we define $H_1(x,y) = 1-ya(x)$, $H_2(x,y)
-= 1-yb(x)$, and write the denomiator as $H(x,y) = H_1(x,y)H_2(x,y)$.
-
-\begin{definition}
-The points such that $H(x,y) = 0$ are called critical points.  The points
-such that $H_1(x,y) = H_2(x,y) = 0$ are called double points. Critical
-points that are not double points are called smooth points.
-\end{definition}
-
-This definition is a massive simplification from the work of Pemantle and
-Wilson. The original definitions are more complex, and there exists more
-types of critical points (which will not appear in the cases presented
-here). The interested reader is referred to the original literature
-\cite{PemWil02, PemWil08, AnalComb2013}.
-
-For smooth critical points, $H_i(x,y) = 0$, where $i$ is either $1$ or
-$2$. Each smooth critical point is associated with a single direction
-$\lambda = \lim k/n$ defined by the equation
-
-\begin{equation}
-\label{eq:minimal}
-\lambda =
-\frac{x\partial H_i(x,y)/\partial x}{y\partial H_i(x,y)/\partial y}.
-\end{equation}
-
-Double points are associated with infinitely many directions. The values
-of $\lambda$ correspond to a closed interval bounded by the two solutions
-of (\ref{eq:minimal}) for $i=1$ and $i=2$.
-
-More than one critical point may be associated with a given direction, but
-only the closest to the origin determines the asymptotic growth of the
-coefficients. The actual formula of the asymptotic growth then depends on
-whether this point is smooth or double. 
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.55]{Fig5.pdf}
-\caption{\textbf{Singular portrait of $K_1(x,y)$ for $d=24$}. The two
-curves labelled represent the points such that $H_1(x,y) = 0$ and
-$H_2(x,y) = 0$, respectively. The arrows indicate the ray associated with
-a critical point, and the grey triangle represents the cone of rays
-associated with the double point. The minimal critical points are shown in
-black, and the non minimal points in grey. Note that the $x$-axis does
-starts at 0.80.}
-\label{fig:singular}
-\end{figure}
-
-Figure~\ref{fig:singular} shows the critical points of $H(x,y)$ for
-$d=24$. The curves intersect at the point $\left( 1/2^{\frac{1}{d}},
-2^{1+\frac{1}{d}}-2 \right)$, which is the only double point, associated
-with the directions in the interval bounded below by $\lambda_- =
-(d-(d-1)2^{\frac{1}{d}}) / (2^{\frac{1}{d}}-1)$ and above by $\lambda_+ =
-(d2^{\frac{1}{d}}-d+1) / (2^{\frac{1}{d}}-1)$, indicated as a black
-triangle.  Smooth points are associated with a single direction computed
-from equation (\ref{eq:minimal}) and indicated by arrows.
-
-The asymptotics of the coefficients are governed by three regimes: if the
-direction $\lambda = \lim k/n$ is between $1$ and $\lambda_-$, the minimal
-critical point is a smooth point solution of $H_1(x,y) = 0$. If $\lambda$
-is between $\lambda_-$ and $\lambda_+$, the minimal critical point is the
-double point. If $\lambda$ is higher than $\lambda_+$ the minimal critical
-point is a smooth point solution of $H_2(x,y) = 0$. In words, the behavior
-is governed by $K(x,y)$ when $k/n$ is low, by $G(x,y)$ when $k/n$ is high,
-and by a combination of the two when $k/n$ is intermediate.
-
-\begin{proposition}
-Let the generating function of the array $(a_{k,n})$ be
-
-\begin{equation*}
-\frac{g(x,y)}{H(x,y)} =
-\frac{g(x,y)}{\prod_{i=1}^rH_i(x,y)}.
-\end{equation*}
-
-If the minimal critical point $(x,y)$ associated with the direction
-$\lambda = \lim k/n$ is smooth, then
-
-\begin{equation*}
-a_{k,n} \sim [x^ky^n] \frac{g(x,y)}{H_i(x,y)}\text{, where $i \leq r$ is
-such that } H_i(x,y) = 0.
-\end{equation*}
-
-If the minimal critical point is a double point, then
+A configuration with $m$ contigs must also contain at least $m-1$
+breahes, plus up to two additional breaches at the ends. The generating
+functions of breaches, potentially empty breaches and contigs are
+$B(x,y)$, $1+B(x,y)$ and $A(x,y)$, respectively. Since a configuration
+with $m$ contigs is an alternating sequence of those objects, the
+generating function appears as
 
 \begin{equation*}
 \begin{split}
-a_{k,n} \sim \frac{1}{x^{k+1}y^{n+1}} \frac{g(x,y)}{\sqrt{-\mathcal{H}}}
-\text{, where} \\
-\mathcal{H} = \frac{\partial^2H(x,y)}{\partial x^2}
-  \frac{\partial^2H(x,y)}{\partial y^2} -
-\left( \frac{\partial^2H(x,y)}{\partial x\partial y} \right)^2.
+K(x,y) &= (1+B(x,y)) A(x,y) B(x,y) A(x,y) \ldots A(x,y) (1+B(x,y)) \\
+&= \frac{y^ma(x)^m}{(1-ya(x))^m}
+\frac{y^{m-1}b(x)^{m-1}}{(1-yb(x))^{m+1}}.
 \end{split}
 \end{equation*}
-\end{proposition}
 
-When $\lim k/n < \lambda_-$, the number of configurations is
-asymptotically equivalent to the coefficients of
-
-\begin{equation*}
-\frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
-\end{equation*}
-
-This case was studied in section \ref{subsec:closure}, so we can use
-algorithm \ref{alg:closure} to estimate the probability that the
-configuration contains exactly $1$ contig.
-
-When $\lambda_- \leq \lim k/n \leq \lambda_+$, the minimal critical point
-is the double point $\left( 1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2
-\right)$ and the number of configurations is asymptotically proportional
-to $2^{\frac{k+1}{d}-n-1}/(2^{\frac{1}{d}}-1)^{n+1}$. Since
-$g(1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2) = 1$, the proportionality
-constant is equal to $1/\sqrt{-\mathcal{H}}$.  Using the asymptotic
-formula for the total number of configurations, the probability that it
-contains exactly $1$ contig is asymptotically equivalent to
+$K(x,y)$ is not a Riordan generating function, but it can be transformed
+so as to allow us to use proposition \ref{th:PW}. More specifically,
+$K(x,y)$ can be written as the double sum
 
 \begin{equation}
-\label{eq:1contig_case2}
-\frac{(k/n)^k2^{\frac{k}{d}-n}}{(k/n-1)^{k-n} (2^{\frac{1}{d}}-1)^{n+1}}
-\sqrt{\frac{2\pi k(k/n-1)}{3(7d^2-6d+3)2^{\frac{2}{d}}-
-(3d^2-d)2^{1+\frac{1}{d}} +d^2 }}.
+\label{eq:mcontigs}
+K(x,y) = A_*(x,y) + B_*(x,y) =
+\sum_{j=0}^m\frac{\alpha_j(x)}{\left(1-ya(x)\right)^j}
++ \sum_{j=0}^{m+1}\frac{\beta_j(x)}{\left(1-yb(x)\right)^j}.
 \end{equation}
 
-Finally, when $\lim k/n > \lambda_+$, the number of configurations is
-asymptotically equivalent to the coefficients of
-
-\begin{equation*}
-\frac{yx(1-x^d)/(1-x)}{\left( 1-yx^{d+1}/(1-x) \right)^2}.
-\end{equation*}
-
-Observe that this generating function is related to the derivative of
-$G(x,y)$. More specifically
-
-\begin{equation*}
-\frac{\partial G(x,y)}{\partial y} =
-\frac{x^{d+1}/(1-x)}{\left( 1-yx^{d+1}/(1-x) \right)^2} =
-\frac{x^d}{1-x^d}\frac{yx(1-x^d)/(1-x)}{\left( 1-yx^{d+1}/(1-x)
-\right)^2}.
-\end{equation*}
-
-Thus, using equation (\ref{eq:m=0}), we can immediately give the asymptotic
-probability that the configuration contains exactly $1$ contig as
+If we fix $x$, $F(x,y)$ appears as a rational function of $y$, so using
+standard methods, we can see that $\alpha_m(x) = (b(x)/a(x))^{m-1} /
+(1-b(x)/a(x))^{m+1}$, and that $\beta_{m+1}(x) = (a(x)/b(x))^m /
+(1-a(x)/b(x))^m$. With these explicit formulas, we can write $F(x,y)$ as
 
 \begin{equation}
-\label{eq:1contig_case3}
-\frac{n((k/n-d)^d-(k/n-d-1)^d)(k/n-1)^{k-n+\frac{1}{2}}
-(k/n-d)^{k-dn-\frac{1}{2}}}
-{(k/n)^{k-\frac{1}{2}}(k/n-d-1)^{k-(d+1)(n-1)-\frac{1}{2}}}.
+\label{eq:mcontigs_epsilon}
+\frac{x^{d(m-1)}(1-x^d)^2}{(1-2x^d)^{m+1}}
+  \frac{1}{\left(1-ya(x)\right)^m} + 
+\frac{(1-2x^d)^m}{x^{dm}}
+  \frac{1}{\left(1-yb(x)\right)^{m+1}} + \varepsilon(x,y),
 \end{equation}
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.55]{Fig6.pdf}
-\caption{\textbf{Probability that the configuration has $1$ contig}.
-As in the previous examples, $k=25,000$ and $d=24$. Between $100$ and
-$20,000$ reads were drawn at random with replacement. Each case was
-replicated $500,000$ times and the average frequency that the
-configuration has exactly $1$ contig was plotted (circles). The plain
-lines show the estimate computed from algorithm \ref{alg:closure}, formula
-(\ref{eq:1contig_case2}) and forumla (\ref{eq:1contig_case3}).
-The grey shadow shows for which values the double point determines the
-asymptotics, \textit{i.e.} where formula (\ref{eq:1contig_case2}) was
-used. The estimate never deviates by more than 0.002. The right panel
-shows the logarithm of the estimate to highlight the asymptotic behavior
-at low coverage.}
-\label{fig:1contig}
-\end{figure}
+\noindent
+where $\varepsilon(x,y)$ involves lower powers of $1 / (1-ya(x))$ and
+$1 / (1-yb(x))$. The lemma below shows that we can extract the coefficient
+asymptotics from this expression and that $\varepsilon(x,y)$ does not
+contribute to the leading term.
 
-The cases $m > 1$ can be derived in the same way. A configuration with
-exactly $m$ contigs starts and ends with a potentially empty gap and
-also contains $m-1$ non-empty gaps, so the generating function of
-configurations with exactly $m$ contigs is
+\begin{lemma}
+\label{lem:RAasspow}
+Assume that the generating function $F_j(x,y)$ can be written as
 
 \begin{equation*}
-K_m(x,y) = (1+G(x,y))^2K(x,y)^mG(x,y)^{m-1} =
-\frac{y^ma(x)^m}{\left(1-ya(x)\right)^m}
-\frac{y^{m-1}b(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
+F_j(x,y) =
+\frac{\phi(x)}{(1-y\nu(x))^j}.
 \end{equation*}
 
-Surprisingly, the singular portraits of $K_m(x,y)$ are identical for $m >
-1$, and they are very similar to the singular portraits of $K_1(x,y)$.
-Indeed, the points where the denominator vanishes are the same. This also
-implies that for all $m > 0$, the asymptotic growth changes regime when
-$\lambda = \lim k/n$ reaches the values $\lambda_-$ and $\lambda_+$
-defined above.
+If $k$ and $n$ tend to infinity with $\lim k/n = \lambda$, then
 
-When $\lim k/n < \lambda_-$, the asymptotic growth is defined by the
-generating function
+\begin{equation}
+\label{eq:RAasspow}
+[x^ky^n]F_j(x,y) \sim {n-j+1 \choose j-1}
+\frac{\nu(x_*)^n \phi(x_*)}
+{x_*^k\sqrt{2\pi n \sigma(x_*)^2}},
+\end{equation}
+
+\noindent
+where $x_*$ is the critical value, \textit{i.e.} the solution of
+$\mu(x) = x\nu'(x)/\nu(x) = \lambda$ and $\sigma(x)^2 = x \mu'(x)$,
+as in proposition \ref{th:PW}.
+\end{lemma}
+
+\begin{proof}
+Define the Riordan generating function $G(x,y)$ as
 
 \begin{equation*}
-\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-ya(x)\right)^m}.
+G(x,y) = \frac{\phi(x)}{1-y\nu(x)} =
+\sum_{k=0}^\infty\sum_{n=0}^\infty a_{k,n} x^ky^n.
 \end{equation*}
 
-When $\lambda_- \leq \lim k/n \leq \lambda_+$, the number of
-configurations with $m$ contigs is proportional to
-$2^{(k+1)/d-n-1}/(2^{1/d}-1)^{n+1}$. This is surprising, but the
-proportionality constant is different for every $m$.
-
-
-Finally, when $\lim k/n > \lambda_+$, the asymptotic growth is defined by
-the generating function
+Differentiate the equality above $j-1$ times with respect to $y$ to
+obtain
 
 \begin{equation*}
-\frac{y^{2m-1}a(x)^mb(x)^{m-1}}{\left(1-yb(x)\right)^{m+1}}.
+\begin{split}
+\frac{\partial^{m-1} G(x,y)}{\partial y^{m-1}} &=
+\sum_{k=0}^\infty\sum_{n=0}^\infty n(n-1)\ldots(n-j+2)
+a_{k,n} x^ky^{n-m+1} \\
+&= (j-1)!\frac{\phi(x)\nu(x)^{n-1}}{(1-y\nu(x))^m}
+= (j-1)!\nu(x)^{m-1}F_j(x,y).
+\end{split}
+\end{equation*}
+
+This shows that the coefficients of $F_j(x,y)$ are related to the
+coefficients of $G(x,y)$ by the equality
+
+\begin{equation*}
+[x^ky^n]F_j(x,y) = \frac{1}{\nu(x)^{m-1}} {n+j-1 \choose j-1}
+  [x^ky^{n+m-1}]G(x,y).
+\end{equation*}
+
+Since $G(x,y)$ is a Riordan generating function, apply proposition
+\ref{th:PW} and simplify to obtain (\ref{eq:RAasspow}).
+\end{proof}
+
+Lemma \ref{lem:RAasspow} shows that we can obtain the asymptotic behavior
+of the coefficients of (\ref{eq:mcontigs}) as a sum of $2m-1$ terms, but
+it also shows that the coefficients of $\varepsilon(x,y)$ are
+asymptotically negligible. Indeed, the critical value of $F_j(x,y)$
+is the same for every value of $j$, so according to equation
+(\ref{eq:RAasspow}), the coefficients of $F_j(x,y)$ are
+$O(1/n)$ compared to the coefficients of $F_{j+1}(x,y)$.
+
+Recall that $x_a$ denotes the critical value of $A(x,y)$. Similarly, we
+denote $x_b$ the critical value of $B(x,y)$. With these notations, the
+asymptotic behavior of the coefficients of $K(x,y)$ appears as
+
+\begin{equation}
+\label{eq:nasty}
+\begin{split}
+[x^ky^n]K(x,y) \sim {n-m+1 \choose m-1 }
+    &\frac{(1-x_a^d)^2}{(1-2x_a^d)^{m+1}}
+    \frac{a(x_a)^n} {x_a^{k-d(m-1)}\sqrt{2\pi n \sigma_a(x_a)^2}} \\
+ + {n-m \choose m} &(1-2x^d)^m
+    \frac{b(x_b)^n} {x_b^{k+dm}\sqrt{2\pi n \sigma_b(x_b)^2}}.
+\end{split}
+\end{equation}
+
+We can expect that equation (\ref{eq:mcontigs_epsilon}) will have three
+asymptotic regimes. In the case that $x_a > x_b$ and $a(x_a) > b(x_b)$,
+the coefficients of $B_*$ are exponentially small compared to the those of
+$A_*$, so they can be neglected. The converse is also true. But if $x_a >
+x_b$ and $a(x_a) < b(x_b)$, or if $x_a < x_b$ and $a(x_a) > b(x_b)$, then
+none of the functions can be neglected, and the coefficients have ``mixed
+asymptotics''. Pemantle and Wilson \cite{AnalComb2013} formalize this
+concept and explain how to distinguish these cases, but here we will
+simply use formula (\ref{eq:nasty}) without discrimination.
+
+
+\begin{algorithm}
+\label{alg:nasty}
+
+Here are the steps required to compute the probability of obtaining a
+configuration with $m$ contigs for a genome of size $k$, with required
+overlap $d$ and with $n_*$ reads.
+
+\begin{enumerate}
+\item Compute $n = k(1-e^{-n_*/k})$
+\item Compute $\lambda_1 = (k-d(m-1))/n$
+\item Solve $\mu_a(x_a) = \lambda_1$ by the Newton-Raphson method using
+(\ref{eq:mu}) and (\ref{eq:muprime})
+\item Compute $a(x_a)$ and $\sigma^2(x_a)$ using
+(\ref{eq:nu}) and (\ref{eq:sigma})
+\item Compute $\lambda_2 = (k+dm)/n$
+\item Compute $x_b = (\lambda_2-2)/(\lambda_2-1)$
+\item Compute $b(x_b) = (\lambda_2-2)^{d+1} / (\lambda_2-1)^d$
+and $\sigma_b(x_b)^2 = (\lambda_2-2)(\lambda_2-1)$
+\item Compute the two terms of (\ref{eq:nasty}) in logarithmic space
+\item Compute (\ref{eq:coefC}) in logarithmic space
+\item Take the differences, exponentiate and sum.
+\end{enumerate}
+
+We illustrate this method to compute the probability that the
+configuration has $m=10$ contigs on a genome with $k = 25000$, and
+assembly conditions where $n_* = 7000$ and $d=24$. Using the Poisson
+approximation, we obtain $n \approx 25000 \cdot (1-e^{-7500/25000})
+\approx 6105.4065$.
+
+From this, we obtain $\lambda_1 = (k-d(m-1))/n \approx 4.0593$. Using the
+Newton-Raphson method with expressions (\ref{eq:mu}) and
+(\ref{eq:muprime}), we solve the equation $\mu(x_a) = \lambda_1$ and
+obtain $x_a \approx 0.75538011$. Using equations (\ref{eq:nu}) and
+(\ref{eq:sigma}), we obtain $a(x_a) \approx 3.08429680$ and
+$\sigma_a(x_a)^2 \approx 11.93581488$. The first term of
+(\ref{eq:nasty}) in logarithmic space is thus approximately equal to
+
+\begin{equation*}
+\begin{split}
+\log { 6096 \choose 9 } &+ 2\log(1-0.75538011^d)
+-11\log(1-2\cdot0.75538011^d) \\
+&+ 6105.4065\log(3.08429680) - 24784\log(0.75538011) \\
+&- \log(6105.4065)/2 - \log(11.93581488)/2 - \log(2\pi)/2
+\approx 13888.583.
+\end{split}
+\end{equation*}
+
+We also obtain $\lambda_2 = (k+dm)/n \approx 4.1340$. This directly yields
+$x_b \approx 0.68092311$, $b(x_b) \approx 0.00021065$, and
+$\sigma_b(x_b)^2 \approx 6.68817131$. The second term of (\ref{eq:nasty})
+in logarithmic space is thus approximately equal to
+
+\begin{equation*}
+\begin{split}
+\log { 6097 \choose 10 } &+ 10\log(1-2\cdot0.68092311^d) \\
+&+ 6105.4065\log(0.00021065) - 25240\log(0.68092311) \\
+&- \log(6105.4065)/2 - \log(6.68817131)/2 - \log(2\pi)/2
+\approx 9757.229.
+\end{split}
+\end{equation*}
+
+The second term is much smaller than the first so it can be neglected.
+We compute the number of configurations in logarithmic space from equation
+(\ref{eq:coefC}) and obtain
+
+\begin{equation*}
+\log { 24999 \choose 6104.4065} \approx 13890.737.
+\end{equation*}
+
+Finally, the estimated probability that a configuration is closed for a
+genome of size $k=25000$, with coverage $n_* = 10000$ reads and
+$24$-intervals is
+
+\begin{equation*}
+\exp(13888.583-13890.737) \approx 0.116
 \end{equation*}
 
 
+\end{algorithm}
 
 
 %%%%%%%%%%%%% Average contig size %%%%%%%%%%%%%
@@ -1230,6 +1226,71 @@ H^*(x,y) &= x \frac{\partial K(x,y)}{\partial x}
 \end{equation*}
 
 
+
+
+\section{Seeding}
+
+Computing the best alignment between two sequences is carried out by
+dynamic programming. However, the running time of these algorithms scale
+$O(mn)$, where $m$ and $n$ are the sequence lengths, so it is only
+feasible for short sequences. For long sequences, heuristics are used for
+speed up, and the most popular by far belong to ``seeding'' methods.
+
+
+
+\section{Discussion}
+
+Strictly speaking, we do not need the theorems by Pemantle and Wilson.
+Here we care only about approximations rather than asymptotics. We could
+have used earlier results by Drmota \cite{Drmota1994} or Gardy
+\cite{Gardy1995}, or we could have used the saddle point asymptotics
+method on $(x(1-x^d)/(1-x))^n$ we would obtain expression (\ref{eq:assRA})
+for fixed $n$ and $k$, which is sufficient for our purpose. However, this
+would have required to check that the function satisfies some conditions
+that are fairly technical. Proposition \ref{th:PW} is very general and it
+makes this step unnecessary.
+
+\section{Appendix}
+
+Occasionally, we need the second order term of the asymptotics. In the
+case of Riordan arrays, it is not so difficult to find it.
+
+\begin{proposition}
+With the same assumptions and notations as proposition \ref{th:PW}
+
+\begin{equation}
+[x^ky^n]F(x,y) \sim \frac{\nu(x_\lambda)^n\phi(x_\lambda)}
+  {x_\lambda^k\sqrt{2\pi n \sigma(x_\lambda)^2}}
+\left(1-\left(\frac{15}{8}c_3^2+\frac{3}{2}c_4\right)
+\frac{1}{n\sigma(x_\lambda)^2} \right),
+\end{equation}
+
+\noindent
+where $\varphi(\theta) = -\log \nu(x_\lambda e^{i\theta}) - c_0
+-c_1\theta = c_2\theta^2 + c_3\theta^3 + c_4\theta^4 + O(\theta^5)$.
+\end{proposition}
+
+This result is implicitly proved in \cite{AnalComb2013}.
+For Riordan arrays, the function $A(\theta)$ of formula (9.2.9) in
+is equal to $-1$. The integral of proposition 9.2.5
+thus reduces to $\int_{N'}e^{-n\varphi(\theta)}d\theta$ and the
+coefficients can be computed from the proof of theorem 4.1.1. Note that 
+$c_2 = \sigma(x_\lambda)^2/2$.
+
+%---------------------------------------------------------------
+%---------------------------------------------------------------
+
+\bibliography{pubmed,extra}
+\bibliographystyle{plain}
+
+%----------------------------------------------------------------
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                           Old parts                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %The simplest strategy is to compute the cumulative size of $d$-gaps and
 %get the cumulative size of contigs by complementarity. We can exhibit a
@@ -1357,28 +1418,188 @@ H^*(x,y) &= x \frac{\partial K(x,y)}{\partial x}
 %\left( \frac{1-x^{d+1}}{1-x^d} \right)^m
 %\end{equation*}
 
-
-
-
-
-\section{Discussion}
-
-Strictly speaking, we do not need the theorems by Pemantle and Wilson.
-Here we care only about approximations rather than asymptotics. We could
-have used earlier results by Drmota \cite{Drmota1994} or Gardy
-\cite{Gardy1995}, or we could have used the saddle point asymptotics
-method on $(x(1-x^d)/(1-x))^n$ we would obtain expression (\ref{eq:assRA})
-for fixed $n$ and $k$, which is sufficient for our purpose. However, this
-would have required to check that the function satisfies some conditions
-that are fairly technical. Proposition \ref{th:PW} is very general and it
-makes this step unnecessary.
-
-%---------------------------------------------------------------
-%---------------------------------------------------------------
-
-\bibliography{pubmed,extra}
-\bibliographystyle{plain}
-
-%----------------------------------------------------------------
-
-\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%A configuration that contains exactly $1$ contig may contain up to two
+%gaps: one before and/or one after the contig. The genrating function of
+%the configurations that contain exactly $1$ contig is thus
+%
+%\begin{equation*}
+%\begin{split}
+%K_1(x,y) = (1+G(x,y))K(x,y)(1+G(x,y)) =
+%\frac{ya(x)}{1-ya(x)}
+%\frac{1}{\left(1-yb(x)\right)^2}, \\
+%\text{where $a(x) = x(1-x^d)/(1-x)$, and $b(x) = x^{d+1}/(1-x)$}.
+%\end{split}
+%\end{equation*}
+%
+%This generating function does not define a Riordan array, but it can be
+%expressed as the ratio of two analytic functions. In this case, the points
+%where the denominator vanishes hold everything we need to know about the
+%asymptotic growth of the coefficients. We will use this example to
+%illustrate the general method to extract coefficient asymptotics in
+%similar cases. For convenience, we define $H_1(x,y) = 1-ya(x)$, $H_2(x,y)
+%= 1-yb(x)$, and write the denomiator as $H(x,y) = H_1(x,y)H_2(x,y)$.
+%
+%\begin{definition}
+%The points such that $H(x,y) = 0$ are called critical points.  The points
+%such that $H_1(x,y) = H_2(x,y) = 0$ are called double points. Critical
+%points that are not double points are called smooth points.
+%\end{definition}
+%
+%This definition is a massive simplification from the work of Pemantle and
+%Wilson. The original definitions are more complex, and there exists more
+%types of critical points (which will not appear in the cases presented
+%here). The interested reader is referred to the original literature
+%\cite{PemWil02, PemWil08, AnalComb2013}.
+%
+%For smooth critical points, $H_i(x,y) = 0$, where $i$ is either $1$ or
+%$2$. Each smooth critical point is associated with a single direction
+%$\lambda = \lim k/n$ defined by the equation
+%
+%\begin{equation}
+%\label{eq:minimal}
+%\lambda =
+%\frac{x\partial H_i(x,y)/\partial x}{y\partial H_i(x,y)/\partial y}.
+%\end{equation}
+%
+%Double points are associated with infinitely many directions. The values
+%of $\lambda$ correspond to a closed interval bounded by the two solutions
+%of (\ref{eq:minimal}) for $i=1$ and $i=2$.
+%
+%More than one critical point may be associated with a given direction, but
+%only the closest to the origin determines the asymptotic growth of the
+%coefficients. The actual formula of the asymptotic growth then depends on
+%whether this point is smooth or double. 
+%
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=0.55]{Fig5.pdf}
+%\caption{\textbf{Singular portrait of $K_1(x,y)$ for $d=24$}. The two
+%curves labelled represent the points such that $H_1(x,y) = 0$ and
+%$H_2(x,y) = 0$, respectively. The arrows indicate the ray associated with
+%a critical point, and the grey triangle represents the cone of rays
+%associated with the double point. The minimal critical points are shown in
+%black, and the non minimal points in grey. Note that the $x$-axis does
+%starts at 0.80.}
+%\label{fig:singular}
+%\end{figure}
+%
+%Figure~\ref{fig:singular} shows the critical points of $H(x,y)$ for
+%$d=24$. The curves intersect at the point $\left( 1/2^{\frac{1}{d}},
+%2^{1+\frac{1}{d}}-2 \right)$, which is the only double point, associated
+%with the directions in the interval bounded below by $\lambda_- =
+%(d-(d-1)2^{\frac{1}{d}}) / (2^{\frac{1}{d}}-1)$ and above by $\lambda_+ =
+%(d2^{\frac{1}{d}}-d+1) / (2^{\frac{1}{d}}-1)$, indicated as a black
+%triangle.  Smooth points are associated with a single direction computed
+%from equation (\ref{eq:minimal}) and indicated by arrows.
+%
+%The asymptotics of the coefficients are governed by three regimes: if the
+%direction $\lambda = \lim k/n$ is between $1$ and $\lambda_-$, the minimal
+%critical point is a smooth point solution of $H_1(x,y) = 0$. If $\lambda$
+%is between $\lambda_-$ and $\lambda_+$, the minimal critical point is the
+%double point. If $\lambda$ is higher than $\lambda_+$ the minimal critical
+%point is a smooth point solution of $H_2(x,y) = 0$. In words, the behavior
+%is governed by $K(x,y)$ when $k/n$ is low, by $G(x,y)$ when $k/n$ is high,
+%and by a combination of the two when $k/n$ is intermediate.
+%
+%\begin{proposition}
+%Let the generating function of the array $(a_{k,n})$ be
+%
+%\begin{equation*}
+%\frac{g(x,y)}{H(x,y)} =
+%\frac{g(x,y)}{\prod_{i=1}^rH_i(x,y)}.
+%\end{equation*}
+%
+%If the minimal critical point $(x,y)$ associated with the direction
+%$\lambda = \lim k/n$ is smooth, then
+%
+%\begin{equation*}
+%a_{k,n} \sim [x^ky^n] \frac{g(x,y)}{H_i(x,y)}\text{, where $i \leq r$ is
+%such that } H_i(x,y) = 0.
+%\end{equation*}
+%
+%If the minimal critical point is a double point, then
+%
+%\begin{equation*}
+%\begin{split}
+%a_{k,n} \sim \frac{1}{x^{k+1}y^{n+1}} \frac{g(x,y)}{\sqrt{-\mathcal{H}}}
+%\text{, where} \\
+%\mathcal{H} = \frac{\partial^2H(x,y)}{\partial x^2}
+%  \frac{\partial^2H(x,y)}{\partial y^2} -
+%\left( \frac{\partial^2H(x,y)}{\partial x\partial y} \right)^2.
+%\end{split}
+%\end{equation*}
+%\end{proposition}
+%
+%When $\lim k/n < \lambda_-$, the number of configurations is
+%asymptotically equivalent to the coefficients of
+%
+%\begin{equation*}
+%\frac{yx(1-x^d)/(1-x)}{1-yx(1-x^d)/(1-x)}.
+%\end{equation*}
+%
+%This case was studied in section \ref{subsec:closure}, so we can use
+%algorithm \ref{alg:closure} to estimate the probability that the
+%configuration contains exactly $1$ contig.
+%
+%When $\lambda_- \leq \lim k/n \leq \lambda_+$, the minimal critical point
+%is the double point $\left( 1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2
+%\right)$ and the number of configurations is asymptotically proportional
+%to $2^{\frac{k+1}{d}-n-1}/(2^{\frac{1}{d}}-1)^{n+1}$. Since
+%$g(1/2^{\frac{1}{d}}, 2^{1+\frac{1}{d}}-2) = 1$, the proportionality
+%constant is equal to $1/\sqrt{-\mathcal{H}}$.  Using the asymptotic
+%formula for the total number of configurations, the probability that it
+%contains exactly $1$ contig is asymptotically equivalent to
+%
+%\begin{equation}
+%\label{eq:1contig_case2}
+%\frac{(k/n)^k2^{\frac{k}{d}-n}}{(k/n-1)^{k-n} (2^{\frac{1}{d}}-1)^{n+1}}
+%\sqrt{\frac{2\pi k(k/n-1)}{3(7d^2-6d+3)2^{\frac{2}{d}}-
+%(3d^2-d)2^{1+\frac{1}{d}} +d^2 }}.
+%\end{equation}
+%
+%Finally, when $\lim k/n > \lambda_+$, the number of configurations is
+%asymptotically equivalent to the coefficients of
+%
+%\begin{equation*}
+%\frac{yx(1-x^d)/(1-x)}{\left( 1-yx^{d+1}/(1-x) \right)^2}.
+%\end{equation*}
+%
+%Observe that this generating function is related to the derivative of
+%$G(x,y)$. More specifically
+%
+%\begin{equation*}
+%\frac{\partial G(x,y)}{\partial y} =
+%\frac{x^{d+1}/(1-x)}{\left( 1-yx^{d+1}/(1-x) \right)^2} =
+%\frac{x^d}{1-x^d}\frac{yx(1-x^d)/(1-x)}{\left( 1-yx^{d+1}/(1-x)
+%\right)^2}.
+%\end{equation*}
+%
+%Thus, using equation (\ref{eq:m=0}), we can immediately give the asymptotic
+%probability that the configuration contains exactly $1$ contig as
+%
+%\begin{equation}
+%\label{eq:1contig_case3}
+%\frac{n((k/n-d)^d-(k/n-d-1)^d)(k/n-1)^{k-n+\frac{1}{2}}
+%(k/n-d)^{k-dn-\frac{1}{2}}}
+%{(k/n)^{k-\frac{1}{2}}(k/n-d-1)^{k-(d+1)(n-1)-\frac{1}{2}}}.
+%\end{equation}
+%
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=0.55]{Fig6.pdf}
+%\caption{\textbf{Probability that the configuration has $1$ contig}.
+%As in the previous examples, $k=25,000$ and $d=24$. Between $100$ and
+%$20,000$ reads were drawn at random with replacement. Each case was
+%replicated $500,000$ times and the average frequency that the
+%configuration has exactly $1$ contig was plotted (circles). The plain
+%lines show the estimate computed from algorithm \ref{alg:closure}, formula
+%(\ref{eq:1contig_case2}) and forumla (\ref{eq:1contig_case3}).
+%The grey shadow shows for which values the double point determines the
+%asymptotics, \textit{i.e.} where formula (\ref{eq:1contig_case2}) was
+%used. The estimate never deviates by more than 0.002. The right panel
+%shows the logarithm of the estimate to highlight the asymptotic behavior
+%at low coverage.}
+%\label{fig:1contig}
+%\end{figure}
+%
